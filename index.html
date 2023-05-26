@@ -412,38 +412,40 @@
         return (date.getMonth() + 1) + "月" + date.getDate() + "日";
     }
 
-    ajax({
-        url: "https://getman.cn/mock/nooneb/history",
-        type: "get",
-        success: res => {
-            const json = JSON.parse(res);
-            if (json.length >= 10) json.shift();
+    setTimeout(function (){
+        ajax({
+            url: "https://getman.cn/mock/nooneb/history",
+            type: "get",
+            success: res => {
+                const json = JSON.parse(res);
+                if (json.length >= 10) json.shift();
 
-            ajax({
-                url: "https://ipapi.co/json",
-                type: "get",
-                success: res2=>{
-                    const ipRes=JSON.parse(res2)
-                    console.log(ipRes);
-                    const ip=ipRes.ip;
-                    const city=ipRes.city;
-                    const ua= navigator.userAgent;
-                    json.push(getShortDate() + " " + ip+" "+city+" "+ua);
-                    let h = document.getElementById("history");
-                    let s = "";
-                    for (let i = json.length - 1; i >= 0; i--) {
-                        // s += (i + 1) + "." + json[i] + "<hr>";
-                        s += json[i] + "<hr>";
+                ajax({
+                    url: "https://ipapi.co/json",
+                    type: "get",
+                    success: res2=>{
+                        const ipRes=JSON.parse(res2)
+                        console.log(ipRes);
+                        const ip=ipRes.ip;
+                        const city=ipRes.city;
+                        const ua= navigator.userAgent;
+                        json.push(getShortDate() + " " + ip+" "+city+" "+ua);
+                        let h = document.getElementById("history");
+                        let s = "";
+                        for (let i = json.length - 1; i >= 0; i--) {
+                            // s += (i + 1) + "." + json[i] + "<hr>";
+                            s += json[i] + "<hr>";
+                        }
+                        h.innerHTML = s;
+                        ajax({
+                            url: "https://getman.cn/api/mock?route=/nooneb/history&body=" + JSON.stringify(json),
+                            type: "post"
+                        }).send()
                     }
-                    h.innerHTML = s;
-                    ajax({
-                        url: "https://getman.cn/api/mock?route=/nooneb/history&body=" + JSON.stringify(json),
-                        type: "post"
-                    }).send()
-                }
-            }).send()
-        }
-    }).send();
+                }).send()
+            }
+        }).send();
+    },3000)
 </script>
 </body>
 </html>
