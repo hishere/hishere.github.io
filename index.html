@@ -418,7 +418,7 @@
             type: "get",
             success: res => {
                 const json = JSON.parse(res);
-                if (json.length >= 10) json.shift();
+                if (json.length >= 8) json.shift();
 
                 ajax({
                     url: "https://ipapi.co/json",
