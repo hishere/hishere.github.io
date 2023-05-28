@@ -29,7 +29,7 @@
 <body>
 <div id="app">
     <h2>一键式操作</h2>
-    任务id: <input type="text" class="t1" v-model="taskId"/><br>
+    任务id: <input type="text" class="t1" placeholder="1234567" v-model="taskId"/><br>
     <button v-on:click="fetchWb">文宝</button>
     <button v-on:click="fetchJd">记娣</button>
     <button v-on:click="fetchFs">富生</button>
@@ -92,7 +92,7 @@
                 size: 50,
                 res: "",
                 odd: 0,
-                taskId: 1234567,
+                taskId: '',
                 headers: {
                     'Host': 'gateway.shangbangzhuan.com',
                     'Connection': 'Keep-Alive',
