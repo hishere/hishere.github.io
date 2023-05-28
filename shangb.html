@@ -15,6 +15,9 @@
         .t {
             width: 3rem;
         }
+        .t1{
+            width: 5rem;
+        }
 
         .dcdcdc {
             background-color: #dcdcdc;
@@ -25,7 +28,12 @@
 </head>
 <body>
 <div id="app">
-
+    <h2>一键式操作</h2>
+    任务id: <input type="text" class="t1" v-model="taskId"/><br>
+    <button v-on:click="fetchWb">文宝</button>
+    <button v-on:click="fetchJd">记娣</button>
+    <button v-on:click="fetchFs">富生</button>
+    <button v-on:click="fetchAll">全部</button>
     <h2>赏帮筛选器</h2>
     <p>用途: 用价格区间筛选出简单的任务</p>
 <!--    <h3><a href="http://bnmh.ftvip.cn/4877987">下载</a></h3>-->
@@ -83,10 +91,54 @@
                 current: 1,
                 size: 50,
                 res: "",
-                odd: 0
+                odd: 0,
+                taskId: 1234567,
+                headers: {
+                    'Host': 'gateway.shangbangzhuan.com',
+                    'Connection': 'Keep-Alive',
+                    'Accept-Encoding': 'gzip',
+                    'User-Agent': 'okhttp/4.0.1',
+                    'uuid': '',
+                    'deviceInfo': '',
+                    'device': 'android',
+                    'version': '2.37'
+                },
+                fsId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6ImIzNThiNTRkLWFlNDMtNDM1MS1iZDA0LTYzMTAzZjJlZGQzOSIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjo0ODc3OTg3fQ.dgSQfqSejLEZA5eI5DlCxgDd95lg9i-F-xjVuVqqeD8',
+                jdId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6ImUxMTI1MWRhLWJjNTEtNDhhYi04NDJmLThhZTMxNTBlNDk0ZSIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjozNTk0NjExfQ.Ae6Y0MypR2fmTItY5hqPEEVc3jXpbjVwIEB36I_VllU',
+                wbId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6IjdmNjdkZWMxLTZhYjAtNDQwOC1hYWU2LTc4M2VhYTZmOTk3NSIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjozNTc4MTc0fQ.Hr9_4Y9GB18mkFDoVsRpO8axzgF2qv1lQi36xQdW5f8',
+                realme: 'BRAND:realme,MODEL:RMX2117,VERSION:10,DEVICE:RMX2117CN,BOARD:oppo6853,NETWORK:NETWORK_WIFI',
+                redmi: 'BRAND:Redmi,MODEL:22041216C,VERSION:12,DEVICE:xaga,BOARD:xaga,NETWORK:NETWORK_WIFI'
             }
         },
         methods: {
+            fetchWb(){
+                let headers=this.headers;
+                headers["uuid"]=this.wbId;
+                headers["deviceInfo"]=this.realme;
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+
+            },
+            fetchJd(){
+                let headers=this.headers;
+                headers["uuid"]=this.jdId;
+                headers["deviceInfo"]=this.realme;
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+
+            },
+            fetchFs(){
+                let headers=this.headers;
+                headers["uuid"]=this.fsId;
+                headers["deviceInfo"]=this.redmi;
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+            },
+            fetchAll(){
+                this.fetchWb();
+                setTimeout(()=>{this.fetchJd()},500)
+                setTimeout(()=>{this.fetchFs()},1000)
+            },
             hallList() {
                 const that = this;
                 axios.get(that.url, {
