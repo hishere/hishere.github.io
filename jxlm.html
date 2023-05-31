@@ -67,7 +67,7 @@
                 <th style="width: 3rem" @click="pxIndex()">索引</th>
                 <th style="width: 6.5rem">账户</th>
                 <th style="width: 4rem" @click="pxValue()">价值</th>
-                <th style="width: 2.5rem" @click="pxPass()">通过</th>
+                <th style="width: 3rem" @click="pxPass()">通过</th>
                 <th style="width: 3rem" @click="pxToday()">今日</th>
             </tr>
         </thead>
@@ -78,7 +78,7 @@
                 </td>
                 <td :class="{'mod2is0': index%2===0}" style="width: 6.5rem">{{ i.user.mobile }}</td>
                 <td :class="{'mod2is0': index%2===0}" style="width: 4rem">{{i.user.integralCurrent }}</td>
-                <td :class="{'mod2is0': index%2===0}" style="width: 2.5rem">
+                <td :class="{'mod2is0': index%2===0}" style="width: 3rem">
                     <span> {{ i.user.passNum }}</span>
                     <div class="inRD">{{index}}</div>
                 </td>
