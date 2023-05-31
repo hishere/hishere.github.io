@@ -33,6 +33,12 @@
             font-size: 0.1rem;
             float: right;
         }
+        .ac0{
+            color: springgreen;
+        }
+        .ac1{
+            color: orangered;
+        }
     </style>
     <link rel="stylesheet" href="./no.css">
 </head>
@@ -80,7 +86,7 @@
                 <td :class="{'mod2is0': index%2===0}" style="width: 4rem">{{i.user.integralCurrent }}</td>
                 <td :class="{'mod2is0': index%2===0}" style="width: 3rem">
                     <span> {{ i.user.passNum }}</span>
-                    <div class="inRD">{{index}}</div>
+                    <span :class="'inRD ac'+acTypes[parseInt(i.index)]">{{index}}</span>
                 </td>
                 <td :class="{'mod2is0': index%2===0}">{{i.user.todayIntegral }}</td>
             </tr>
@@ -103,7 +109,11 @@
                     start: 0,
                     end: 50
                 },
-                unMax: unArr.length - 1
+                unMax: unArr.length - 1,
+                acTypes: [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                    ,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1
+                    ,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,1,1,0,0,0,1,1,0]
             }
         },
         methods: {
