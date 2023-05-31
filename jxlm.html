@@ -28,6 +28,11 @@
         table{
             width: fit-content;
         }
+        .inRD{
+            color: darkgrey;
+            font-size: 0.1rem;
+            float: right;
+        }
     </style>
     <link rel="stylesheet" href="./no.css">
 </head>
@@ -68,10 +73,15 @@
         </thead>
         <tbody>
             <tr v-cloak v-for="(i,index) in mData.users" :key="index">
-                <td :class="{'mod2is0': index%2===0}" style="width: 3rem">{{ i.index }}</td>
+                <td :class="{'mod2is0': index%2===0}" style="width: 3rem">
+                    <span>{{ i.index }}</span>
+                </td>
                 <td :class="{'mod2is0': index%2===0}" style="width: 6.5rem">{{ i.user.mobile }}</td>
                 <td :class="{'mod2is0': index%2===0}" style="width: 4rem">{{i.user.integralCurrent }}</td>
-                <td :class="{'mod2is0': index%2===0}" style="width: 2.5rem">{{ i.user.passNum }}</td>
+                <td :class="{'mod2is0': index%2===0}" style="width: 2.5rem">
+                    <span> {{ i.user.passNum }}</span>
+                    <div class="inRD">{{index}}</div>
+                </td>
                 <td :class="{'mod2is0': index%2===0}">{{i.user.todayIntegral }}</td>
             </tr>
         </tbody>
