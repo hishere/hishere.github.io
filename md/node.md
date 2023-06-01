@@ -1,5 +1,5 @@
-#### 在node中使用canvas
-```HTML
+### 在node中使用canvas
+```javascript
 const Canvas = require("canvas");
 const imgBase64 = "data:image/jpeg;base64,/9j/4AAQ......"
 //给base64图片添加文本
@@ -32,4 +32,37 @@ function textForImg(text) {
 //         console.log('写入成功！');
 //     }
 // })
+```
+
+### express框架案例
+
+```javascript
+const exp=require("express");
+const bodyParser = require("body-parser");
+const app=exp();
+
+// 跨域设置
+// app.all("*", function (req, res, next) {
+//     res.setHeader("Access-Control-Allow-Credentials", true);
+//     res.setHeader("Access-Control-Allow-Origin", req.get("Origin")); // 添加这一行代码，代理配置不成功
+//     res.setHeader("Access-Control-Allow-Methods", 'POST, GET, OPTIONS, DELETE, PUT');
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, If-Modified-Since")
+//     next();
+// })
+
+app.listen(8080,()=>{
+    console.log("run at http://127.0.0.1");
+});
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+app.post("/aaa",function (req,resp){
+    console.log(req.query);
+    console.log(req.body);
+    console.log(req.headers);
+    resp.send("123");
+});
+app.get("/",(req,resp)=>{
+    console.log(req.socket.remoteAddress);
+    resp.send("gegjej");
+});
 ```

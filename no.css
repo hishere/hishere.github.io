@@ -35,6 +35,8 @@ input[type="text"],td[contenteditable="true"] {
 }
 input[type="text"]:active,input[type="text"]:focus,
 td[contenteditable="true"]:active,td[contenteditable="true"]:focus,
+th[contenteditable="true"]:active,th[contenteditable="true"]:focus,
+a[contenteditable="true"]:active,a[contenteditable="true"]:focus,
 td:active,th:active{
     text-decoration: none;
     border: none;
@@ -45,6 +47,7 @@ td:active,th:active{
     box-sizing: border-box;
     display: inline-block;
 }
+
 a {
     text-decoration: none;
     box-shadow: 1px 1px 1px 1px #a1c9e6;
