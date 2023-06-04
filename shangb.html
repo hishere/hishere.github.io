@@ -29,7 +29,9 @@
 <body>
 <div id="app">
     <h2>一键式操作</h2>
-    任务id: <input type="text" class="t1" placeholder="1234567" v-model="taskId"/><br>
+    任务id: <input type="text" class="t1" placeholder="1234567" v-model="taskId"/>
+    <button v-on:click="paste()">粘贴</button>
+    <br>
     <button v-on:click="fetchWb">文宝</button>
     <button v-on:click="fetchJd">记娣</button>
     <button v-on:click="fetchFs">富生</button>
@@ -111,6 +113,12 @@
             }
         },
         methods: {
+            paste(){
+                const taht=this;
+                navigator.clipboard.readText().then(text=>{
+                    taht.taskId=text;
+                });
+            },
             fetchWb(){
                 let headers=this.headers;
                 headers["uuid"]=this.wbId;
