@@ -12,8 +12,8 @@ const backup = unArr;
 
 // console.log(unArr);
 function tok(){
- // return Math.trunc(Math.random()*1000);
- return "79ff2b06537d08df310195df9a8f5dfa";
+ return Math.trunc(Math.random()*1000);
+ // return "79ff2b06537d08df310195df9a8f5dfa";
     // return "248";
 }
 
