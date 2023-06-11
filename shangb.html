@@ -39,11 +39,11 @@
     <h2>赏帮筛选器</h2>
     <p>用途: 用价格区间筛选出简单的任务</p>
 <!--    <h3><a href="http://bnmh.ftvip.cn/4877987">下载</a></h3>-->
-    排序: <input type="text" class="t" v-model="sortBy"/>1综合2最新3简单4高价5未做<br>
-    当前: <input type="text" class="t" v-model="current"/><br>
-    大小: <input type="text" class="t" v-model="size"/><br>
-    金额: <input type="text" class="t" v-model="moneyLimitLeft"/> ~
-    <input type="text" class="t" v-model="moneyLimitRight"/>
+    排序: <input type="text" class="t" v-model.number="sortBy"/>1综合2最新3简单4高价5未做<br>
+    当前: <input type="text" class="t" v-model.number="current"/><br>
+    大小: <input type="text" class="t" v-model.number="size"/><br>
+    金额: <input type="text" class="t" v-model.number="moneyLimitLeft"/> ~
+    <input type="text" class="t" v-model.number="moneyLimitRight"/>
     <br><br>
     <button v-on:click="hallList">请求</button>
     &nbsp
