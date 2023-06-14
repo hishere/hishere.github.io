@@ -113,7 +113,7 @@
                 acTypes: [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
                     ,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                     0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1
-                    ,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,1,1,0,0,0,1,1,0,0]
+                    ,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,1,1,0,0,0,1,1,0,0,1]
             }
         },
         methods: {
@@ -238,7 +238,8 @@
             window.addEventListener('beforeunload', e => this.beforeUnload(e));
             const mData = JSON.parse(localStorage.getItem("mData"));
             if (mData !== null) this.$data.mData = JSON.parse(localStorage.getItem("mData"));
-        },
+			console.log("ac类型长度:"+this.acTypes.length)
+		},
         destroyed() {
             window.removeEventListener('beforeunload', e => this.beforeUnload(e))
         }
