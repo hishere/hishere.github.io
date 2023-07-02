@@ -28,6 +28,14 @@
 </head>
 <body>
 <div id="app">
+    <h2>一键式操作</h2>
+    任务id: <input type="text" class="t1" placeholder="1234567" v-model="taskId"/>
+    <button v-on:click="paste()">粘贴</button>
+    <br>
+    <button v-on:click="fetchWb">文宝</button>
+    <button v-on:click="fetchJd">记娣</button>
+    <button v-on:click="fetchFs">富生</button>
+    <button v-on:click="fetchAll">全部</button>
     <h2>赏帮筛选器</h2>
     <p>用途: 用价格区间筛选出简单的任务</p>
 <!--    <h3><a href="http://bnmh.ftvip.cn/4877987">下载</a></h3>-->
@@ -47,9 +55,7 @@
     <hr>
     <ul>
         金额-------项目---------id
-        <li v-for="(i,index) in res" :class="{'dcdcdc': index%2==0}">
-            {{ i.money }}元---{{ i.name }}---<span v-on:click="detailFs(i.id)">{{ i.id }}</span>
-        </li>
+        <li v-for="(i,index) in res" :class="{'dcdcdc': index%2==0}">{{ i.money }}元---{{ i.name }}---{{ i.id }}</li>
     </ul>
 </div>
 <script>
@@ -113,13 +119,33 @@
                     taht.taskId=text;
                 });
             },
-            //点击后浏览记录中就能找到了
-            detailFs(taskId){
+            fetchWb(){
+                let headers=this.headers;
+                headers["uuid"]=this.wbId;
+                headers["deviceInfo"]=this.realme;
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+
+            },
+            fetchJd(){
+                let headers=this.headers;
+                headers["uuid"]=this.jdId;
+                headers["deviceInfo"]=this.realme;
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+
+            },
+            fetchFs(){
                 let headers=this.headers;
                 headers["uuid"]=this.fsId;
                 headers["deviceInfo"]=this.redmi;
-                console.log("点击了:"+taskId);
-                fetch('http://gateway.shangbangzhuan.com/task/detail/'+taskId, {headers: headers});
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+            },
+            fetchAll(){
+                this.fetchWb();
+                setTimeout(()=>{this.fetchJd()},500)
+                setTimeout(()=>{this.fetchFs()},1000)
             },
             hallList() {
                 const that = this;
