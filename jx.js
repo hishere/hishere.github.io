@@ -85,7 +85,7 @@ for(let i in unArr){
     div.appendChild(a);
 
     if(i===100){
-        div.append(document.createElement("br"));
+        // div.append(document.createElement("br"));
     }
 }
 
@@ -95,7 +95,7 @@ bo[0].appendChild(div);
 const fo = document.getElementsByClassName("page-footer");
 const me = document.createElement("A");
 me.innerHTML="是我";
-me.style.margin="0.2rem"
+me.style.margin="0.2rem";
 me.style.padding="0.2rem";
 me.style.border="1px solid lightblue";
 me.onclick=function (){
