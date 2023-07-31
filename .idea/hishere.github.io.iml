@@ -8,5 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="vue.runtime.global.prod" level="application" />
+    <orderEntry type="library" name="vue.global.prod" level="application" />
   </component>
 </module>

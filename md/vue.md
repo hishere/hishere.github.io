@@ -1,4 +1,40 @@
+### 导包
+
+20230801方案
+
+https://unpkg.zhimg.com/vue@3.3.4/打开目录
+
+```html
+<script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+```
+
+```txt
+// 服务端渲染。 通过 `require()` 在 Node.js 服务器端渲染使用。
+vue.cjs.js
+vue.cjs.prod.js
+
+// 使用构建工具，如 `webpack`，`rollup` 和 `parcel` 等打包出来的工程项目
+vue.esm-bundler.js
+vue.runtime.esm-bundler.js
+
+// 通过浏览器中的 `<script src="...">` 直接使用，暴露全局Vue
+vue.global.js
+vue.global.prod.js
+vue.runtime.global.js
+vue.runtime.global.prod.js
+
+// 在浏览器中通过 `<script type="module">` 来使用（浏览器原生 ES 模块导入使用）
+vue.esm-browser.js
+vue.esm-browser.prod.js
+vue.runtime.esm-browser.js
+vue.runtime.esm-browser.prod.js
+```
+
+
+
 ### Vue2模板
+
 ```HTML
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -38,6 +74,7 @@
 </html>
 ```
 ### Vue3模板
+
 ```HTML
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -269,3 +306,9 @@ v-model.number 文本转数字
 #### 触发一次
 
 @click.once
+
+### Yox
+
+#### 开始
+
+yox,ptitevue都是轻量几十k,但是vue多占据的内存100多k,只能忍下
