@@ -36,7 +36,9 @@ function up(base64){
 function doit() {
     let ht=document.getElementsByClassName("head-tip")[0];
     let ct=document.getElementsByClassName("con-tip")[0];
-    ht.innerHTML="价值: "+localStorage.getItem("taskIntegral");
+
+    //无法得到价值了...taskIntegral
+    ht.innerHTML="价值: "+localStorage.getItem("un");
 
     let img = new Image();
     let text = "人工智能";
