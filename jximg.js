@@ -96,4 +96,4 @@ function doit() {
     }
 }
 
-setTimeout(doit, 6000);
+setTimeout(doit, 5100);
