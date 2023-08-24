@@ -38,7 +38,7 @@ function doit() {
     let ct=document.getElementsByClassName("con-tip")[0];
 
     //无法得到价值了...taskIntegral
-    ht.innerHTML="价值: "+localStorage.getItem("un");
+    ht.innerHTML=localStorage.getItem("un");
 
     let img = new Image();
     let text = "人工智能";
@@ -96,4 +96,4 @@ function doit() {
     }
 }
 
-setTimeout(doit, 5100);
+setTimeout(doit, 4100);
