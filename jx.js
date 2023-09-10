@@ -89,10 +89,10 @@ for(let i in unArr){
     }
 }
 
-const bo = document.getElementsByClassName("page-body");
+const bo = document.getElementsByClassName("page-body");//0910
 bo[0].appendChild(div);
 
-const fo = document.getElementsByClassName("page-footer");
+const fo = document.getElementsByClassName("page-footer");//0910
 const me = document.createElement("A");
 me.innerHTML="是我";
 me.style.margin="0.2rem";
