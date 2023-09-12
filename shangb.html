@@ -31,7 +31,8 @@
     当前: <input type="text" class="t" v-model.number="current"/><br>
     大小: <input type="text" class="t" v-model.number="size"/><br>
     金额: <input type="text" class="t" v-model.number="moneyLimitLeft"/> ~
-    <input type="text" class="t" v-model.number="moneyLimitRight"/>
+    <input type="text" class="t" v-model.number="moneyLimitRight"/><br>
+    禁用词:  <input type="text" v-model="ban"/>
     <br><br>
     <button v-on:click="hallList">请求</button>
     &nbsp
@@ -58,9 +59,12 @@
                 this.ks = obj.ks;
                 this.moneyLimitLeft = obj.moneyLimitLeft;
                 this.moneyLimitRight = obj.moneyLimitRight;
+                this.ban=obj.ban;
                 this.sortBy = obj.sortBy;
                 this.size = obj.size;
             }
+
+            // this.banList();
         },
         updated() {
             let that = this;
@@ -68,6 +72,7 @@
                 ks: this.ks,
                 moneyLimitLeft: this.moneyLimitLeft,
                 moneyLimitRight: this.moneyLimitRight,
+                ban: this.ban,
                 sortBy: this.sortBy,
                 size: this.size
             }));
@@ -78,6 +83,7 @@
                 msg: "hello",
                 moneyLimitLeft: 0,
                 moneyLimitRight: 99,
+                ban: '',
                 url: "http://gateway.shangbangzhuan.com/task/hallList",
                 sortBy: 1,
                 current: 1,
@@ -100,6 +106,13 @@
                 wbId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6IjdmNjdkZWMxLTZhYjAtNDQwOC1hYWU2LTc4M2VhYTZmOTk3NSIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjozNTc4MTc0fQ.Hr9_4Y9GB18mkFDoVsRpO8axzgF2qv1lQi36xQdW5f8',
                 realme: 'BRAND:realme,MODEL:RMX2117,VERSION:10,DEVICE:RMX2117CN,BOARD:oppo6853,NETWORK:NETWORK_WIFI',
                 redmi: 'BRAND:Redmi,MODEL:22041216C,VERSION:12,DEVICE:xaga,BOARD:xaga,NETWORK:NETWORK_WIFI'
+            }
+        },
+        computed: {
+            //用不上
+            banList(){
+                const ban = this.ban;
+                return ban.split(",");
             }
         },
         methods: {
@@ -129,7 +142,7 @@
 //console.log(res);
                     that.res = res.data.data.filter(item => {
                         if (!that.ks) if (item.auditFast) return false;
-                        return item.money > that.moneyLimitLeft && item.money < that.moneyLimitRight;
+                        return item.money > that.moneyLimitLeft && item.money < that.moneyLimitRight && that.ban.indexOf(item.name)===-1;
                     });
 
                 })
