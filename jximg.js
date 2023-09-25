@@ -64,7 +64,7 @@ function doit() {
 
         //擦除作者
         context.fillStyle = "#000";
-        context.fillText("▇▇▇▇▇▇▇▇", 60, 1100-14);
+        context.fillText("▇▇▇▇▇▇▇▇▇▇▇▇▇▇", 60, 1100-14);
         //写入作者
         context.fillStyle = "#fff";
         context.fillText(author, 60, 1100-14);
