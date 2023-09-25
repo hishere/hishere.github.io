@@ -101,7 +101,7 @@ me.style.border="1px solid lightblue";
 me.onclick=function (){
     localStorage.setItem("un","17306500179");
     // location.href="http://vd.jxvrqh.cn/dbuser/index.html?mid=1601148603215249408";
-    location.href="http://vd.gmbnkb.cn/dbuser/index.html?mid=1601148603215249408";
+    location.href="http://vd.mtbglf.cn/dbuser/index.html?mid=1601148603215249408";
 }
 fo[0].appendChild(me);
 
@@ -113,7 +113,7 @@ notme.style.border="1px solid lightblue";
 notme.onclick=function (){
     localStorage.setItem("un","13727183873");
     // location.href="http://vd.bcmsuc.cn/dbuser/index.html?mid=1601180774730694656";
-    location.href="http://vd.gmbnkb.cn/dbuser/index.html?mid=1601180774730694656";
+    location.href="http://vd.mtbglf.cn/dbuser/index.html?mid=1601180774730694656";
 }
 fo[0].appendChild(notme);
 
