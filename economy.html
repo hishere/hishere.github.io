@@ -46,6 +46,7 @@
     <h3>丰衣足食计划</h3>
     <a v-text="totalEc()"></a>
     <a @click="saveHis()">记录</a>
+    <a @click="undo()">回撤</a>
     <a contenteditable="true" v-text="mykey" style="width: 5rem;" @input="mykey=$event.target.innerText"></a>
     <a @click="upL()">备份</a>
     <a @click="downL()">恢复</a><br>
@@ -128,6 +129,11 @@
             }
         },
         methods: {
+            undo(){
+                const his = this.his;
+                his.pop();
+                this.his=his;
+            },
             upL() {
                 const mykey = this.mykey;
                 const dataObj = {
