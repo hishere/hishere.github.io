@@ -83,6 +83,12 @@ function doit() {
         up(url);
 
         ct.className="con-tip";
+
+        //识别内容
+        const auList=["搞笑牛牛","爱在风景里","金毛轮胎"];
+        if(auList.includes(author)){
+            author+="❤❤❤❤";
+        }
         ct.innerHTML=author;//赋值由text改为author
 //         const aLink = document.createElement('A');
 //         aLink.style.display = 'none';
