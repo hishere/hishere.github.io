@@ -85,7 +85,7 @@ function doit() {
         ct.className="con-tip";
 
         //识别内容
-        const auList=["搞笑牛牛","爱在风景里","金毛轮胎"];
+        const auList=["搞笑大牛","爱在风景里","金毛轮胎","空空绿植","每日伴读"];
         if(auList.includes(author)){
             author+="❤❤❤❤";
         }
