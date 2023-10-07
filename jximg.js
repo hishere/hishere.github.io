@@ -85,12 +85,18 @@ function doit() {
         ct.className="con-tip";
 
         //识别内容
-        const auList=["搞笑大牛","爱在风景里","金毛轮胎","空空绿植","每日伴读",
-            "解压水果乐园","牛牛聊足球","莉姐家常菜li","怀旧经典88","齐鲁传统文化交流","解压日记"];
-        if(auList.includes(author)){
-            author+="❤❤❤❤";
+        // const auList=["搞笑大牛","爱在风景里","金毛轮胎","空空绿植","每日伴读",
+        //     "解压水果乐园","牛牛聊足球","莉姐家常菜li","怀旧经典88","齐鲁传统文化交流","解压日记"];
+        // if(auList.includes(author)){
+        //     author+="❤❤❤❤";
+        // }
+        //内容缩减一部分吧
+        let shortText=text;
+        if (shortText.length>55){
+            shortText.substring(0,55-1);
         }
-        ct.innerHTML=author;//赋值由text改为author
+
+        ct.innerHTML=text;//赋值由text改为author,又改回了text
 //         const aLink = document.createElement('A');
 //         aLink.style.display = 'none';
 //         aLink.href = url; // base64Url就是你要下载的base64格式图片代码
