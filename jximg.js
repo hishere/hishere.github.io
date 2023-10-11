@@ -59,7 +59,7 @@ function doit() {
         ctx.drawImage(img, 0, 0, img.width, img.height);
         ctx.font = "0.3rem Arial";
         ctx.fillStyle = "#fff";
-        ctx.log(text);
+        console.log(text);
 
         let t1=".";
         let t2=".";
