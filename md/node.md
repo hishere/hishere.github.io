@@ -66,3 +66,50 @@ app.get("/",(req,resp)=>{
     resp.send("gegjej");
 });
 ```
+
+### chromedriver的使用案例
+
+```javascript
+// 下载chromedriver保证和chrome版本一致
+// https://googlechromelabs.github.io/chrome-for-testing/
+// https://chromedriver.storage.googleapis.com/index.html
+
+//桌面图标的目标
+//"C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9527 --user-data-dir="D://chroData"
+
+(async()=>{
+    let unArr = [1234,1235,1236,1237];
+    const webdriver = require('selenium-webdriver');
+    const chrome = require('selenium-webdriver/chrome');
+    const until = webdriver.until;
+    const chromeOptions = new chrome.Options();
+    chromeOptions.debuggerAddress("127.0.0.1:9527");
+    const driver = await new webdriver.Builder().forBrowser("chrome").setChromeOptions(chromeOptions).build();
+
+
+    let start = 0, end = 3;
+
+    function waitMinutes2() {
+        return new Promise(function (resolve, reject) { //做一些异步操作
+            setTimeout(() => {
+                 console.log('等3秒');
+                 resolve("等完了");
+             }, 2800);
+         });
+    }
+    for (let i=start;i<=end;i++){
+        const un = unArr[i];
+        console.log(i+"当前: "+un);
+        await waitMinutes2();
+        const script = "localStorage.setItem('un'," + un + ");";
+        const script2 = "localStorage.setItem('token'," + (i+i) + ");";
+        await driver.executeScript(script+script2);
+        await driver.navigate().refresh();
+        await waitMinutes2();
+    }
+})()
+
+//配合chrome插件User-Agent Switcher and Manager不用每次换agent
+//微信的标识
+//Mozilla/5.0 (Linux; Android 12; 22041216C Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4434 MMWEBSDK/20221206 Mobile Safari/537.36 MMWEBID/992 MicroMessenger/8.0.32.2300(0x28002034) WeChat/arm32 Weixin NetType/WIFI Language/zh_CN ABI/arm64
+```

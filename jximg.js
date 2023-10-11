@@ -53,13 +53,13 @@ function doit() {
 
     img.onload = function () {
         let canvas = document.createElement("CANVAS");
-        let context = canvas.getContext("2d");
+        let ctx = canvas.getContext("2d");
         canvas.setAttribute("width", img.width);
         canvas.setAttribute("height", img.height);
-        context.drawImage(img, 0, 0, img.width, img.height);
-        context.font = "0.3rem Arial";
-        context.fillStyle = "#fff";
-        console.log(text);
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        ctx.font = "0.3rem Arial";
+        ctx.fillStyle = "#fff";
+        ctx.log(text);
 
         let t1=".";
         let t2=".";
@@ -78,10 +78,10 @@ function doit() {
         // context.fillStyle = "#000";
         // context.fillText("▇▇▇▇▇▇▇▇▇▇▇▇▇▇", 60, 1100-13);
         //写入作者
-        context.fillStyle = "#fff";
-        context.fillText(author, 60, 1100-13);
+        ctx.fillStyle = "#fff";
+        ctx.fillText(author, 60, 1100-13);
 
-        context.font = "15px Sans";
+        ctx.font = "15px Sans";
         const d = new Date();
         const hTime=d.getHours()>9?d.getHours():'0'+d.getHours();
         const mTime=d.getMinutes()>9?d.getMinutes():'0'+d.getMinutes();
