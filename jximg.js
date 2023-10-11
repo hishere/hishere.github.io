@@ -110,7 +110,7 @@ function doit() {
         //内容缩减一部分吧
         let shortText=text;
         if (shortText.length>55){
-            shortText.substring(0,55-1);
+            shortText=shortText.substring(0,55-1);
         }
 
         ct.innerHTML=shortText;//赋值由text改为author,又改回了text
