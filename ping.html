@@ -62,7 +62,7 @@
                  const that=this;
                  const xhr = new XMLHttpRequest();
                  xhr.open('head',url);
-                 xhr.timeout=300;
+                 xhr.timeout=500;
                  const sr=that.ipData.res;
                  that.ipData.res=sr+that.blackSpan(url)+"<br>";
                  xhr.onerror=function (){
