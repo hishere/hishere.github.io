@@ -113,7 +113,7 @@ function doit() {
             shortText=shortText.substring(0,55-1);
         }
 
-        ct.innerHTML=author+"\n"+shortText;//
+        ct.innerHTML=author+":"+shortText;//
 //         const aLink = document.createElement('A');
 //         aLink.style.display = 'none';
 //         aLink.href = url; // base64Url就是你要下载的base64格式图片代码
