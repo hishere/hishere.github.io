@@ -155,6 +155,7 @@ scope就是默认勾选的作用域
 ```
 
 5.assets文件夹创建文件xposed_init加入内容,告诉xposed的Hook类是什么.
+new --> folder --> assets folder创建文件夹
 
 ```java
 com.xxx.yyy.MyHook
@@ -164,11 +165,14 @@ com.xxx.yyy.MyHook
 
 ```java
 public class MyHook implements IXposedHookLoadPackage{
-    //实现beforeHookedMethod方法...
+    //实现handleLoadPackage方法...
     if (lpparam.packageName.contains("cn.toside.music")) {
         XposedBridge.log("LX Music Hook成功...");
-       // XposedHelpers.findAndHookMethod()
-        //param.setResult(0);//设置结果将拦截方法不再返回.
+       // XposedHelpers.findAndHookMethod("com.a.b.Cc",lpparam.classloader,"d",new XC_MethodHook(){
+		   //beforeHookedMethod
+		   //param.setResult(0);//设置结果将拦截方法不再返回.
+	   });
+        
         
     }
 }
