@@ -51,6 +51,7 @@ function textForImg(text,author) {
 const body = {taskType: 1, pageSize: 10};
 let mid = 1601180774730694656
 mid=1601612990568857600 //你好,老板
+// mid=1602299724893913088 //新老板
 // mid=1601148603215249408 //jd
 // mid=1606885397969895424 //fs
 // mid=1647277669714362368 //181号选手
@@ -59,6 +60,10 @@ let ua = "5.0 (Linux; Android 13; CSE12 Build/QP1A.199811.020; wv) AppleWebKit/5
 var token = 2;
 var now = 0;
 var host = "http://mvd1322.laihezuo.cn";
+
+const auList=["搞笑大牛","爱在风景里","金毛轮胎","小金毛nn","柯基蛋黄","拉布拉多呀","云享音乐库","丸来丸又去","喝水的鱼鱼啊","空空绿植","每日伴读",
+             "解压水果乐园","牛牛聊足球","莉姐家常菜li","怀旧经典88",
+			 "齐鲁传统文化交流","解压日记","美味在民间"];
 
 //3.提交任务
 function cT(img, token, ua, un,i,stamp,fileSign) {
@@ -134,7 +139,12 @@ function gT(ua, token, un, i) {
                     console.log(i+" : 发生人工处理xxxxxxxxxxxxxx: "+un)
                     return;
                 }
-                console.log(un + " : " + i + title.substring(0, 40))
+				if(auList.indexOf(author)!==-1){
+					//存在作者
+					console.log(i+": "+author+" : ❌");
+					return;
+				}
+                console.log(un + " : " + i +" : "+author+" : "+ title.substring(0, 40))
                 const img64 = textForImg(title,author.substring(0,7));
                 up64(img64, token, ua, un,i);
             }, k);
@@ -178,7 +188,7 @@ let mRange=range(0,9);
 // mRange=range(180,199);
 // mRange=range(200,203);
 
-mRange=[0,1,2,3]
+mRange=[3]
 
 let j = 0;
 for (let i of mRange) {
