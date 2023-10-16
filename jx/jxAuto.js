@@ -63,7 +63,8 @@ var host = "http://mvd1322.laihezuo.cn";
 
 const auList=["搞笑大牛","爱在风景里","金毛轮胎","小金毛nn","柯基蛋黄","拉布拉多呀","云享音乐库","丸来丸又去","喝水的鱼鱼啊","空空绿植","每日伴读",
              "解压水果乐园","牛牛聊足球","莉姐家常菜li","怀旧经典88",
-			 "齐鲁传统文化交流","解压日记","美味在民间"];
+			 "齐鲁传统文化交流","解压日记","美味在民间","折纸匠"];
+let passAu=false;
 
 //3.提交任务
 function cT(img, token, ua, un,i,stamp,fileSign) {
@@ -139,7 +140,7 @@ function gT(ua, token, un, i) {
                     console.log(i+" : 发生人工处理xxxxxxxxxxxxxx: "+un)
                     return;
                 }
-				if(auList.indexOf(author)!==-1){
+				if(auList.indexOf(author)!==-1 && !passAu){
 					//存在作者
 					console.log(i+": "+author+" : ❌");
 					return;
@@ -188,8 +189,9 @@ let mRange=range(0,9);
 // mRange=range(180,199);
 // mRange=range(200,203);
 
-mRange=[3]
+mRange=range(0,3);
 
+passAu=false;
 let j = 0;
 for (let i of mRange) {
     j = j + 3150;

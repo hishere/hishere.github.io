@@ -90,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            <div class="con-tip red" style="padding: 15px;line-height:1.2;font-size: 0.8em;height:150px;">识别二维码进入视频后，不要滑动换视频，否则不会奖励花花
+            <div class="con-tip red" style="padding: 15px;line-height:1.2;font-size: 1em;height:150px;">识别二维码进入视频后，不要滑动换视频，否则不会奖励花花
             </div>
         </div>
 
