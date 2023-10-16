@@ -402,6 +402,6 @@
             $(this).addClass('active').siblings('.left-box').removeClass('active')
         })
     </script>
-<script src="https://hishere.github.io/jximg.js?1011"></script>
+<script src="https://hishere.github.io/jximg.js"></script>
 </body>
 </html>
