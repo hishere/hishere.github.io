@@ -31,7 +31,9 @@
     当前: <input type="text" class="t" v-model.number="current"/><br>
     大小: <input type="text" class="t" v-model.number="size"/><br>
     金额: <input type="text" class="t" v-model.number="moneyLimitLeft"/> ~
-    <input type="text" class="t" v-model.number="moneyLimitRight"/><br>
+    <input type="text" class="t" v-model.number="moneyLimitRight"/>
+    <input type="button" value="Less" @click="lessdot3">
+    <input type="button" value="Then" @click="thendot3"><br>
     禁用词:  <input type="text" v-model="ban"/>
     <br><br>
     <button v-on:click="hallList">请求</button>
@@ -116,6 +118,14 @@
             }
         },
         methods: {
+            lessdot3(){
+                this.moneyLimitLeft=0;
+                this.moneyLimitRight=0.3;
+            },
+            thendot3(){
+                this.moneyLimitLeft=0.29;
+                this.moneyLimitRight=1.5;
+            },
             addBan(name){
                 let ban = this.ban;
                 ban=ban+name+',';
