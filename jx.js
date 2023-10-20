@@ -85,12 +85,14 @@ for(let i in unArr){
     div.appendChild(a);
 
     if(i===100){
-        // div.append(document.createElement("br"));
+        div.append(document.createElement("br"));
     }
 }
 
+
 const bo = document.getElementsByClassName("page-body");//0910
 bo[0].appendChild(div);
+
 
 const fo = document.getElementsByClassName("page-footer");//0910
 const me = document.createElement("A");
