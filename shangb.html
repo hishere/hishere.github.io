@@ -48,7 +48,7 @@
     <ul>
         金额-------项目---------id
         <li v-for="(i,index) in res" :class="{'dcdcdc': index%2==0}">
-            {{ i.money }}元---<span v-on:dblclick="addBan(i.name)">{{ i.name }}</span>---<span v-on:click="detailFs(i.id)">{{ i.id }}</span>
+            {{ i.money }}元---<span v-on:dblclick="addBan(i.name)">{{ i.name.substring(0,10) }}</span>---<span v-on:click="detailFs(i.id)">{{ i.id }}</span>
         </li>
     </ul>
 </div>
