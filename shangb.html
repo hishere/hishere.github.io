@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" style="font-size:20px;">
 <head>
     <meta charset="UTF-8">
     <meta name="Referrer" content="origin">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport"
-          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+          content="width=device-width,initial-scale=0.9,minimum-scale=0.9,maximum-scale=0.9,user-scalable=no">
     <script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
     <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
     <style>
@@ -47,7 +47,7 @@
     <hr>
     <div>
         金额-------项目---------id
-        <div style="margin: 0.5rem;" v-for="(i,index) in res" :class="{'dcdcdc': index%2==0}">
+        <div style="margin: 0.1rem;" v-for="(i,index) in res" :class="{'dcdcdc': index%2==0}">
             {{ i.money }}元---<span v-on:dblclick="addBan(i.name)">{{ i.name.substring(0,10) }}</span>---<span v-on:click="detailFs(i.id)">{{ i.id }}</span>
         </div>
     </div>
