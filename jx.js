@@ -85,7 +85,7 @@ for(let i in unArr){
     div.appendChild(a);
 
     if(i===100){
-        div.append(document.createElement("br"));
+        div.appendChild(document.createElement("br"));
     }
 }
 
