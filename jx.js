@@ -84,9 +84,9 @@ for(let i in unArr){
     };
     div.appendChild(a);
 
-    if(i===100){
-        div.appendChild(document.createElement("BR"));
-    }
+    // if(i===100){
+    //     div.appendChild(document.createElement("BR"));
+    // }
 }
 
 
@@ -103,22 +103,29 @@ me.style.border="1px solid lightblue";
 me.onclick=function (){
     localStorage.setItem("un","17306500179");
     // location.href="http://vd.jxvrqh.cn/dbuser/index.html?mid=1601148603215249408";
-    location.href="http://vd.mtbglf.cn/dbuser/index.html?mid=1601148603215249408";
+    // location.href="http://vd.mtbglf.cn/dbuser/index.html?mid=1601148603215249408";
+    location.reload();
 }
 fo[0].appendChild(me);
 
-const notme = document.createElement("A");
-notme.innerHTML="非我";
-notme.style.margin="0.2rem"
-notme.style.padding="0.2rem";
-notme.style.border="1px solid lightblue";
-notme.onclick=function (){
-    localStorage.setItem("un","13727183873");
-    // location.href="http://vd.bcmsuc.cn/dbuser/index.html?mid=1601180774730694656";
-    location.href="http://vd.mtbglf.cn/dbuser/index.html?mid=1601180774730694656";
-}
-fo[0].appendChild(notme);
+function addPh(name,un){
+    const notme = document.createElement("A");
+    notme.innerHTML=name;
+    notme.style.margin="0.2rem"
+    notme.style.padding="0.2rem";
+    notme.style.border="1px solid lightblue";
+    notme.onclick=function (){
+        localStorage.setItem("un",un);
+        location.reload();
+    }
+    fo[0].appendChild(notme);
 
-if (others.indexOf(un)!==-1){
-    document.title="*"+un+"*";
 }
+addPh("零号","13727183873");
+addPh("壹佰","18234685357");
+addPh("贰佰","18353483702");
+
+
+// if (others.indexOf(un)!==-1){
+//     document.title="*"+un+"*";
+// }
