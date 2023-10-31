@@ -83,8 +83,12 @@ function doit() {
 
         ctx.font = "15px Sans";
         const d = new Date();
+        let mp2=d.getMinutes()+2;
+        if (mp2>57){
+            mp2=59;
+        }
         const hTime=d.getHours()>9?d.getHours():'0'+d.getHours();
-        const mTime=d.getMinutes()>9?d.getMinutes():'0'+d.getMinutes();
+        const mTime=mp2>9?mp2:'0'+mp2;
         ctx.fillText(hTime+":"+mTime, 20, 40);
 
         ctx.fillStyle="#343434"
