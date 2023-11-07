@@ -69,6 +69,7 @@ public class HelloActivity extends Activity {
 }
 ```
 ## 设置Activity为默认
+
 ```xml
 <activity
     android:name=".MainActivity"
