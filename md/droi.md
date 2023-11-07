@@ -68,7 +68,17 @@ public class HelloActivity extends Activity {
     }
 }
 ```
-
+## 设置Activity为默认
+```xml
+<activity
+    android:name=".MainActivity"
+    android:exported="true" >
+    <intent-filter>
+	<action android:name="android.intent.action.MAIN" />
+	<category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+```
 ## 打包
 
 一个空壳结构大小为20kb左右
