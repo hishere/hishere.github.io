@@ -178,3 +178,138 @@ public class MyHook implements IXposedHookLoadPackage{
 }
 ```
 
+## context获取
+
+```java
+void setContext() {
+        final Class<?> clazz = XposedHelpers.findClass("android.app.Instrumentation", null);
+        XposedHelpers.findAndHookMethod(clazz, "callApplicationOnCreate", Application.class
+                , new XC_MethodHook() {
+
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        super.beforeHookedMethod(param);
+                    }
+
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+
+                        if (param.args[0] instanceof Application) {
+                            context = ((Application) param.args[0]).getApplicationContext();
+                        } else {
+                            XposedBridge.log("hook callApplicationOnCreate failed");
+                            return;
+                        }
+                        tos("得到context");//Toast.makeText().show();
+                    }
+                });
+    }
+```
+
+## 按钮hook
+
+thisObject获取本类
+
+args[0]获取第一个参数
+
+```java
+ XposedHelpers.findAndHookMethod(View.class, "setOnClickListener", View.OnClickListener.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                View view = (View) param.thisObject;
+                String s=null;
+                if (view instanceof Button){
+                    Button b= (Button) view;
+                    String text = b.getText().toString();
+
+                    if (text.equals("按钮")){
+                        tos(b.getId());
+                    }
+                }
+            }
+        });
+```
+
+```java
+XposedHelpers.findAndHookMethod(View.class, "setOnClickListener", View.OnClickListener.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+
+                if (param.thisObject instanceof Button) {
+
+                    //正确方式
+                    param.args[0] = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                           tos(LocalTime.now().toString());
+                        }
+                    };
+
+                    //不要这样做,setOnClickListener循环调用死机
+//                    Button b= (Button) param.thisObject;
+//                    b.setOnClickListener(v -> XposedBridge.log("jss888ss"));
+                }
+            }
+        });
+```
+
+
+
+## View Hook
+
+View下有TextView,ImageView,ViewGroup,ProgressBar
+
+TextView下有Button,EditText
+
+## 文本域Hook
+
+前者是静态,即inflate渲染xml后就会执行的,后者是动态,set后执行
+
+```java
+XposedHelpers.findAndHookMethod(TextView.class, "onTextChanged", CharSequence.class, int.class, int.class, int.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                String s = param.args[0].toString();
+                String arg = param.args[0].toString();
+                Object thisObject = param.thisObject;
+                TextView to = (TextView) thisObject;
+                if (s.equals("这是一段文本")) {
+                    to.setText("我是被修改的文本");
+                }
+            }
+        });
+```
+
+```java
+XposedHelpers.findAndHookMethod(TextView.class, "setText", CharSequence.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                param.args[0]="我是被修改的文本";
+            }
+        });
+```
+
+## 方法Hook
+
+```java
+ XposedHelpers.findAndHookMethod("app.nooneb.myapplication.MainActivity", lpparam.classLoader, "fuckMe",
+               String.class, String.class, String.class, new XC_MethodHook() {
+           @Override
+           protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+               Object[] args = param.args;
+               args[0]="窗前";
+               args[1]="明月";
+               args[2]="白光";
+           }
+       });
+```
+
+## 方法
+
+**beforeHookedMethod** 执行前hook,可改参数,返回值(改参数首选)
+
+**afterHookedMethod** 执行后hook,可改返回值(改返回值首选)
+
+replaceHookedMethod 返回值可以直接return,setresult不生效(不知道)
+
