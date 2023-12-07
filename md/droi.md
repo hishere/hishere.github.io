@@ -324,3 +324,65 @@ XposedHelpers.findAndHookMethod(TextView.class, "setText", CharSequence.class, n
 
 replaceHookedMethod 返回值可以直接return,setresult不生效(不知道)
 
+# Compose
+
+## 对齐
+
+采用kotlin开发
+
+@Preview(showBackground = true)为预览
+@Composable 为组件
+
+```kotlin
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+
+    Column {
+        Top()
+        Down()
+        Foot()
+    }
+}
+```
+
+对齐: 水平对齐和垂直对齐
+
+```kotlin
+Column(
+    modifier = Modifier
+        .fillMaxHeight()
+        .fillMaxWidth(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center
+)
+```
+如下fillMaxWidth(0.5f)占据宽度一半,另一半则直接fillMaxWidth()可分配另一半,如果是fillMaxWidth(0.5f)则为分配剩下一半的一半,即宽度得到是1/4
+```kotlin
+modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(0.5f),
+```
+
+## 事件
+
+```kotlin
+Button(onClick = {
+    setBt("level 9")
+}) {
+    Text(text = "按钮")
+}
+```
+
+## 组件
+
+Column
+
+Row
+
+Text
+
+Button
+
+Image
+
+等等
