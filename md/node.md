@@ -113,3 +113,54 @@ app.get("/",(req,resp)=>{
 //微信的标识
 //Mozilla/5.0 (Linux; Android 12; 22041216C Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4434 MMWEBSDK/20221206 Mobile Safari/537.36 MMWEBID/992 MicroMessenger/8.0.32.2300(0x28002034) WeChat/arm32 Weixin NetType/WIFI Language/zh_CN ABI/arm64
 ```
+
+### Whistle
+
+#### 安装
+
+```shell
+npm install -g whistle
+```
+
+允许脚本运行
+
+```shell
+set-ExecutionPolicy RemoteSigned
+
+whisle -V 
+whistle help
+```
+
+#### 启动
+
+whistle支持三种等价的命令whistle、w2、wproxy,默认8899端口
+
+```shell
+w2 start
+w2 start -p 8888
+```
+
+控制台
+
+如果无法访问,是防火墙问题
+
+```shell
+http://local.whistlejs.com/
+http://127.0.0.1:8899
+```
+
+#### 安装证书
+
+为了HTTPS能抓到
+
+win: 控制台->https->download RootCA->下载安装->本地计算机->
+
+所有放入下列存储->受信任颁发机构->完成
+
+手机上到设置安装即可
+
+#### 代理到whistle
+
+win: 设置->网络->使用代理->127.0.0.1端口8899
+
+手机: wlan设置代理

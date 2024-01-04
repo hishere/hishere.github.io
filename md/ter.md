@@ -139,3 +139,36 @@ pkg install openjdk
 ```
 
 # clang/gcc
+
+# Aircack-ng
+
+安装必要的依赖
+
+```shell
+apt install libc++ libnl libpcap libsqlite openssl pcre zlib -y
+```
+
+下载aarch64的包
+
+```shell
+wget https://raw.githubusercontent.com/pitube08642/aircrack-ng-for-termux/main/dists/termux/aircrack-ng/binary-aarch64/aircrack-ng_3_1.7_aarch64.deb
+```
+
+安装
+
+```shell
+dpkg -i aircrack-ng_3_1.7_aarch64.deb
+```
+
+运行
+
+```shell
+aircrack-ng -S
+```
+
+跑包
+
+```shell
+aircrack-ng xxx.cap -w mima.txt
+```
+
