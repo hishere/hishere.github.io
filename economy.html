@@ -156,7 +156,13 @@
                     var his=res.data.his;
                     that.$data.ec=ec;
                     this.$data.his=his;
-                    alert("恢复成功!")
+                    alert("恢复成功!");
+                    var hisStart=his[0];
+var hisEnd=his[his.length-1];
+var per=(hisEnd.v-hisStart.v)/hisStart.v;
+var baseRate=per*100;
+baseRate=baseRate.toFixed(4);
+this.$data.baseRate=baseRate;
                 })
             },
             beforeUnload() {
