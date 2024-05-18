@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        function ajax(options) {
+            options = options || {};
+            const xhr = new XMLHttpRequest();
+            xhr.open(options.type, options.url);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    const status = xhr.status;
+                    if (status >= 200 && status < 300 || status === 304) {
+                        options.success && options.success(xhr.responseText, xhr.responseXML);
+                    } else {
+                        options.error && options.error(status);
+                    }
+                }
+            };
+            return xhr;
+        }
+        // ajax({
+        //     url: "https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/no/one/but/you",
+        //     type: "get",
+        //     success: res => {
+        //         const data=JSON.parse(res)
+        //         console.log(data.data.count1);
+        //     }
+        // }).send()
+        const bd={
+            "url": "/no/one/but/you",
+            "mode": "{\n  data: {\n    count1: 2\n  }\n}",
+            "method": "get",
+            "description": "首页数量",
+            "id": "6648b1be94e3e514624f65ea"
+        }
+        var xhr=ajax({
+            url: "https://mock.presstime.cn/api/mock/update",
+            type: "post",
+            success: function (res){
+                console.log(res);
+            }
+        });
+        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDhiMGE2ZmEyOTQwMTQ3ODQzNzNmOSIsImlhdCI6MTcxNjAzOTg0NiwiZXhwIjoxNzE3MjQ5NDQ2fQ.QTh9yilYpgssRjsSPEEyUF0LvNJ7NAJss-4giP-EMXQ');
+        xhr.setRequestHeader("Content-Type","application/json;charset=UTF-8")
+        xhr.send(JSON.stringify(bd));
+    </script>
+</body>
+</html>

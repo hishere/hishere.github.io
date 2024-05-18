@@ -8,6 +8,7 @@
     <title>Nooneb的导航站</title>
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="no.css">
+    <script src="./mock.js"></script>
 </head>
 <style>
 
@@ -66,6 +67,7 @@
     <a href="https://github.com/hishere/hishere.github.io/blob/main/md/box.md">精通tvbox</a>
     <a href="./sgk/sgk.html">SGK</a>
     <a href="./ffmpeg.html">FFMPEG</a>
+    <a href="./mock.html">Easy Mock</a>
 </span>
 <h3>搜索引擎</h3>
 <span>
@@ -334,44 +336,80 @@
         return xhr;
     }
 
+    // ajax({
+    //     url: "https://getman.cn/mock/no/one/but/you",
+    //     type: "get",
+    //     success: res => {
+    //         count1.innerText = res;
+    //         ajax({
+    //             url: "https://getman.cn/api/mock?route=/no/one/but/you&body=" + (parseInt(res) + 1),
+    //             type: "post"
+    //         }).send()
+    //     }
+    // }).send();
     ajax({
-        url: "https://getman.cn/mock/no/one/but/you",
+        url: "https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/no/one/but/you",
         type: "get",
         success: res => {
-            count1.innerText = res;
-            ajax({
-                url: "https://getman.cn/api/mock?route=/no/one/but/you&body=" + (parseInt(res) + 1),
-                type: "post"
-            }).send()
-        }
-    }).send();
-    ajax({
-        url: "https://a6.qikekeji.com/txt/data/detail?txt_name=usersformysite",
-        type: "get",
-        success: res => {
-            let res1 = JSON.parse(res);
-            let users = JSON.parse(res1.data.txt_content)[0].content;
-            let v_id = res1.data.v_id;
-
+            const data=JSON.parse(res)
+            count1.innerText = data.data.count1;
+            const sendCount1=parseInt(data.data.count1)+1;
+            let sendCount2=parseInt(data.data.usersformysite);
             const isNewUser = localStorage.getItem("isNewUserOfMySite");
             if (isNewUser == null) {//是新用户
                 localStorage.setItem("isNewUserOfMySite", "1");
-                const xhr = ajax({
-                    type: "post",
-                    url: "https://a6.qikekeji.com/txt/data/save",
-                    success: res => {
-                        console.log(res);
-                    }
-                });
-                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                const obj = [{"title": "在线用户", "content": parseInt(users) + 1}];
-                const objStr = JSON.stringify(obj);
-                xhr.send("txt_name=usersformysite&txt_content=" + objStr + "&v_id=" + v_id);
-                users = parseInt(users) + 1;
+                sendCount2=sendCount2+1;
             }
-            count2.innerText = users;
+            count2.innerText=sendCount2;
+
+            const bd={
+                "url": "/no/one/but/you",
+                "mode": "{\n  data: {\n    count1: "+sendCount1+",\n    usersformysite: "+sendCount2+"\n  }\n}",
+                "method": "get",
+                "description": "首页数量",
+                "id": "6648b1be94e3e514624f65ea"
+            };
+            const xhr = ajax({
+                url: "https://mock.presstime.cn/api/mock/update",
+                type: "post",
+                success: function (res) {
+                    console.log(res);
+                }
+            });
+            xhr.setRequestHeader('Authorization', mockAuth);
+            xhr.setRequestHeader("Content-Type","application/json;charset=UTF-8")
+            xhr.send(JSON.stringify(bd));
         }
     }).send();
+
+
+    // ajax({
+    //     url: "https://a6.qikekeji.com/txt/data/detail?txt_name=usersformysite",
+    //     type: "get",
+    //     success: res => {
+    //         let res1 = JSON.parse(res);
+    //         let users = JSON.parse(res1.data.txt_content)[0].content;
+    //         let v_id = res1.data.v_id;
+    //
+    //         const isNewUser = localStorage.getItem("isNewUserOfMySite");
+    //         if (isNewUser == null) {//是新用户
+    //             localStorage.setItem("isNewUserOfMySite", "1");
+    //             const xhr = ajax({
+    //                 type: "post",
+    //                 url: "https://a6.qikekeji.com/txt/data/save",
+    //                 success: res => {
+    //                     console.log(res);
+    //                 }
+    //             });
+    //             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    //             const obj = [{"title": "在线用户", "content": parseInt(users) + 1}];
+    //             const objStr = JSON.stringify(obj);
+    //             xhr.send("txt_name=usersformysite&txt_content=" + objStr + "&v_id=" + v_id);
+    //             users = parseInt(users) + 1;
+    //         }
+    //         count2.innerText = users;
+    //     }
+    // }).send();
 
     function random() {
         // return "?random=" + (Math.random() + '').substring(4, 8);
@@ -413,29 +451,31 @@
         const date = new Date();
         return date.getFullYear() + "年" + (date.getMonth() + 1) + "月" + date.getDate() + "日";
     }
-    function getShortDate(){
+
+    function getShortDate() {
         const date = new Date();
         return (date.getMonth() + 1) + "月" + date.getDate() + "日";
     }
 
-    setTimeout(function (){
+    setTimeout(function () {
         ajax({
-            url: "https://getman.cn/mock/nooneb/history",
+            url: "https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/history",
             type: "get",
             success: res => {
-                const json = JSON.parse(res);
+                const jsonRes=JSON.parse(res);
+                const json = jsonRes.data.his;
                 if (json.length >= 8) json.shift();
 
                 ajax({
                     url: "https://ipapi.co/json",
                     type: "get",
-                    success: res2=>{
-                        const ipRes=JSON.parse(res2)
+                    success: res2 => {
+                        const ipRes = JSON.parse(res2)
                         console.log(ipRes);
-                        const ip=ipRes.ip;
-                        const city=ipRes.city;
-                        const ua= navigator.userAgent;
-                        json.push(getShortDate() + " " + ip+" "+city+" "+ua);
+                        const ip = ipRes.ip;
+                        const city = ipRes.city;
+                        const ua = navigator.userAgent;
+                        json.push(getShortDate() + " " + ip + " " + city + " " + ua);
                         let h = document.getElementById("history");
                         let s = "";
                         for (let i = json.length - 1; i >= 0; i--) {
@@ -443,15 +483,34 @@
                             s += json[i] + "<hr>";
                         }
                         h.innerHTML = s;
-                        ajax({
-                            url: "https://getman.cn/api/mock?route=/nooneb/history&body=" + JSON.stringify(json),
-                            type: "post"
-                        }).send()
+                        // ajax({
+                        //     url: "https://getman.cn/api/mock?route=/nooneb/history&body=" + JSON.stringify(json),
+                        //     type: "post"
+                        // }).send()
+
+                        const sendJson=JSON.stringify(json);
+                        const bd={
+                            "url": "/history",
+                            "mode": "{\n  \"data\": {\n    his: "+sendJson+"\n  }\n}",
+                            "method": "get",
+                            "description": "主页历史",
+                            "id": "6648b9d7fa29401478437cbf"
+                        }
+                        const xhr = ajax({
+                            url: "https://mock.presstime.cn/api/mock/update",
+                            type: "post",
+                            success: function (res) {
+                                console.log(res);
+                            }
+                        });
+                        xhr.setRequestHeader('Authorization', mockAuth);
+                        xhr.setRequestHeader("Content-Type","application/json;charset=UTF-8")
+                        xhr.send(JSON.stringify(bd));
                     }
                 }).send()
             }
         }).send();
-    },5000)
+    }, 5000)
 </script>
 </body>
 </html>
