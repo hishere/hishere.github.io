@@ -137,6 +137,7 @@
             },
             upL() {
                 const mykey = this.mykey;
+                console.log("k:"+mykey);
                 const dataObj = {
                     ec: this.ec,
                     his: this.his
@@ -144,11 +145,11 @@
                 const jStr = JSON.stringify(dataObj)
 
                 let id="6648c7ec94e3e514624f7876";
-                if (mykey==="mykey"){
+                if (mykey=="mykey"){
 
-                }else if (mykey==="oneb0"){
+                }else if (mykey=="oneb0"){
                     id="6648c52b94e3e514624f7713"
-                }else if (mykey==="oneb1"){
+                }else if (mykey=="oneb1"){
                     id="6648c812fa29401478438770";
                 }
                 let bd = {
