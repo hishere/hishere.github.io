@@ -130,10 +130,10 @@
             }
         },
         methods: {
-            undo(){
+            undo() {
                 const his = this.his;
                 his.pop();
-                this.his=his;
+                this.his = his;
             },
             upL() {
                 const mykey = this.mykey;
@@ -143,9 +143,9 @@
                 };
                 const jStr = JSON.stringify(dataObj)
 
-                let bd= {
+                let bd = {
                     "url": "/mykey",
-                    "mode": "{\n  \"data\": "+jStr+"\n}",
+                    "mode": "{\n  \"data\": " + jStr + "\n}",
                     "method": "get",
                     "description": "mykey",
                     "id": "6648c7ec94e3e514624f7876"
@@ -154,28 +154,29 @@
                     bd,
                     {
                         // params:{},
-                        headers: {"Authorization": mockAuth,"Content-Type":"application/json;charset=UTF-8"}
-                    }).then(res=>{
-                    if (res.status==200){
+                        headers: {"Authorization": mockAuth, "Content-Type": "application/json;charset=UTF-8"}
+                    }).then(res => {
+                    if (res.status == 200) {
                         alert("备份成功!");
                     }
                 })
             },
             downL() {
                 const mykey = this.mykey;
-                const that=this;
-                axios.get("https://getman.cn/mock/mykey/"+mykey).then(res=>{
-                    var ec=res.data.ec;
-                    var his=res.data.his;
-                    that.$data.ec=ec;
-                    that.$data.his=his;
+                const that = this;
+                axios.get("https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/" + mykey).then(ress => {
+                    const jsonRes=JSON.parse(ress);
+                    const ec = jsonRes.data.ec;
+                    const his = jsonRes.data.his;
+                    that.$data.ec = ec;
+                    that.$data.his = his;
                     alert("恢复成功!");
-                    var hisStart=his[0];
-var hisEnd=his[his.length-1];
-var per=(hisEnd.v-hisStart.v)/hisStart.v;
-var baseRate=per*100;
-baseRate=baseRate.toFixed(4);
-this.$data.baseRate=baseRate;
+                    const hisStart = his[0];
+                    const hisEnd = his[his.length - 1];
+                    const per = (hisEnd.v - hisStart.v) / hisStart.v;
+                    let baseRate = per * 100;
+                    baseRate = baseRate.toFixed(4);
+                    this.$data.baseRate = baseRate;
                 })
             },
             beforeUnload() {
