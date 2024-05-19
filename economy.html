@@ -165,7 +165,7 @@
                 const mykey = this.mykey;
                 const that = this;
                 axios.get("https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/" + mykey).then(ress => {
-                    const jsonRes=JSON.parse(ress);
+                    const jsonRes=ress;
                     const ec = jsonRes.data.ec;
                     const his = jsonRes.data.his;
                     that.$data.ec = ec;
