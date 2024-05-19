@@ -142,7 +142,19 @@
                 };
                 const jStr = JSON.stringify(dataObj)
 
-                axios.post("https://getman.cn/api/mock?route=/mykey/"+mykey+"&body="+jStr).then(res=>{
+                let bd= {
+                    "url": "/mykey",
+                    "mode": "{\n  \"data\": "+jStr+"\n}",
+                    "method": "get",
+                    "description": "mykey",
+                    "id": "6648c7ec94e3e514624f7876"
+                };
+                axios.post("https://mock.presstime.cn/api/mock/update",
+                    bd,
+                    {
+                        // params:{},
+                        headers: {"Authorization": mockAuth,"Content-Type":"application/json;charset=UTF-8"}
+                    }).then(res=>{
                     if (res.status==200){
                         alert("备份成功!");
                     }
