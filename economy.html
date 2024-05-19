@@ -143,12 +143,20 @@
                 };
                 const jStr = JSON.stringify(dataObj)
 
+                let id="6648c7ec94e3e514624f7876";
+                if (mykey==="mykey"){
+
+                }else if (mykey==="oneb0"){
+                    id="6648c52b94e3e514624f7713"
+                }else if (mykey==="oneb1"){
+                    id="6648c812fa29401478438770";
+                }
                 let bd = {
                     "url": "/"+mykey,
                     "mode": "{\n  \"data\": " + jStr + "\n}",
                     "method": "get",
                     "description": mykey,
-                    "id": "6648c7ec94e3e514624f7876"
+                    "id": id
                 };
                 axios.post("https://mock.presstime.cn/api/mock/update",
                     bd,
