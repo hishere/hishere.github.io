@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>丰衣足食计划</title>
 
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta http-equiv="content-language" content="*">
 
 
     <link rel="shortcut icon" href="favicon.ico"/>
@@ -144,10 +144,10 @@
                 const jStr = JSON.stringify(dataObj)
 
                 let bd = {
-                    "url": "/mykey",
+                    "url": "/"+mykey,
                     "mode": "{\n  \"data\": " + jStr + "\n}",
                     "method": "get",
-                    "description": "mykey",
+                    "description": mykey,
                     "id": "6648c7ec94e3e514624f7876"
                 };
                 axios.post("https://mock.presstime.cn/api/mock/update",
@@ -165,7 +165,7 @@
                 const mykey = this.mykey;
                 const that = this;
                 axios.get("https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/" + mykey).then(ress => {
-                    const jsonRes=ress;
+                    const jsonRes=ress.data;
                     console.log(jsonRes);
                     const ec = jsonRes.data.ec;
                     const his = jsonRes.data.his;
