@@ -24,9 +24,6 @@ function gToken(){
     });
 }
 
-
-
-
 //获取时间,超过一天就去拿token
 if (localStorage.getItem("mockAuth")){
     const mockAuth=localStorage.getItem("mockAuth");
