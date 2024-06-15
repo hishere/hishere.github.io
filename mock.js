@@ -1,5 +1,5 @@
 
-let mockAuth="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDhiMGE2ZmEyOTQwMTQ3ODQzNzNmOSIsImlhdCI6MTcxNjAzOTg0NiwiZXhwIjoxNzE3MjQ5NDQ2fQ.QTh9yilYpgssRjsSPEEyUF0LvNJ7NAJss-4giP-EMXQ";
+let mockAuth="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDhiMGE2ZmEyOTQwMTQ3ODQzNzNmOSIsImlhdCI6MTcxODAwMjI4OCwiZXhwIjoxNzE5MjExODg4fQ.T2f-XqpYNrKX0FVEBznaykTL3jQrcNfMM7lJTVM_asQ";
 
 if(typeof(exports) != "undefined"){
     exports.mockAuth= mockAuth;
