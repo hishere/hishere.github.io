@@ -35,7 +35,7 @@ if (localStorage.getItem("mockAuth")){
     gToken()
 }
 
-let mockAuth=localStorage.getItem("mockTok");
+let mockAuth="Bearer "+localStorage.getItem("mockTok");
 
 if(typeof(exports) != "undefined"){
     exports.mockAuth= mockAuth;
