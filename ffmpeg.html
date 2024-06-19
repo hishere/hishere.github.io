@@ -13,5 +13,8 @@
     <pre>sudo ffmpeg -i /storage/emulated/0/ss8.mp4 -i /storage/emulated/0/ss.ass -c copy -c:s mov_text /storage/emulated/0/ss8ass.mp4</pre>
     <h2>大小质量问题</h2>
     <pre>-b:v 5000k</pre>
+	<h2>裁剪画面</h2>
+	<div>宽:高:x:y</div>
+	<pre>ffmpeg -i a.mp4 -vf crop=200:400:0:120 -threads 4 -preset ultrafast -strict -2 b.mp4</pre>
     </body>
 </html>
