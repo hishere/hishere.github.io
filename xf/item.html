@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        ousu{
+            display: inline-block;
+            color: gray;
+        }
+        jisu{
+            display: inline-block;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    id标识m_iItemID: <br>
+    <textarea name="iid" placeholder="100102,100103" id="iid" cols="30" rows="10"></textarea><br>
+    数量m_iBuyAmount: <br>
+    <input type="text" value="1" id="num"><br><br>
+    <input type="file" id="upF">
+    <hr>
+    <div>
+        <span class="addd" data-iid="100201">100201不明</span><br>
+        <span class="addd" data-iid="100202">100202不明</span><br>
+        <span class="addd" data-iid="100203">100203不明</span><br>
+    </div>
+
+<script>
+
+    const upF = document.getElementById("upF");
+
+    let iidAr=[100102];
+    let v=1;
+
+    const iid = document.getElementById("iid");
+    iid.onchange=function (e){
+        iidAr=iid.value.split(",");
+        console.log(iidAr);
+    }
+    const num = document.getElementById("num");
+    num.onchange=function (e){
+        v=num.value;
+    }
+    function download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    upF.onchange = function () {
+        var res = document.getElementById("upF").files[0];
+        if (res) {
+            var red = new FileReader();
+            red.readAsText(res, "UTF-8");
+            red.onload = function (e) {
+                const dat = this.result;
+
+                var star = "1100010,\"m_iStoreNamaID\":400009,\"m_strStroreIconID\":\"malltop-01\",\"m_iStoreType\":0,\"m_StoreItemNodeList\":";
+                var end = "},{\"m_iStoreID\":1100011";
+                var ma = dat.match(/1100010.*1100011/).toString();
+                var ma1 = ma.replace(star, "");
+                var ma2 = ma1.replace(end, "");
+                var jma=JSON.parse(ma2);
+
+
+                let i=0;
+                for (let i in iidAr){
+                    i=i+1;
+                    let obj = {
+                        m_iAddBackpack: 0,
+                        m_iBuyAmount: v+1,
+                        m_iCheckAch: 0,
+                        m_iItemID: 100102,
+                        m_iRandom: 0,
+                        m_iRandomValue: 0,
+                        m_iResetAmount: 0,
+                    }
+                    obj.m_iItemID=parseInt(iidAr[i]);
+                    jma.push(obj);
+                }
+                console.log(jma);
+
+                const jmaS=JSON.stringify(jma);
+                // console.log(jmaS);
+                const datRp=dat.replace(/1100010.*1100011/,star+jmaS+end)
+                // console.log(datRp);
+
+                // setTimeout(function (){
+                download("SaveX.Save",datRp.toString())
+                // },3000);
+
+            }
+        }
+
+    }
+</script>
+</body>
+</html>
