@@ -85,6 +85,8 @@
 </span>
 <h3>影视</h3>
 <span>
+    <a href="https://www.dushe04.com">DS</a>
+    <a href="https://www.keke1.app">可可</a>
     <a href="http://ffzy1.tv/">非凡资源</a>
 	<a href="https://www.xmdyw.net">夏沫电影</a>
     <a href="https://www.dmys1.com/">大米星球(快)</a>
@@ -443,10 +445,24 @@
         }
         time.innerText = h + ":" + m + ":" + s
     }, 2000);
+
+    const hostname=window.location.hostname
+    let hostFlag=0;
+    if (hostname.indexOf("github")!==-1){
+        hostFlag=1;
+    }
+    if (hostname.indexOf("gitlab")!==-1){
+        hostFlag=2;
+    }
+    //a标签追加尾巴,github变gitlab
     const as = document.getElementsByTagName("a");
     const randomTmp = random();
     for (let i = 0, len = as.length; i < len; i++) {
-        as.item(i).href += randomTmp;
+        if (hostFlag===2){
+            as.item(i).href = as.item(i).href.replaceAll("github", "gitlab") + randomTmp;
+        }else {
+            as.item(i).href = as.item(i).href + randomTmp;
+        }
     }
 
     function getDate() {
