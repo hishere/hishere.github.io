@@ -5,7 +5,7 @@ name: 'to git lab'
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   job1:
