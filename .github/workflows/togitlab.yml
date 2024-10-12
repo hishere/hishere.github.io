@@ -10,14 +10,14 @@ on:
 jobs:
   job1:
     name: check repository
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: 'show file list'
         run: ls -a
   job2:
     name: upload to gitlab
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: i can fly!
         uses: Yikun/hub-mirror-action@v1.1
