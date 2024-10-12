@@ -9,9 +9,19 @@ on:
 
 jobs:
   job1:
-    name: job one
+    name: check repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: 'show file list'
         run: ls -a
+  job2:
+    name: upload to gitlab
+    runs-on: ubuntu-latest
+    steps:
+      - name: i can fly!
+        uses: action/checkout@v4
+        with:
+          src: github/hishere
+          dst: gitlab/Nooneb
+        
