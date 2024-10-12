@@ -24,4 +24,12 @@ jobs:
         with:
           src: github/hishere
           dst: gitlab/Nooneb
+          dst_key: ${{secrets.LAB_PRIVATE_KEY}}
+          dst_token: ${{LAB_TOKEN}}
+          account_type: user
+          clone_style: "ssh"
+          debug: true
+          force_update: true
+          static_list: "hishere.github.io"
+          timeout: '300s'
         
