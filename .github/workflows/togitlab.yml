@@ -19,13 +19,14 @@ jobs:
     name: upload to gitlab
     runs-on: ubuntu-latest
     steps:
+      uses: action/checkout@v4
       - name: i can fly!
-        uses: action/checkout@v4
+        uses: Yikun/hub-mirror-action@latest
         with:
           src: github/hishere
           dst: gitlab/Nooneb
           dst_key: ${{secrets.LAB_PRIVATE_KEY}}
-          dst_token: ${{LAB_TOKEN}}
+          dst_token: ${{secrets.LAB_TOKEN}}
           account_type: user
           clone_style: "ssh"
           debug: true
