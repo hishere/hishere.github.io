@@ -19,7 +19,6 @@ jobs:
     name: upload to gitlab
     runs-on: ubuntu-latest
     steps:
-      uses: action/checkout@v4
       - name: i can fly!
         uses: Yikun/hub-mirror-action@latest
         with:
