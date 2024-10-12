@@ -28,7 +28,7 @@ jobs:
           dst_key: ${{secrets.LAB_PRIVATE_KEY}}
           dst_token: ${{secrets.LAB_TOKEN}}
           account_type: user
-          clone_style: "ssh"
+          clone_style: "https"
           debug: true
           force_update: true
           static_list: "hishere.github.io"
