@@ -17,19 +17,14 @@ jobs:
         run: ls -a
   job2:
     name: upload to gitlab
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - name: i can fly!
-        uses: Yikun/hub-mirror-action@v1.2
+      - uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+      - uses: action-pack/gitlab-sync@v3
         with:
-          src: github/hishere
-          dst: gitlab/hishere
-          dst_key: ${{secrets.LAB_PRIVATE_KEY}}
-          dst_token: ${{secrets.LAB_TOKEN}}
-          account_type: user
-          clone_style: "https"
-          debug: true
-          force_update: true
-          static_list: "hishere.github.io"
-          timeout: '300s'
+          username: ${{github.actor}}
+          url: https://gitlab.com/${{github.repository}}.git
+          token: ${{secrets.LAB_TOKEN}}
         
