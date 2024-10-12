@@ -24,7 +24,7 @@ jobs:
         uses: Yikun/hub-mirror-action@master
         with:
           src: github/hishere
-          dst: gitlab/hishere
+          dst: gitlab/Nooneb
           dst_key: ${{secrets.LAB_PRIVATE_KEY}}
           dst_token: ${{secrets.LAB_TOKEN}}
           account_type: user
