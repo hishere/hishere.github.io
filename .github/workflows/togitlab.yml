@@ -20,13 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: i can fly!
-        uses: Yikun/hub-mirror-action@master
+        uses: Yikun/hub-mirror-action@v1.1
         with:
           src: github/hishere
           dst: gitlab/hishere
           dst_key: ${{secrets.LAB_PRIVATE_KEY}}
           dst_token: ${{secrets.LAB_TOKEN}}
-          account_type: user
           clone_style: "https"
           debug: true
           force_update: true
