@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: 'show file list'
+      - name: 'show file lists'
         run: ls -a
   job2:
     name: upload to gitlab
