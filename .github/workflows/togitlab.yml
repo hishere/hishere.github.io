@@ -27,4 +27,3 @@ jobs:
           username: ${{github.actor}}
           url: https://gitlab.com/${{github.repository}}.git
           token: ${{secrets.LAB_TOKEN}}
-        
