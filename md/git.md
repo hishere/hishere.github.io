@@ -1,0 +1,279 @@
+# Github Action
+
+在项目根目录创建.github/workflows/xxx.yml即可
+
+## 用途
+
+在项目push后做一些操作,或者定时器按时执行一些东西
+
+## yml结构
+
+如下最重要的当然是jobs
+actions/checkout@v4是得到项目所有文件的能力
+
+```yml
+name: '3 body sign'
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow
+  schedule:
+    - cron: '* 2 * * *'
+     
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'wb sign'
+        run: bash ./wb.sh
+      - name: 'fs sign'
+        run: bash ./fs.sh
+      - name: 'jd sign'
+        run: bash ./jd.sh
+```
+
+## hello world
+
+```yml
+name: 'say hello'
+on: push
+jobs:
+  myjob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'hello'
+        run: echo 'hello world'
+```
+
+## on
+
+只要push时就执行
+
+```yml
+on: [ push ]
+```
+
+或者可以更简便
+
+```yml
+on: push
+```
+
+push和pull一起的情况
+
+```yml
+on: [push,pull_request]
+```
+
+main分支push时执行
+
+```yml
+on:
+  push:
+    branches:
+      - main
+```
+
+多个分支的情况,dev分支不会触发,如果dev分支没有yml的话
+
+```yml
+on:
+  push:
+    branches: [dev,main]
+```
+
+另一个比较常用的事件是定时器
+
+### schedule和cron语法
+
+案例
+
+```yml
+on:
+  schedule:
+    - cron: '30 5 * * 1,3'
+    - cron: '30 5 * * 2,4'
+```
+
+五个通配符星星
+
+分 0到59
+
+时 0到23
+
+日 1到31
+
+月 1到12
+
+周 0到6
+
+案例语法
+
+```sh
+每天每个小时的15分运行,相当于每小时运行一次,一天能运行24次
+15 * * * *
+
+每天每个小时的15分和20分运行,相当于每小时运行两次,一天能运行48次
+15,20 * * * *
+
+在每天的第4和第5个小时的第2和第10分运行,一天能运行4次,即4:02,4:10,5:02,5:10
+2,10 4,5 * * *
+
+在每天的第4和5和6小时的30分运行,一天能运行3次
+30 4-6 * * *
+
+在每天的每个小时中，从第20分钟到59分钟每隔15分钟运行一次（即20分、35分和50分运行）
+20/15 * * * *
+```
+
+实战
+
+```sh
+每天凌晨1点30分运行一次
+30 1 * * *
+
+每分钟运行一次
+0/1 * * * *
+
+每15分钟运行一次,(即0 15 30 45,一小时能运行刚好4次)
+0/15 * * * *
+```
+
+为什么只有5项?
+
+因为年是可以省略的
+
+## job
+
+多个job
+
+```yml
+jobs:
+  a:
+    name: a job
+  b:
+    name: b job
+```
+
+运行的顺序
+
+以下,job2依赖于job1,job3依赖于job1,2,即job1,2,3是依次执行的
+
+```yml
+jobs:
+  job1:
+  job2:
+    needs: job1
+  job3:
+    needs: [job1,job2]
+```
+
+## runs-on
+
+```yml
+runs-on: ubuntu-latest
+```
+
+环境
+
+ubuntu-latest,ubuntu-18.04
+
+windows-latest,windows-2019
+
+macOS-latest,macOS-10.14
+
+## steps
+
+每个steps包含name,run,env
+
+```yml
+name: 'do some test'
+on: 
+  push:
+    branches: [main]
+jobs:
+  myjob:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'xxxx'
+      - run: echo 'yyyy'
+```
+
+```yml
+steps:
+  - name: xxx
+    run: 
+```
+
+## 变量
+
+```yml
+name: 'do some test'
+on: 
+  push:
+    branches: [main]
+jobs:
+  myjob:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          HUB: ${{toJSON(github)}}
+        run: echo $HUB
+```
+
+常用
+
+github.repository
+
+github.actor
+
+## 函数
+
+contains(search,item)
+
+startsWith(src,value)
+
+endsWith
+
+format
+
+join
+
+toJSON
+
+fromJSON
+
+hashFiles
+
+状态检查函数
+
+success()
+
+always()
+
+cancelled()
+
+## 条件
+
+```yml
+jobs:
+  myjbo:
+    if: xxx==yyy
+    runs:on:
+    steps:
+```
+
+## uses和with
+
+只有checkout才能访问仓库文件
+
+```yml
+steps:
+  - uses: actions/checkout@v4
+    with: 
+      fetch-depth: 0
+    run: ls -a
+```
+

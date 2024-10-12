@@ -172,3 +172,25 @@ aircrack-ng -S
 aircrack-ng xxx.cap -w mima.txt
 ```
 
+# 网速限制
+
+添加限制
+
+```sh
+sudo tc qdisc add dev wlan0 root tbf rate 72Kbi latency 50ms burst 15kb
+```
+
+解除限制
+
+```sh
+sudo tc qdisc del dev wlan0 root
+```
+
+# FFMPEG
+
+安装ffmpeg
+pkg install ffmpeg
+pkg install libexpat
+pkg install openssl1.1-tool
+缺什么库就装什么库
+
