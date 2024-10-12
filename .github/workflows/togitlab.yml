@@ -10,7 +10,7 @@ on:
 jobs:
   job1:
     name: check repository
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
       - name: 'show file list'
@@ -26,6 +26,7 @@ jobs:
           dst: gitlab/hishere
           dst_key: ${{secrets.LAB_PRIVATE_KEY}}
           dst_token: ${{secrets.LAB_TOKEN}}
+          account_type: user
           clone_style: "https"
           debug: true
           force_update: true
