@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: i can fly!
-        uses: Yikun/hub-mirror-action@latest
+        uses: Yikun/hub-mirror-action@master
         with:
           src: github/hishere
           dst: gitlab/Nooneb
