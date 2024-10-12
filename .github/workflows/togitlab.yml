@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: i can fly!
-        uses: Yikun/hub-mirror-action@v1.1
+        uses: Yikun/hub-mirror-action@v1.2
         with:
           src: github/hishere
           dst: gitlab/hishere
