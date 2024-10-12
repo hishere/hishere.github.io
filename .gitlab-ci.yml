@@ -1,4 +1,4 @@
-pages:
+pagess:
     stage: deploy
     image: node:18
     script:
