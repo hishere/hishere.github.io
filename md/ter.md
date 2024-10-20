@@ -194,3 +194,44 @@ pkg install libexpat
 pkg install openssl1.1-tool
 缺什么库就装什么库
 
+# openssl安装
+
+```sh
+安装openssl
+pkg install openssl1.1-tool
+添加环境变量
+echo "export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib/openssl-1.1" >> ~/.bashrc
+使当前shell生效
+export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib/openssl-1.1
+```
+
+# nginx
+
+```sh
+安装nginx
+pkg install nginx
+启动nginx
+nginx
+停止nginx
+nginx -s stop
+设置nginx自启动
+nano -w  ~/.bashrc
+粘贴内容
+if pgrep -x "nginx" >/dev/null
+  then
+    echo "nginx运行中..."
+  else
+    nginx >/dev/null
+    echo "nginx已开启..."
+fi
+
+保存Ctrl+o退出Ctrl+x
+
+nginx目录位置
+/usr/share/nginx/html
+进入
+cd $PREFIX/share/nginx/html
+nginx配置文件位置
+$PREFIX/etc/nginx/nginx.conf
+```
+
