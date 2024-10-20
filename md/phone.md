@@ -183,22 +183,33 @@ $, (, ), *, +, ., [, ], ?, \, ^, {, }, |
 创维电视远程安装APP
 0.开启adb调试
 关于界面上上下下左右左右进入工厂模式
+
 1.挂载存储
 termux-setup-storage
+
 2.安装adb工具
 pkg install android-tools
+
 3.连接(同一局域网)
 adb connect 192.168.xxx.xxx
+
 4.安装
 adb install storage/download/xxx.apk
 
 其它
+
 查看已连接 adb devices
+
 停止 adb kill-server
+
 断连 adb disconnect ip
+
 列举包 adb shell pm list packages
+
 禁用 adb shell pm disable --user 0 xxx
+
 推送 adb push xxx yyy
+
 拉取 adb pull yyy xxx
 
 # appops权限表
