@@ -43,6 +43,14 @@ shamiko似乎没用了
 4.目标手机进入fastboot，此时fastboot devices可以显示设备
 5.如果fastboot刷入提示permission denied，img文件位置/storage/emulated/0/xxx
 
+# termux-adb工具
+安装
+``` shell
+pkg upgrade
+curl -s https://raw.githubusercontent.com/nohajc/termux-adb/master/install.sh | bash
+```
+安装完成后即可使用termux-adb devices显示列表
+
 # apatch系统分区读写
 
 apatch系统分区读写
