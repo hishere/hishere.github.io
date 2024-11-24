@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>中国象棋融合版</title>
+    <script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+  <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas ref="cv" id="cv">
+
+    </canvas>
+  </div>
+  <script>
+    const obj = {
+      data() {
+        return {
+          base_po: 40,
+          msg: "saaa",
+          qizi: [
+            {name: "车",posX:0,posY:0,color: 'black'},
+            {name: "马车",posX:0,posY:0,color: 'black'}
+          ]
+        }
+      },
+      methods: {
+        gezi(cvCtx){
+          cvCtx.strokeStyle="rgb(93,82,121)";
+          // cvCtx.strokeRect(10,10,460,460);
+          // cvCtx.stroke();//四方
+
+          const base_po = this.base_po;
+          for (let i=0; i<10; i++){
+            const y = base_po + 50 * i;
+            cvCtx.moveTo(base_po,y);
+            cvCtx.lineTo(400+base_po,y)
+            cvCtx.stroke();
+            // 10,60,110,160,210,260,310,360,410,460
+          }
+          for (let i=0; i<9; i++){
+            const x = base_po + 50 * i;
+            cvCtx.moveTo(x,base_po);
+            cvCtx.lineTo(x,450+base_po)
+            cvCtx.stroke();
+            // 40,90,140,190,240,290,340,390,440,490
+          }
+          cvCtx.fillStyle='white';
+          //xy,wh,楚河线
+          cvCtx.fillRect(base_po+1,201+base_po,358+base_po,base_po+8);
+
+
+          // cvCtx.beginPath();
+          // cvCtx.fillStyle='black';
+          // cvCtx.arc(90,140,5,0,2*Math.PI)
+          // // cvCtx.fill();
+          // cvCtx.arc(390,140,5,0,2*Math.PI)
+          // cvCtx.fill();
+
+          // cvCtx.beginPath();
+          // for (let i=0; i<10; i+=2){
+          //   cvCtx.arc(base_po+i*50,190,5,0,2*Math.PI)
+          // }
+          // cvCtx.fill();
+
+          // cvCtx.beginPath();
+          // cvCtx.arc(90,390,5,0,2*Math.PI)
+          // // cvCtx.fill();
+          // cvCtx.arc(390,390,5,0,2*Math.PI)
+          // cvCtx.fill();
+
+          // cvCtx.beginPath();
+          // for (let i=0; i<10; i+=2){
+          //   cvCtx.arc(base_po+i*50,340,5,0,2*Math.PI)
+          // }
+          // cvCtx.fill();
+
+        },
+        xuxian(cvCtx){
+          const base_po=this.base_po;
+          cvCtx.beginPath();
+          cvCtx.setLineDash([5])
+          //九宫虚线
+          cvCtx.moveTo(190,base_po);
+          cvCtx.lineTo(290,140);
+          cvCtx.stroke();
+          cvCtx.moveTo(190,390);
+          cvCtx.lineTo(290,490);
+          cvCtx.stroke();
+          cvCtx.moveTo(290,base_po);
+          cvCtx.lineTo(190,140);
+          cvCtx.stroke();
+          cvCtx.moveTo(290,390);
+          cvCtx.lineTo(190,490);
+          cvCtx.stroke();
+        },
+        shizi(cvCtx){
+          cvCtx.beginPath();
+          cvCtx.setLineDash([1])
+          this.shizi4(cvCtx,1,2);
+          this.shizi4(cvCtx,7,2);
+          this.shiziUR(cvCtx,0,3);
+          this.shiziDR(cvCtx,0,3);
+          this.shizi4(cvCtx,2,3)
+          this.shizi4(cvCtx,4,3)
+          this.shizi4(cvCtx,6,3)
+          this.shiziUL(cvCtx,8,3)
+          this.shiziDL(cvCtx,8,3)
+
+          this.shizi4(cvCtx,1,7);
+          this.shizi4(cvCtx,7,7);
+          this.shiziUR(cvCtx,0,6);
+          this.shiziDR(cvCtx,0,6);
+          this.shizi4(cvCtx,2,6)
+          this.shizi4(cvCtx,4,6)
+          this.shizi4(cvCtx,6,6)
+          this.shiziUL(cvCtx,8,6)
+          this.shiziDL(cvCtx,8,6)
+        },
+        shiziUR(cvCtx,aa,bb){
+          let a=aa*50+40;
+          let b=bb*50+40;
+          cvCtx.moveTo(a+5,b-15);
+          cvCtx.lineTo(a+5,b-5);
+          cvCtx.lineTo(a+15,b-5)
+          cvCtx.stroke();
+        },
+        shiziUL(cvCtx,aa,bb){
+          let a=aa*50+40;
+          let b=bb*50+40;
+          cvCtx.moveTo(a-5,b-15);
+          cvCtx.lineTo(a-5,b-5);
+          cvCtx.lineTo(a-15,b-5)
+          cvCtx.stroke();
+        },
+        shiziDL(cvCtx,aa,bb){
+          let a=aa*50+40;
+          let b=bb*50+40;
+          cvCtx.moveTo(a-5,b+15);
+          cvCtx.lineTo(a-5,b+5);
+          cvCtx.lineTo(a-15,b+5)
+          cvCtx.stroke();
+        },
+        shiziDR(cvCtx,aa,bb){
+          let a=aa*50+40;
+          let b=bb*50+40;
+          cvCtx.moveTo(a+5,b+15);
+          cvCtx.lineTo(a+5,b+5);
+          cvCtx.lineTo(a+15,b+5)
+          cvCtx.stroke();
+        },
+        shizi4(cvCtx,aa,bb){
+          this.shiziUL(cvCtx,aa,bb);
+          this.shiziUR(cvCtx,aa,bb);
+          this.shiziDL(cvCtx,aa,bb);
+          this.shiziDR(cvCtx,aa,bb);
+        },
+        doQizi(cvCtx){
+
+          const qizi0=this.qizi[1];
+          cvCtx.fillStyle= qizi0.color;
+          cvCtx.arc(40,40,20,0,2*Math.PI);
+          cvCtx.fill();
+          cvCtx.fillStyle="white";
+          cvCtx.fillText(qizi0.name,35,45)
+        }
+
+      },
+      mounted(){
+        // 40,90,140,190,240,290,340,390,440,490
+        const cv = this.$refs.cv;
+        cv.width='500';
+        cv.height='500';
+        const cvCtx = cv.getContext("2d");
+
+        this.gezi(cvCtx);
+        this.xuxian(cvCtx);
+        this.shizi(cvCtx);
+        cvCtx.beginPath();
+
+        //设置楚河
+        cvCtx.font='20px bold';
+        cvCtx.fillStyle="gray";
+        cvCtx.fillText("融合象棋",200,275)
+
+        this.doQizi(cvCtx);
+
+
+      }
+    };
+    const app = Vue.createApp(obj);
+    app.mount("#app");
+  </script>
+</body>
+</html>
