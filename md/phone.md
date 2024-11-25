@@ -20,6 +20,12 @@ Note11Tpro
 netsh winsock reset
 没网，有网但黄色，都可以试试
 
+# 记录我的Realme Q2
+
+当我想要找刷机包时找不到，直接到twrp刷入magisk-v28，
+一般就是apk改zip后缀直接刷就行，开机默认shamiko_052版本，然后，magisk又提示了个修复/直接安装，开启zygisk，又重启，再刷了shamiko_1.1和lsposed-zygisk_192，hide隐藏建行生活，完美解决。
+
+
 # 从magisk迁移到apatch
 
 解决电信、银行打不开，隐藏root更加彻底。
