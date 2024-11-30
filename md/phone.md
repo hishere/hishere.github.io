@@ -330,3 +330,8 @@ enum AppOpEnum {
 }
 ```
 
+# DELL-PC 解锁bios
+
+1.使用 https://bios-pw.org 生成解锁码
+
+2.如果提示错误，将6FF1改BF97，输入新的解锁码仍然提示错误，在输入一遍，用Ctrl+Entet确认，并且是按了两遍enter，成功。
