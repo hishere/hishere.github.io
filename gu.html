@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<title>基金估值计算</title>
+		<style>
+			span{
+				width: 3rem;
+				display: inline-block;
+			}
+			input{
+				width: 3rem;
+			}
+		</style>
+		 <link rel="shortcut icon" href="favicon.ico"/>
+		<link rel="stylesheet" href="./no.css">
+	</head>
+	<body>
+		<div id="app">
+			<div style="margin-left: 3rem;"><span>持仓</span><span style="margin-left: 2rem;">涨幅</span></div>
+			<span>仓0</span><input type="text" v-model.number="jjData.gu[0]" />%<input type="text" v-model.number="jjData.zhang[0]" style="margin-left: 3rem;"/>%<br>
+			<span>仓1</span><input type="text" v-model.number="jjData.gu[1]" />%<input type="text" v-model.number="jjData.zhang[1]" style="margin-left: 3rem;"/>%<br>
+			<span>仓2</span><input type="text" v-model.number="jjData.gu[2]" />%<input type="text" v-model.number="jjData.zhang[2]" style="margin-left: 3rem;"/>%<br>
+			<span>仓3</span><input type="text" v-model.number="jjData.gu[3]" />%<input type="text" v-model.number="jjData.zhang[3]" style="margin-left: 3rem;"/>%<br>
+			<span>仓4</span><input type="text" v-model.number="jjData.gu[4]" />%<input type="text" v-model.number="jjData.zhang[4]" style="margin-left: 3rem;"/>%<br>
+			<span>仓5</span><input type="text" v-model.number="jjData.gu[5]" />%<input type="text" v-model.number="jjData.zhang[5]" style="margin-left: 3rem;"/>%<br>
+			<span>仓6</span><input type="text" v-model.number="jjData.gu[6]" />%<input type="text" v-model.number="jjData.zhang[6]" style="margin-left: 3rem;"/>%<br>
+			<span>仓7</span><input type="text" v-model.number="jjData.gu[7]" />%<input type="text" v-model.number="jjData.zhang[7]" style="margin-left: 3rem;"/>%<br>
+			<span>仓8</span><input type="text" v-model.number="jjData.gu[8]" />%<input type="text" v-model.number="jjData.zhang[8]" style="margin-left: 3rem;"/>%<br>
+			<span>仓9</span><input type="text" v-model.number="jjData.gu[9]" />%<input type="text" v-model.number="jjData.zhang[9]" style="margin-left: 3rem;"/>%<br>
+			<span>仓10</span><input type="text" v-model.number="jjData.gu[10]" />%<input type="text" v-model.number="jjData.zhang[10]" style="margin-left: 3rem;"/>%<br>
+			<div>结果: {{res()/100}}%</div>
+		</div>
+		<script>
+			const app = Vue.createApp({
+				data() {
+					return {
+						jjData: {
+							gu:[1,1,1,1,1,1,1,1,1,1,1],
+							zhang: [0,0,0,0,0,0,0,0,0,0,0]
+						}
+					}
+				},
+				methods: {
+					res() {
+						let that=this;
+						let sum=0;
+						for(let i=0;i<11;i++){
+							sum=sum+that.jjData.gu[i]*that.jjData.zhang[i];
+						}
+						return sum;
+					},
+					beforeUnload() {
+						localStorage.setItem("jjData", JSON.stringify(this.$data.jjData));
+					}
+				},
+				beforeMount() {
+					window.addEventListener('beforeunload', e => this.beforeUnload(e));
+					const jjData = JSON.parse(localStorage.getItem("jjData"));
+					if (jjData !== null) this.$data.jjData = JSON.parse(localStorage.getItem("jjData"));
+				},
+				destroyed() {
+					window.removeEventListener('beforeunload', e => this.beforeUnload(e))
+				}
+			});
+			const vm = app.mount("#app");
+		</script>
+	</body>
+</html>
