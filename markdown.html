@@ -78,7 +78,7 @@
         fetch(externalMdUrl)
          .then(response => response.text())
          .then(data => {
-                const html=md.render('${toc}'+data);
+                const html=md.render('${toc}\n'+data);
                 document.getElementById('markdown-rendered').innerHTML = html;
             })
          .catch(error => {
