@@ -32,7 +32,7 @@
             border: none;
             outline: none;
             background-color: #007BFF;
-            opacity: 0.3;
+            opacity: 0.2;
             color: white;
             cursor: pointer;
             padding: 15px;
@@ -52,7 +52,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const mdLoad = urlParams.get('md');
         console.log('接收到的 md 参数值为：', mdLoad);
-
+        document.title=mdLoad;
     
         const md = window.markdownit({
             html: true,
