@@ -10,6 +10,40 @@
 
     <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/highlight.js/11.11.1/styles/default.min.css" integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
+    <script src="https://s4.zstatic.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+	<script src="https://s4.zstatic.net/npm/markdown-it-anchor/dist/markdownItAnchor.umd.js"></script>
+    <script src="https://s4.zstatic.net/npm/markdown-it-toc-done-right/dist/markdownItTocDoneRight.umd.js"></script>
+	<style>
+        #toc {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        #markdown-rendered {
+            margin-top: 20px;
+        }
+        #backToTop {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #007BFF;
+            opacity: 0.3;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        #backToTop:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,6 +59,9 @@
             linkify: true,
             typographer: true
         });
+        md.use(window.markdownItAnchor, { permalink: true, permalinkBefore: true, permalinkSymbol: '§' })
+           .use(window.markdownItTocDoneRight,{containerId: 'toc'}); 
+        
 
         // 重写代码块渲染方法
         md.renderer.rules.fence = function (tokens, idx, options, env, self) {
@@ -41,12 +78,29 @@
         fetch(externalMdUrl)
          .then(response => response.text())
          .then(data => {
-                const html = md.render(data);
+                const html=md.render('${toc}'+data);
                 document.getElementById('markdown-rendered').innerHTML = html;
             })
          .catch(error => {
                 console.error('Error fetching Markdown file:', error);
             });
+    </script>
+    <button id="backToTop" onclick="scrollToTop()">顶</button>
+    <script>
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior:'smooth'
+            });
+        }
+        window.onscroll = function () {
+            const backToTopButton = document.getElementById('backToTop');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        };
     </script>
 </body>
 </html>
