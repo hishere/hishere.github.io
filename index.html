@@ -462,11 +462,13 @@
     const as = document.getElementsByTagName("a");
     const randomTmp = random();
     for (let i = 0, len = as.length; i < len; i++) {
-        if (hostFlag === 2) {
-            as.item(i).href = as.item(i).href.replaceAll("github", "gitlab") + randomTmp;
-        } else {
-            as.item(i).href = as.item(i).href + randomTmp;
-        }
+       // if (hostFlag === 2) {
+        //    as.item(i).href = as.item(i).href.replaceAll("github", "gitlab") + randomTmp;
+       // } else {
+       if(as.item(i).href.indexOf('?')==-1){
+        as.item(i).href = as.item(i).href + randomTmp;
+       }
+      //  }
         //新标签打开
         as.item(i).target = "_blank"
     }
