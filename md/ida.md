@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html><pre>
 
 ### 基本认识
 
@@ -30,5 +28,3 @@ N快捷键给函数改名字,方便找
 generate groupescan command
 
 添加数据,类型group,搜索即可
-
-</pre></html>

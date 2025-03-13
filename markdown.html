@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Render External Markdown</title>
+    <script src="https://s4.zstatic.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+
+    <script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/highlight.js/11.11.1/styles/default.min.css" integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+</head>
+
+<body>
+    <div id="markdown-rendered"></div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const mdLoad = urlParams.get('md');
+        console.log('接收到的 md 参数值为：', mdLoad);
+
+    
+        const md = window.markdownit({
+            html: true,
+            linkify: true,
+            typographer: true
+        });
+
+        // 重写代码块渲染方法
+        md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+            const token = tokens[idx];
+            const info = token.info? token.info.trim() : '';
+            const lang = window.hljs.getLanguage(info)? info : 'plaintext';
+            const code = token.content;
+            const highlighted = window.hljs.highlight(code, { language: lang }).value;
+            return `<pre><code class="hljs ${lang}">${highlighted}</code></pre>`;
+        };
+        
+        const externalMdUrl = './md/'+mdLoad+'.md';
+
+        fetch(externalMdUrl)
+         .then(response => response.text())
+         .then(data => {
+                const html = md.render(data);
+                document.getElementById('markdown-rendered').innerHTML = html;
+            })
+         .catch(error => {
+                console.error('Error fetching Markdown file:', error);
+            });
+    </script>
+</body>
+</html>
