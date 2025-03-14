@@ -44,6 +44,35 @@
         #backToTop:hover {
             background-color: #0056b3;
         }
+        .code-container {
+    position: relative;
+    margin: 1em 0;
+}
+
+.copy-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 2;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.copy-btn:hover {
+    background: #007bff;
+    color: white;
+    border-color: transparent;
+}
+
+pre {
+    position: relative;
+    padding-top: 30px !important; /* 给按钮留出空间 */
+}
     </style>
 </head>
 
@@ -66,13 +95,31 @@
 
         // 重写代码块渲染方法
         md.renderer.rules.fence = function (tokens, idx, options, env, self) {
-            const token = tokens[idx];
-            const info = token.info? token.info.trim() : '';
-            const lang = window.hljs.getLanguage(info)? info : 'plaintext';
-            const code = token.content;
-            const highlighted = window.hljs.highlight(code, { language: lang }).value;
-            return `<pre><code class="hljs ${lang}">${highlighted}</code></pre>`;
-        };
+    const token = tokens[idx];
+    const info = token.info ? token.info.trim() : '';
+    const lang = window.hljs.getLanguage(info) ? info : 'plaintext';
+    const code = token.content;
+    const highlighted = window.hljs.highlight(code, { language: lang }).value;
+    
+    // 转义特殊字符以便安全存储在HTML属性中
+    const escapedCode = code
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+    return `
+    <div class="code-container">
+        <button class="copy-btn" onclick="copyCode(this)" 
+                data-code="${escapedCode}" 
+                title="Copy to clipboard">
+            Copy
+        </button>
+        <pre><code class="hljs ${lang}">${highlighted}</code></pre>
+    </div>
+    `;
+};
         
         const externalMdUrl = './md/'+mdLoad+'.md';
 
@@ -88,6 +135,23 @@
     </script>
     <button id="backToTop" onclick="scrollToTop()">顶</button>
     <script>
+    // 全局复制函数（需在页面中声明）
+function copyCode(button) {
+    const escapedCode = button.getAttribute('data-code');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(escapedCode, 'text/html');
+    const code = doc.documentElement.textContent;
+
+    navigator.clipboard.writeText(code).then(() => {
+        button.textContent = 'Copied!';
+        setTimeout(() => { 
+            button.textContent = 'Copy'; 
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        button.textContent = 'Error';
+    });
+}
         function scrollToTop() {
             window.scrollTo({
                 top: 0,
