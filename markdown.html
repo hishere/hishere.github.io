@@ -104,7 +104,7 @@ md.renderer.rules.fence = function (tokens, idx, options, env, self) {
 
     return `
     <div class="code-container">
-        <button class="copy-btn" onclick="copyCode('${uid}')">Copy</button>
+        <button class="copy-btn" onclick="copyCode('${uid}')">复制</button>
         <!-- 隐藏元素存储原始代码 -->
         <pre id="${uid}" style="display:none">${escapeSafeHTML(code)}</pre>
         <!-- 显示高亮后的代码 -->
