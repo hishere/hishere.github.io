@@ -61,14 +61,14 @@
         
 
         // 重写代码块渲染方法
-        md.renderer.rules.fence = function (tokens, idx, options, env, self) {
-            const token = tokens[idx];
-            const info = token.info? token.info.trim() : '';
-            const lang = window.hljs.getLanguage(info)? info : 'plaintext';
-            const code = token.content;
-            const highlighted = window.hljs.highlight(code, { language: lang }).value;
-            return `<pre><code class="hljs ${lang}">${highlighted}</code></pre>`;
-        };
+        // md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+            // const token = tokens[idx];
+            // const info = token.info? token.info.trim() : '';
+            // const lang = window.hljs.getLanguage(info)? info : 'plaintext';
+            // const code = token.content;
+            // const highlighted = window.hljs.highlight(code, { language: lang }).value;
+            // return `<pre><code class="hljs ${lang}">${highlighted}</code></pre>`;
+        // };
         
         const externalMdUrl = './md/'+mdLoad+'.md';
 
