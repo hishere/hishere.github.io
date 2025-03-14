@@ -93,33 +93,59 @@ pre {
            .use(window.markdownItTocDoneRight,{containerId: 'toc'}); 
         
 
-        // 重写代码块渲染方法
-        md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+        // 更新后的高亮渲染逻辑（修复HTML实体转义问题）
+md.renderer.rules.fence = function (tokens, idx, options, env, self) {
     const token = tokens[idx];
     const info = token.info ? token.info.trim() : '';
     const lang = window.hljs.getLanguage(info) ? info : 'plaintext';
     const code = token.content;
     const highlighted = window.hljs.highlight(code, { language: lang }).value;
-    
-    // 转义特殊字符以便安全存储在HTML属性中
-    const escapedCode = code
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+    const uid = 'code-' + Math.random().toString(36).slice(2, 11);
 
     return `
     <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)" 
-                data-code="${escapedCode}" 
-                title="Copy to clipboard">
-            Copy
-        </button>
+        <button class="copy-btn" onclick="copyCode('${uid}')">Copy</button>
+        <!-- 隐藏元素存储原始代码 -->
+        <pre id="${uid}" style="display:none">${escapeSafeHTML(code)}</pre>
+        <!-- 显示高亮后的代码 -->
         <pre><code class="hljs ${lang}">${highlighted}</code></pre>
     </div>
     `;
 };
+
+// 安全转义函数（保留HTML实体）
+function escapeSafeHTML(str) {
+    return str.replace(/[<>"']/g, 
+        ch => ({
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[ch] || ch));
+}
+
+// 复制函数（保留原始格式）
+function copyCode(uid) {
+    const pre = document.getElementById(uid);
+    const code = pre.textContent;  // 关键点：通过textContent获取原始内容
+    const btn = pre.previousElementSibling;
+
+    navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '已复制!';
+        setTimeout(() => btn.textContent = '复制', 2000);
+    }).catch(() => {
+        // 兼容旧版浏览器的复制方案
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        btn.textContent = '已复制!';
+        setTimeout(() => btn.textContent = '复制', 2000);
+    });
+}
+
         
         const externalMdUrl = './md/'+mdLoad+'.md';
 
@@ -135,23 +161,7 @@ pre {
     </script>
     <button id="backToTop" onclick="scrollToTop()">顶</button>
     <script>
-    // 全局复制函数（需在页面中声明）
-function copyCode(button) {
-    const escapedCode = button.getAttribute('data-code');
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(escapedCode, 'text/html');
-    const code = doc.documentElement.textContent;
-
-    navigator.clipboard.writeText(code).then(() => {
-        button.textContent = 'Copied!';
-        setTimeout(() => { 
-            button.textContent = 'Copy'; 
-        }, 2000);
-    }).catch(err => {
-        console.error('Failed to copy:', err);
-        button.textContent = 'Error';
-    });
-}
+    
         function scrollToTop() {
             window.scrollTo({
                 top: 0,
