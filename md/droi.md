@@ -142,17 +142,17 @@ compileOnly 'de.robv.android.xposed:api:82'
 ```xml
 <application>
 <meta-data
-            android:name="xposedmodule"
-            android:value="true" />
-        <meta-data
-            android:name="xposeddescription"
-            android:value="洛雪去更新" />
-        <meta-data
-            android:name="xposedminversion"
-            android:value="89" />
-        <meta-data
-            android:name="xposedscope"
-            android:resource="@array/scope" />
+        android:name="xposedmodule"
+        android:value="true" />
+    <meta-data
+        android:name="xposeddescription"
+        android:value="洛雪去更新" />
+    <meta-data
+        android:name="xposedminversion"
+        android:value="89" />
+    <meta-data
+        android:name="xposedscope"
+        android:resource="@array/scope" />
 </application>
 ```
 scope就是默认勾选的作用域
@@ -193,29 +193,29 @@ public class MyHook implements IXposedHookLoadPackage{
 
 ```java
 void setContext() {
-        final Class<?> clazz = XposedHelpers.findClass("android.app.Instrumentation", null);
-        XposedHelpers.findAndHookMethod(clazz, "callApplicationOnCreate", Application.class
-                , new XC_MethodHook() {
+    final Class<?> clazz = XposedHelpers.findClass("android.app.Instrumentation", null);
+    XposedHelpers.findAndHookMethod(clazz, "callApplicationOnCreate", Application.class
+        , new XC_MethodHook() {
 
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                    }
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+            }
 
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
 
-                        if (param.args[0] instanceof Application) {
-                            context = ((Application) param.args[0]).getApplicationContext();
-                        } else {
-                            XposedBridge.log("hook callApplicationOnCreate failed");
-                            return;
-                        }
-                        tos("得到context");//Toast.makeText().show();
-                    }
-                });
-    }
+                if (param.args[0] instanceof Application) {
+                    context = ((Application) param.args[0]).getApplicationContext();
+                } else {
+                    XposedBridge.log("hook callApplicationOnCreate failed");
+                    return;
+                }
+                tos("得到context");//Toast.makeText().show();
+            }
+        });
+}
 ```
 
 ## 按钮hook
@@ -226,43 +226,43 @@ args[0]获取第一个参数
 
 ```java
  XposedHelpers.findAndHookMethod(View.class, "setOnClickListener", View.OnClickListener.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                View view = (View) param.thisObject;
-                String s=null;
-                if (view instanceof Button){
-                    Button b= (Button) view;
-                    String text = b.getText().toString();
+    @Override
+    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+        View view = (View) param.thisObject;
+        String s=null;
+        if (view instanceof Button){
+            Button b= (Button) view;
+            String text = b.getText().toString();
 
-                    if (text.equals("按钮")){
-                        tos(b.getId());
-                    }
-                }
+            if (text.equals("按钮")){
+                tos(b.getId());
             }
-        });
+        }
+    }
+});
 ```
 
 ```java
 XposedHelpers.findAndHookMethod(View.class, "setOnClickListener", View.OnClickListener.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+    @Override
+    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 
-                if (param.thisObject instanceof Button) {
+        if (param.thisObject instanceof Button) {
 
-                    //正确方式
-                    param.args[0] = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                           tos(LocalTime.now().toString());
-                        }
-                    };
+            //正确方式
+            param.args[0] = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   tos(LocalTime.now().toString());
+                }
+            };
 
-                    //不要这样做,setOnClickListener循环调用死机
+            //不要这样做,setOnClickListener循环调用死机
 //                    Button b= (Button) param.thisObject;
 //                    b.setOnClickListener(v -> XposedBridge.log("jss888ss"));
-                }
-            }
-        });
+        }
+    }
+});
 ```
 
 
@@ -279,26 +279,26 @@ TextView下有Button,EditText
 
 ```java
 XposedHelpers.findAndHookMethod(TextView.class, "onTextChanged", CharSequence.class, int.class, int.class, int.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                String s = param.args[0].toString();
-                String arg = param.args[0].toString();
-                Object thisObject = param.thisObject;
-                TextView to = (TextView) thisObject;
-                if (s.equals("这是一段文本")) {
-                    to.setText("我是被修改的文本");
-                }
-            }
-        });
+    @Override
+    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+        String s = param.args[0].toString();
+        String arg = param.args[0].toString();
+        Object thisObject = param.thisObject;
+        TextView to = (TextView) thisObject;
+        if (s.equals("这是一段文本")) {
+            to.setText("我是被修改的文本");
+        }
+    }
+});
 ```
 
 ```java
 XposedHelpers.findAndHookMethod(TextView.class, "setText", CharSequence.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                param.args[0]="我是被修改的文本";
-            }
-        });
+    @Override
+    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+        param.args[0]="我是被修改的文本";
+    }
+});
 ```
 
 ## 方法Hook
@@ -306,14 +306,14 @@ XposedHelpers.findAndHookMethod(TextView.class, "setText", CharSequence.class, n
 ```java
  XposedHelpers.findAndHookMethod("app.nooneb.myapplication.MainActivity", lpparam.classLoader, "fuckMe",
                String.class, String.class, String.class, new XC_MethodHook() {
-           @Override
-           protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-               Object[] args = param.args;
-               args[0]="窗前";
-               args[1]="明月";
-               args[2]="白光";
-           }
-       });
+   @Override
+   protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+       Object[] args = param.args;
+       args[0]="窗前";
+       args[1]="明月";
+       args[2]="白光";
+   }
+});
 ```
 
 ## 方法
@@ -386,3 +386,434 @@ Button
 Image
 
 等等
+
+## 未完待续的跨应用存储
+不管是用sp存储还是ContentProvider似乎都难以实现跨应用配置保存，在Xposed中这很重要。
+问题在于跨应用的非本模块获取cursor为空
+也许只有用http将配置保存到网上再读这种方法了吗？如果未来还有兴趣，我将完善。
+
+hook代码
+```java
+package app.nooneb.getsb2;
+
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+
+public class HookInit implements IXposedHookLoadPackage {
+
+	@Override
+	public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
+		if (BuildConfig.APPLICATION_ID.equals(lpparam.packageName)) {
+			XposedHelpers.findAndHookMethod(
+				MainActivity.class.getName(),
+				lpparam.classLoader,
+				"isModuleActivated",
+				XC_MethodReplacement.returnConstant(true));
+
+            final Uri queryUri = Uri.withAppendedPath(
+                Uri.parse("content://app.nooneb.getsb2.provider/settings"),
+                "id3" // 要查询的键名
+            );
+
+            // 延迟查询确保数据已写入
+            
+		}
+        if(lpparam.packageName.equals("app.nooneb.batterysetter")){
+            XposedBridge.log("电池。。。。");
+            final ClassLoader cll=lpparam.classLoader;
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+
+
+                            // 获取当前应用的Context
+                           // Context context = (Context) XposedHelpers.callStaticMethod(
+                            //    Class.forName("android.app.ActivityThread"),
+                            //    "currentApplication"
+                            //);
+                            
+                            // 使用应用的ClassLoader获取Context
+                            Class<?> activityThreadClass = Class.forName("android.app.ActivityThread", false, cll);
+                            Object activityThread = XposedHelpers.callStaticMethod(activityThreadClass, "currentActivityThread");
+                            Context context = (Context) XposedHelpers.callMethod(activityThread, "getApplication");
+                            Context targetContext = context.createPackageContext("app.nooneb.getsb2", Context.CONTEXT_IGNORE_SECURITY);
+                            
+                            
+                            XposedBridge.log("contextTar:"+targetContext);
+                          
+
+                            Cursor cursor = targetContext.getContentResolver().query(Uri.parse("content://app.nooneb.getsb2.provider2/users"), null, null, null, null);
+
+                            // iteration of the cursor
+                            // to print whole table
+
+                            if(cursor.moveToFirst()) {
+                                StringBuilder strBuild=new StringBuilder();
+                                while (!cursor.isAfterLast()) {
+                                    strBuild.append("\n"+cursor.getString(cursor.getColumnIndex("id"))+ "-"+ cursor.getString(cursor.getColumnIndex("name")));
+                                    cursor.moveToNext();
+                                }
+                                XposedBridge.log("读取到:"+strBuild.toString());
+                            }
+                            else {
+                                XposedBridge.log("No Records Found");
+                            }
+
+                        } catch (Exception e) {
+                            XposedBridge.log(e);
+                        }
+                    }
+                }, 2000);    
+        }
+        
+
+	}
+
+}
+```
+
+mainactivity
+```java
+package app.nooneb.getsb2;
+
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.database.Cursor;
+import android.net.Uri;
+
+public class MainActivity extends Activity {
+ 	private EditText editText3;
+    private TextView tvShow;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setSubtitle(isModuleActivated() ? R.string.xposed_activated : R.string.xposed_unactivated);
+        }
+		
+		editText3 = findViewById(R.id.editText3);
+        tvShow=findViewById(R.id.tvShow);
+		SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+		editText3.setText(prefs.getString("id3", "接单2131298297"));
+		//findViewById(R.id.saveButton).setOnClickListener(v -> saveSettings());
+		
+        
+        
+		findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+//					ContentValues values = new ContentValues();
+//                    values.put("key", "id3");
+//                    values.put("value", editText3.getText().toString());
+//
+//                    // 插入/更新数据到ContentProvider
+//                    getContentResolver().insert(
+//                        SettingsProvider.CONTENT_URI,
+//                        values
+//                    );
+                    // class to add values in the database
+                    ContentValues values = new ContentValues();
+
+                    // fetching text from user
+                    values.put(MyContentProvider.name, editText3.getText().toString());
+
+                    // inserting into database through content URI
+                    getContentResolver().insert(MyContentProvider.CONTENT_URI, values);
+
+                    // displaying a toast message
+                    Toast.makeText(getBaseContext(), "数据插入成功！", Toast.LENGTH_LONG).show();
+				}
+			});
+		findViewById(R.id.showButton).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                // content URI
+                Cursor cursor = getContentResolver().query(Uri.parse("content://app.nooneb.getsb2.provider2/users"), null, null, null, null);
+
+                // iteration of the cursor
+                // to print whole table
+                if(cursor.moveToFirst()) {
+                    StringBuilder strBuild=new StringBuilder();
+                    while (!cursor.isAfterLast()) {
+                        strBuild.append("\n"+cursor.getString(cursor.getColumnIndex("id"))+ "-"+ cursor.getString(cursor.getColumnIndex("name")));
+                        cursor.moveToNext();
+                    }
+                    tvShow.setText(strBuild);
+                }
+                else {
+                    tvShow.setText("No Records Found");
+                }
+                
+            
+            }
+  
+        });
+    }
+
+    public static boolean isModuleActivated() {
+        return false;
+    }
+	
+}
+```
+
+ContentProvider
+```java
+package app.nooneb.getsb2;
+
+import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.net.Uri;
+import java.util.HashMap;
+
+public class MyContentProvider extends ContentProvider {
+    public MyContentProvider() {
+    }
+
+    // defining authority so that other application can access it
+    static final String PROVIDER_NAME = "app.nooneb.getsb2.provider2";
+
+    // defining content URI
+    static final String URL = "content://" + PROVIDER_NAME + "/users";
+
+    // parsing the content URI
+    static final Uri CONTENT_URI = Uri.parse(URL);
+
+    static final String id = "id";
+    static final String name = "name";
+    static final int uriCode = 1;
+    static final UriMatcher uriMatcher;
+    private static HashMap<String, String> values;
+
+    static {
+
+        // to match the content URI
+        // every time user access table under content provider
+        uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+        // to access whole table
+        uriMatcher.addURI(PROVIDER_NAME, "users", uriCode);
+
+        // to access a particular row
+        // of the table
+        uriMatcher.addURI(PROVIDER_NAME, "users/*", uriCode);
+    }
+    @Override
+    public String getType(Uri uri) {
+        switch (uriMatcher.match(uri)) {
+            case uriCode:
+                return "vnd.android.cursor.dir/users";
+            default:
+                throw new IllegalArgumentException("Unsupported URI: " + uri);
+        }
+    }
+    // creating the database
+    @Override
+    public boolean onCreate() {
+        Context context = getContext();
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        db = dbHelper.getWritableDatabase();
+        if (db != null) {
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection,
+                        String[] selectionArgs, String sortOrder) {
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        qb.setTables(TABLE_NAME);
+        switch (uriMatcher.match(uri)) {
+            case uriCode:
+                qb.setProjectionMap(values);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        if (sortOrder == null || sortOrder == "") {
+            sortOrder = id;
+        }
+        Cursor c = qb.query(db, projection, selection, selectionArgs, null,
+                            null, sortOrder);
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+        return c;
+    }
+
+    // adding data to the database
+    @Override    
+    public Uri insert(Uri uri, ContentValues values) {
+        long rowID = db.insert(TABLE_NAME, "", values);
+        if (rowID > 0) {
+            Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
+            getContext().getContentResolver().notifyChange(_uri, null);
+            return _uri;
+        }
+        throw new SQLiteException("Failed to add a record into " + uri);
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues values, String selection,
+                      String[] selectionArgs) {
+        int count = 0;
+        switch (uriMatcher.match(uri)) {
+            case uriCode:
+                count = db.update(TABLE_NAME, values, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        int count = 0;
+        switch (uriMatcher.match(uri)) {
+            case uriCode:
+                count = db.delete(TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
+    }
+
+    // creating object of database
+    // to perform query
+    private SQLiteDatabase db;
+
+    // declaring name of the database
+    static final String DATABASE_NAME = "UserDB";
+
+    // declaring table name of the database
+    static final String TABLE_NAME = "Users";
+
+    // declaring version of the database
+    static final int DATABASE_VERSION = 1;
+
+    // sql query to create the table
+    static final String CREATE_DB_TABLE = " CREATE TABLE " + TABLE_NAME
+    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+    + " name TEXT NOT NULL);";
+
+    // creating a database
+    private static class DatabaseHelper extends SQLiteOpenHelper {
+
+        // defining a constructor
+        DatabaseHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        // creating a table in the database
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+
+            db.execSQL(CREATE_DB_TABLE);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+            // sql query to drop a table
+            // having similar name
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+            onCreate(db);
+        }
+    }
+}
+```
+manifest
+```xml
+<?xml version='1.0' encoding='utf-8'?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="app.nooneb.getsb2">
+    <queries>
+        <package android:name="app.nooneb.getsb2"/>
+    </queries>
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:resizeableActivity="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+	
+		<meta-data
+			android:name="xposedmodule"
+			android:value="true" />
+		
+		<meta-data
+			android:name="xposeddescription"
+			android:value="Xposed module demo" />
+		
+		<meta-data
+			android:name="xposedminversion"
+			android:value="89" />
+		
+		<meta-data
+            android:name="xposedscope"
+            android:resource="@array/xposed_scope" />
+		
+        <meta-data
+          android:name="android.max_aspect"
+          android:value="4.0"/>
+
+        
+        <provider
+                
+                android:name=".SettingsProvider"
+                android:authorities="app.nooneb.getsb2.provider"
+                android:exported="true" /> <!-- 允许跨进程访问 -->
+                
+        <provider 
+            android:name=".MyContentProvider"
+            android:authorities="app.nooneb.getsb2.provider2"
+            android:exported="true"/>
+        
+        
+    </application>
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
+    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY"/>
+    
+</manifest>
+```
