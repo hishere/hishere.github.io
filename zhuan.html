@@ -8,7 +8,7 @@
             width: 1000px;
             height: 800px;
             background-color: rgba(240, 240, 240, 0.5);
-            margin: 20px 0;
+            margin:0 20px;
             position: absolute;
             overflow: hidden;
         }
@@ -18,6 +18,7 @@
         }
         body {
             margin-top: 300px;
+            padding: 100px;
             font-family: Arial, sans-serif;
         }
         .size-btn {
@@ -108,7 +109,6 @@ overflow-wrap: break-word;
             targetDiv.style.width = width + 'px';
             targetDiv.style.height = height + 'px';
             statusInfo.textContent = `当前容器尺寸: ${width}×${height}px`;
-document.body.width=(width+50)+'px';
         }
 
         function parseSize(size) {
