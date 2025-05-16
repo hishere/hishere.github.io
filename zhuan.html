@@ -138,7 +138,7 @@ overflow-wrap: break-word;
             let totalItems = 0;
             
             // 添加行号
-            for(let row = 0; row < fullRows; row++) {
+            for(let row = 0; row <= fullRows; row++) {
                 const rowLabel = document.createElement('div');
                 rowLabel.className = 'row-label';
                 rowLabel.textContent = row + 1;
@@ -147,7 +147,7 @@ overflow-wrap: break-word;
             }
             
             // 添加列号
-            for(let col = 0; col < fullCols; col++) {
+            for(let col = 0; col <= fullCols; col++) {
                 const colLabel = document.createElement('div');
                 colLabel.className = 'col-label';
                 colLabel.textContent = col + 1;
