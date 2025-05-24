@@ -822,3 +822,50 @@ manifest
 
 我做了什么？
 
+我想对一个arraylist进行Collator的Locale.CHINA排序操作，然后加了一个匿名内部类MainActivity$100000004
+然后我在MainActivity定义一个sortList去调用内部类04，
+
+``` java
+.method public static sortList(Ljava/util/List;)V
+    .registers 4
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Ljava/util/List<",
+            "Ljava/util/Map<",
+            "Ljava/lang/String;",
+            "Ljava/lang/String;",
+            ">;>;)V"
+        }
+    .end annotation
+
+    .prologue
+    new-instance v0, Lcn/kaicity/apps/wifikeylook/MainActivity$100000004;
+
+    invoke-direct {v0}, Lcn/kaicity/apps/wifikeylook/MainActivity$100000004;-><init>()V
+
+    invoke-static {p0, v0}, Ljava/util/Collections;->sort(Ljava/util/List;Ljava/util/Comparator;)V
+
+    return-void
+.end method
+```
+然后在list被渲染到adapter之前，只需要调用sortList即可
+``` java
+invoke-static {v3}, Lcn/kaicity/apps/wifikeylook/MainActivity;->sortList(Ljava/util/List;)V
+```
+按葫芦画瓢，04加入到member class
+
+```
+# annotations
+.annotation system Ldalvik/annotation/MemberClasses;
+    value = {
+        Lcn/kaicity/apps/wifikeylook/MainActivity$100000000;,
+        Lcn/kaicity/apps/wifikeylook/MainActivity$100000001;,
+        Lcn/kaicity/apps/wifikeylook/MainActivity$100000002;,
+        Lcn/kaicity/apps/wifikeylook/MainActivity$100000003;,
+        Lcn/kaicity/apps/wifikeylook/MainActivity$100000004;
+    }
+.end annotation
+```
+
+一切都是如此完美。并且借助于ai工具，我们不再执着smali语法。而专注自己的逻辑，期间apktool_m是个更好的工具，可以反编译工程为smali再转成java查看。对，仅仅只是查看java代码，别想把smali转成java再转回smali，行不通的。转成java只是用于研究smali是否改得正确而已。tip:在修改dex前备份出来，如果改失败了就覆盖回去，能够运行起来就可以覆盖备份，不断改进smali，直到完成我们所需要的增加删除修改smali代码目标，编译后的apk正常运行，期间操作dex是mt管理器。
