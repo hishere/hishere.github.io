@@ -817,3 +817,8 @@ manifest
     
 </manifest>
 ```
+
+# 关于smali的那些事
+
+我做了什么？
+
