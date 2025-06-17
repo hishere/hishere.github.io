@@ -9,6 +9,15 @@ https://unpkg.zhimg.com/vue@3.3.4/打开目录
 <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
 ```
 
+20250617方案
+
+
+```html
+<script src="https://s4.zstatic.net/ajax/libs/axios/1.9.0/axios.min.js" integrity="sha512-FPlUpimug7gt7Hn7swE8N2pHw/+oQMq/+R/hH/2hZ43VOQ+Kjh25rQzuLyPz7aUWKlRpI7wXbY6+U3oFPGjPOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.5.13/vue.global.prod.min.js" integrity="sha512-66fV4MXSQdGN0KQxZ0Bw627HalhTQYQbOoF24EtMXN2FaAoKMgAZ7nDi77d9xWwrRjEEUfE+7rxjTt+cA2IuJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+```
+
 ```txt
 // 服务端渲染。 通过 `require()` 在 Node.js 服务器端渲染使用。
 vue.cjs.js
