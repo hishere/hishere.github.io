@@ -51,12 +51,14 @@
                 let live = 0;
                 let use=that.ifData.use;
                 let age=that.ifData.age;
-                let interest=that.ifData.interest/100/365;
-                console.log(interest);
+                const annualRate = that.ifData.interest / 100;
+                const dailyInterest = Math.pow(1 + annualRate, 1/365) - 1; 
+    
+                console.log(dailyInterest);
                 let up=that.ifData.up/100+1;
                 while (true){
                     have=have-use;
-                    have=have+have*interest;
+                    have=have+have*dailyInterest;
                     live+=1;
                     if (live%365===0){
                         have=have*up;
