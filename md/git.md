@@ -84,6 +84,15 @@ on:
     branches: [dev,main]
 ```
 
+仅当yml变化才触发
+
+```yml
+on:
+  push:
+    paths:
+      - '.github/workflows/to.yml'
+```
+
 另一个比较常用的事件是定时器
 
 ### schedule和cron语法
@@ -278,6 +287,9 @@ jobs:
 
 只有checkout才能访问仓库文件
 
+这里fetch-depth 0是完全拉取所有历史，默认值是1，即只拉取最新一次
+当然为了避免不必要的麻烦可以显示设置1比较合理些
+
 ```yml
 steps:
   - uses: actions/checkout@v4
@@ -286,3 +298,20 @@ steps:
     run: ls -a
 ```
 
+## git clone加速
+其实也可以加depth 1，否则会默认为0
+```sh
+git clone --depth=1 https://xxx.git
+```
+
+## 只检出部分文件
+对于只检出某些特定文件，必须mode false，如果是文件夹则可true
+```yml
+- uses: actions/checkout@v4
+  with:
+     fetch-depth: 1
+     sparse-checkout: |
+     sss.ps1
+     ask.exe
+     sparse-checkout-cone-mode: false
+```
