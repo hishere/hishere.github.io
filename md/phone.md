@@ -1,10 +1,15 @@
 # MIUI的刷ROOT案例
 
 Note11Tpro
+
 1.绑号等待168小时解锁
+
 2.提取boot.img
+
 3.magisk修补boot.img在Download中
+
 4.刷入修补后的镜像fastboot flash boot_a xxx.boot，默认是a分区，ota升级后是b分区，查看fastboot getvar current-slot
+
 5.magisk启用zygisk，刷入zygisk版LSPosed
 
 # 从拨号进入lsposed
@@ -30,12 +35,19 @@ netsh winsock reset
 
 解决电信、银行打不开，隐藏root更加彻底。
 查内核adb shell cat /proc/version，一般情况都符合arm64
+
 1.完全卸载magisk
+
 2.apatch设置密钥，修补boot.img
+
 3.fastboot刷入
+
 4.安装系统补丁
+
 5.装zygisk next
+
 6.装lsposed
+
 设置可以打开全局空间模式
 shamiko似乎没用了
 以上模块为非内核模块通用magisk
@@ -43,10 +55,15 @@ shamiko似乎没用了
 # fastboot免电脑
 
 0.手机otg连接手机
+
 1.termux-setup-storage给内存权限
+
 2.termux-usb -l显示设备，应该有一台usb。
+
 3.执行termux-usb -r -e $SHELL -E "/dev/bus/usb/001/002"
+
 4.目标手机进入fastboot，此时fastboot devices可以显示设备
+
 5.如果fastboot刷入提示permission denied，img文件位置/storage/emulated/0/xxx
 
 # termux-adb工具
@@ -88,6 +105,7 @@ for i in {40..50}; do curl --connect-timeout 0.05 "http://192.168.1.$i/phone"; d
 
 
 正则表达式
+
 1.开始
 3
 12345匹配3
@@ -193,6 +211,7 @@ $, (, ), *, +, ., [, ], ?, \, ^, {, }, |
 # 电视adb调试
 
 创维电视远程安装APP
+
 0.开启adb调试
 关于界面上上下下左右左右进入工厂模式
 
