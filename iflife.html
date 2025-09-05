@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-security-policy" content="upgrade-insecure-requests">
+    <title>如果的人生</title>
+    <script src="https://s4.zstatic.net/ajax/libs/vue/3.5.13/vue.global.prod.min.js" integrity="sha512-66fV4MXSQdGN0KQxZ0Bw627HalhTQYQbOoF24EtMXN2FaAoKMgAZ7nDi77d9xWwrRjEEUfE+7rxjTt+cA2IuJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="./no.css">
+    <style>
+        input{
+            width: 5rem;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <button @click="resetWebsite" class="reset-btn">重置网站</button>
+
+    <h2>如果的人生</h2>
+    先生姓如名果,现在<input type="text" v-model.number="ifData.age">岁<br>
+    他有<input type="text" v-model.number="ifData.all">元<br>
+    设存款平均年利率是<input type="text" v-model.number="ifData.interest">%<br>
+    他的平均每日支出是<input type="text" v-model.number="ifData.use">元,<br>
+    通过理财,平均年增长<input type="text" v-model.number="ifData.up">%<br>
+    那么,他将在 <span v-text="Math.round(life()/365)+'岁花完所有钱'"></span>,<br>
+    当然,现实总是残酷的,
+    钱不是大风能够刮来的,但却是大风可以刮走的,<br>
+    或房子,或车子,或疾病...
+    <br>
+    <br>
+    人生若得刚好,又岂不得闲暇.
+</div>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                ifData: {
+                    age: 30,
+                    all: 100000,
+                    interest: 3.2,
+                    use: 20,
+                    up: 1
+                }
+            }
+        },
+        methods: {
+        resetWebsite() {
+    // 确认对话框防止误操作
+    if (confirm("确定要重置所有数据吗？此操作不可撤销！")) {
+      // 清空本地数据状态
+      this.$data.ifData = {
+                    age: 30,
+                    all: 150000,
+                    interest: 2,
+                    use: 18,
+                    up: 2
+                }; // 或你的初始状态结构
+      
+      // 清除localStorage中的特定数据
+      localStorage.removeItem("ifData");
+      
+      // 可选：如果需要清除所有localStorage
+      // localStorage.clear();
+      
+      // 提示用户操作完成
+      alert("网站已重置成功！");
+      
+      // 可选：如果需要重新加载页面
+      // window.location.reload();
+    }
+  },
+            life(){
+                const that=this;
+                let have = that.ifData.all;
+                let live = 0;
+                let use=that.ifData.use;
+                let age=that.ifData.age;
+                const annualRate = that.ifData.interest / 100;
+                const dailyInterest = Math.pow(1 + annualRate, 1/365) - 1; 
+    
+                console.log(dailyInterest);
+                let up=that.ifData.up/100+1;
+                while (true){
+                    have=have-use;
+                    have=have+have*dailyInterest;
+                    live+=1;
+                    if (live%365===0){
+                        have=have*up;
+                    }//每年理财收入
+                    if (have<0){
+                        break;
+                    }
+                    if (live>36000)break;
+                }
+                return age*365+live;
+            },
+            beforeUnload() {
+                localStorage.setItem("ifData", JSON.stringify(this.$data.ifData));
+            }
+        },
+        beforeMount() {
+            window.addEventListener('beforeunload', e => this.beforeUnload(e));
+            const ifData = JSON.parse(localStorage.getItem("ifData"));
+            if (ifData!==null)this.$data.ifData = JSON.parse(localStorage.getItem("ifData"));
+        },
+        destroyed() {
+            window.removeEventListener('beforeunload', e => this.beforeUnload(e))
+        }
+    });
+    const vm = app.mount("#app");
+</script>
+</body>
+</html>

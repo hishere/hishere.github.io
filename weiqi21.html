@@ -1,0 +1,268 @@
+<!DOCTYPE>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>21路围棋</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            background-color: #333;
+        }
+
+        #img {
+            font-size: 2rem;
+        }
+        p{
+            font-size: 0.5rem;
+        }
+
+        button {
+            font-size: 2rem;
+        }
+        #box{
+            display: flex;
+        }
+        .center{
+            width: 2rem;
+        }
+    </style>
+    <link rel="stylesheet" href="./no.css">
+</head>
+<body>
+<div id="box">
+    <canvas class="left" id="qp" width="600" height="600"></canvas>
+    <div class="center"></div>
+    <div class="right">
+        <h1>21x21围棋</h1>
+        <button id="wb" onclick="changeWB();">白棋</button>&nbsp;&nbsp;
+        <button onclick="turn(this);">轮流</button>
+        <h1>&nbsp</h1>
+        <h1>二维码转围棋</h1>
+        <input type="file" id="img"><br>
+        <h3>1.上传二维码图片不该有白色边缘</h3>
+        <h3>2.二维码要求版本为1，即21x21版本</h3>
+        <h3>3.版本1无法存下太多内容，也就5个汉字或10个字母这样子。</h3>
+        <h3>4.下一个目标是25路棋盘</h3>
+        <p>20230306: 修复棋盘外可下棋bug</p>
+        <p>20230306: 添加轮流/固定</p>
+    </div>
+
+</div>
+
+<script>
+    let color = "white";
+
+
+    function changeWB() {
+        const wb = document.getElementById("wb");
+        if (wb.innerText === "白棋") {
+            color = "black";
+            wb.innerText = "黑棋";
+        } else {
+            color = "white";
+            wb.innerText = "白棋";
+        }
+    }
+
+    const canvas = document.getElementById("qp");
+    const ctx = canvas.getContext("2d");
+
+    function setSize() {
+//window.onresize=arguments.callee;
+//canvas.width=window.innerWidth;
+//canvas.height=window.innerHeight;
+    }
+
+    setSize();
+
+    ctx.translate(0, 0);
+    ctx.save();
+    ctx.beginPath();
+    ctx.fillStyle = "#d3c19b";
+    ctx.fillRect(0, 0, 600, 600);
+    ctx.fill();
+    ctx.closePath();
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeRect(50, 50, 500, 500);
+    ctx.stroke();
+    ctx.closePath();
+    ctx.restore();
+
+    let lineX = 50;
+    let lineY = 50;
+    ctx.save();
+    ctx.beginPath();
+    for (let i = 0; i < 21; i++) {
+        ctx.font = "15px 微软雅黑";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(i + 1+"", lineX, lineY - 10);
+        ctx.moveTo(lineX, lineY);
+        ctx.lineTo(lineX, 550);
+        lineX += 25;
+    }
+    ctx.stroke();
+    ctx.closePath();
+    ctx.restore();
+
+    lineX = 50;
+    lineY = 50;
+    ctx.save();
+    ctx.beginPath();
+    for (let j = 0; j < 21; j++) {
+        ctx.font = "15px 微软雅黑";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "hanging";
+        ctx.fillText(j + 1, lineX - 15, lineY);
+        ctx.moveTo(lineX, lineY);
+        ctx.lineTo(550, lineY);
+        lineY += 25;
+    }
+    ctx.stroke();
+    ctx.closePath();
+    ctx.restore();
+
+    canvas.onclick = function (e) {
+        const x = Math.round((e.pageX - canvas.getBoundingClientRect().left - 50) / 25);
+        const y = Math.round((e.pageY - canvas.getBoundingClientRect().top - 50) / 25);
+        if(x<0||y<0||x>20||y>20)return;
+        console.log("下棋位置: " + (x + 1) + "," + (y + 1));
+        // console.log(`${x},${y}`);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(50 + x * 25, 50 + y * 25, 12.5, 2 * Math.PI, false);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.restore();
+    }
+
+    function xxx(e){
+        e.preventDefault();
+        const x = Math.round((e.pageX - canvas.getBoundingClientRect().left - 50) / 25);
+        const y = Math.round((e.pageY - canvas.getBoundingClientRect().top - 50) / 25);
+        if(x<0||y<0||x>20||y>20)return;
+        changeWB();
+    }
+    function turn(e){
+        if (e.innerText === "轮流") {
+            e.innerText = "固定";
+            canvas.removeEventListener("click",xxx,false)
+        } else {
+            e.innerText = "轮流";
+            canvas.addEventListener("click",xxx,false)
+        }
+
+    }
+    canvas.addEventListener("click",xxx,false)
+    function go(x, y, c) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(50 + x * 25, 50 + y * 25, 12.5, 2 * Math.PI, false);
+        ctx.fillStyle = c;
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.restore();
+    }
+
+
+    let img_width = 0;
+    let img_height = 0;
+    const imgC = document.createElement('canvas');
+    const context = imgC.getContext('2d');
+    document.getElementById('img').onchange = function (event) {
+        const img = event.target.files[0];
+        // 检查能否读取图片
+        if (!img) {
+            return;
+        }
+
+        // 检查图片类型
+        if (!(img.type.indexOf('image') === 0 && img.type && /\.(?:jpg|png|gif|jpeg)$/.test(img.name))) {
+            alert('图片只能是jpg,gif,png');
+            return;
+        }
+        // 检查图片尺寸
+        // if (img.size > 120*1024) {
+        //   alert('图片不能大于120K');
+        //   return ;
+        // }
+        var reader = new FileReader();
+        reader.readAsDataURL(img);
+
+        reader.onload = function (e) {
+            const image = new Image();
+            image.src = e.target.result;
+            image.onload = function () {
+                img_width = this.width;
+                img_height = this.height;
+
+                // 设置画布尺寸
+                imgC.width = img_width;
+                imgC.height = img_height;
+
+                // 将图片按像素写入画布
+                context.drawImage(this, 0, 0, img_width, img_height);
+                var step = imgC.width / 21;
+                var startX = step / 2;
+                var startY = step / 2;
+                for (var yy = 0; yy < 21; yy++) {
+                    for (var xx = 0; xx < 21; xx++) {
+                        var color = getColor(startX, startY, step / 3, step / 3);
+                        if (color === "ffffff") go(xx, yy, "#fff");
+                        else go(xx, yy, "#000")
+                        startX += step;
+                    }
+                    startX = step / 2;
+                    startY += step;
+                }
+            }
+        }
+    }
+
+    function gethex(r, g, b) {
+        //console.log(r, g, b)
+        r = r.toString(16);
+        g = g.toString(16);
+        b = b.toString(16);
+
+        // 补0
+        r.length === 1 ? r = '0' + r : '';
+        g.length === 1 ? g = '0' + g : '';
+        b.length === 1 ? b = '0' + b : '';
+
+        var hex = r + g + b;
+
+        // 简化处理,如 FFEEDD 可以写为 FED
+        if (r.slice(0, 1) === r.slice(1, 1) && g.slice(0, 1) === g.slice(1, 1) && b.slice(0, 1) === b.slice(1, 1)) {
+            hex = r.slice(0, 1) + g.slice(0, 1) + b.slice(0, 1);
+        }
+
+        return hex;
+    }
+
+    var myColor = [];
+
+    function getColor(x, y, w, h) {
+        const imageData = context.getImageData(x, y, w, h);
+        myColor = [imageData.data[0], imageData.data[1], imageData.data[2]]
+        return gethex(...myColor);
+    }
+</script>
+</body>
+</html>

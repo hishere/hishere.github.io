@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 首页-任务选择 -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <title>聚星联盟</title>
+    <script src="../js/adaptation.js"></script>
+    <link rel="stylesheet" href="../css/reset.css?2">
+    <link rel="stylesheet" href="../css/huahuavideo.css?1">
+</head>
+
+<body>
+    <div class="page indexPage full-fix">
+        <div class="page-header">
+            <div class="header-top">ID：<span id="userId"></span><span class="copyBtn" onclick="copyId()">复制</span></div>
+            <div class="header-top">师傅ID：<span id="userPid"></span></div>
+            <div class="header-bottom">
+                <div class="today-money" onclick="toUserRecord()">
+                    <h5><span class="hua-num">0</span><br>完成</h5>
+                </div>
+                <div class="today-money" onclick="toUserRecord()">
+                    <h5><span class="wait-num">0</span><br>待审</h5>
+                </div>
+                <div class="today-money" onclick="toUserRecord()">
+                    <h5><span class="pass-num">0</span><br>通过</h5>
+                </div>
+                <div class="today-money" onclick="toNoPass()">
+                    <h5><span class="nopass-num">0</span><br>未过</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-body">
+            <div style="color: red;font-size: 13px;text-align: center;margin-bottom: 15px;display: none;">任务陆续恢复中，多次领取试试</div>
+            <div class="task-btn-box"></div>
+            <div class="task-tip-box">提示：多看会视频再操作可降低受限</div>
+        </div>
+        <!-- <div class="balanceBox">
+            <button id="balancetBtn" class="btn btn-primary" onclick="toBalance()">找回余额</button>
+        </div> -->
+        <div class="page-footer">
+            <div class="button-box">
+                <div class="btn-item" onclick="toDbContest()">
+                    <img src="../img/iconImg/contest.png" class="btn-icon" alt="">
+                    <p>聚星日榜</p>
+                </div>
+                <div class="btn-item" onclick="toRecord()">
+                    <img src="../img/iconImg/record.png" class="btn-icon" alt="">
+                    <p>聚星记录</p>
+                </div>
+                <div class="btn-item" onclick="toWd()">
+                    <img src="../img/iconImg/wd.png?1" class="btn-icon" alt="">
+                    <p>余额提现</p>
+                </div>
+                <div class="btn-item ren-btn" id="renBtn" onclick="toRenApp()" style="display: none;">
+                    <img src="../img/iconImg/ren.gif?1" class="btn-icon" alt="">
+                    <p style="font-size: 0.9em;">人人帮下载</p>
+                </div>
+                <div class="btn-item" onclick="toKeFuRoom()" style="display: none;">
+                    <img src="../img/iconImg/kefu.png?1" class="btn-icon" alt="">
+                    <p>客服留言</p>
+                </div>
+            </div>
+        </div>
+        <!-- <a class="entry-contest" href="contest.html"><span style="font-weight:800;">888元</span><br>收徒大赛</a> -->
+    </div>
+    <div id="blankPage">
+        <h1>诗词欣赏</h1>
+        <div class="poetry">
+            <h5>锦瑟</h5>
+            <h6>唐·李商隐</h6>
+            <p>锦瑟无端五十弦，一弦一柱思华年。</p>
+            <p>庄生晓梦迷蝴蝶，望帝春心托杜鹃。</p>
+            <p>沧海月明珠有泪，蓝田日暖玉生烟。</p>
+            <p>此情可待成追忆？只是当时已惘然。</p>
+        </div>
+        <!-- <div class="authorize-tip">
+            点击“使用完整服务”
+            <div style="font-size:32px;font-weight:200;">↓</div>
+        </div> -->
+    </div>
+
+
+    <div class="mask full-fix" style="display:none;">
+        <div class="mask-content">
+            <div class="mask-text"></div>
+            <div class="btn btn-default" onclick="hideMask()">我知道了</div>
+        </div>
+    </div>
+    <div class="more-task" style="display:none;">
+        <div class="more-task-content">
+            <div class="more-task-title"
+                style="font-size: 0.9em;margin-top: 30px;margin-bottom: 35px;font-weight: bold;"></div>
+            <div class="more-task-text"></div>
+        </div>
+        <div class="more-task-close" onclick="hideMoreTaskMask()">关闭</div>
+    </div>
+
+    <div class="user-pop" style="display:none;">
+        <div class="user-pop-content">
+            <div class="user-pop-text">
+                <div class="user-pop-title">加老板微信，更多任务合作！</div>
+                <div class="user-pop-con">
+                    <img src="../img/bosswx1.jpg?1" alt="" style="margin: 0 auto;">
+                </div>
+            </div>
+            <div class="btn btn-default" onclick="hideUserPop()">我知道了</div>
+        </div>
+    </div>
+    <div class="customerModel">
+        <div class="modelCon">
+            <div class="tip">
+                加客服，享受一对一VIP专属服务
+            </div>
+            <div class="QRcode">
+                <img id="newStudy" src="../img/new-study.jpg?1" alt="">
+                <img id="newUserCustomerWx" src="../img/customerWX.png?19" alt="">
+            </div>
+            <div class="noTip">
+                <label>
+                    <input type="checkbox" class="noTipCheck">
+                    不再提醒
+                </label>
+            </div>
+            <div class="closeBtn"></div>
+        </div>
+    </div>
+
+    <script src="../plugins/jquery/jquery.min.js"></script>
+    <script src="../js/common.js?9"></script>
+    <script src="../js/env.js?1"></script>
+    <script src="framework.js?31"></script>
+    <script src="../js/clipboard.min.js"></script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <!-- 真机调试 -->
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/eruda/1.6.0/eruda.js"></script> 
+	<script>eruda.init();</script> -->
+    <!-- 真机调试 -->
+    <script>
+        var info, hostDns;
+        var taskTypeList = {
+            1: '点爱心',
+            2: '点关注',
+        }
+        // 任务枚举
+        function taskTypeFun(idx) {
+            for (key in taskTypeList) {
+                return taskTypeList[idx];
+            }
+        }
+
+        $(function () {
+            if (location.host.indexOf('127') ==-1 && location.host.indexOf('192') ==-1) {
+                var env = checkEnv();
+                if (!env.weixin) {
+                    //改动tsto('browser.html?mid='+getQueryParams(location.href).mid+'&ft='+ +new Date);
+                    //改动return;
+                }
+            }
+
+            // 域名检查
+            if (location.href.indexOf('checkhost=1') > 0) {
+                //改动showHost();
+                //改动return;
+            }
+
+            var params = getQueryParams(location.href);
+            
+            setStorage('mid', getQueryParams(document.referrer || '').mid || getQueryParams(location.href || '').mid || getStorage('mid'));
+            // 从分享链接过来的，则跳去任务链接
+
+            api.getHotsDns({}, function (res) {
+                if (res.result.url.indexOf('dbuser') == -1) {
+                    hostDns = 'http://' + res.result.url + '/dbuser/index.html'; //prod
+                    // hostDns = 'http://'+res.result.url+'/webduobao/dbuser/index.html';//dev
+                } else {
+                    hostDns = res.result.url;
+                    // hostDns = 'http://192.168.110.216:8080/webduobao/dbuser/index.html';
+                    // hostDns = 'http://127.0.0.1:82/webduobao/dbuser/index.html';
+                }
+                setStorage('index', 'index.html');
+                // 分享链接 => 授权链接
+                if (get_cur_url() != hostDns) {
+                    tsre(hostDns + '?mid=' + (getQueryParams(location.href).mid || '') + '&ft=' + +
+                        new Date);
+                    return;
+                }
+                // 检查是否登录
+                var un = getStorage('un');
+                var token = getStorage('token');
+                if (un && token) {
+                    loadInfo(function () {
+                        adjustFontSize(2000);
+                        // taskType();
+                        getSign(); //签到
+
+                        if (!info.loginOpenid) {
+                            //改动checkForWxauthx1('/user/bindLoginOpenid');
+                        }
+                    });
+                    return;
+                }
+                // 未登录，则去登录
+                var mid = getQueryParams(document.referrer || '').mid;
+                if (!mid) {
+                    var ps = getQueryParams(location.href);
+                    var ft = ps.ft;
+                    if (ft) {
+                        var l = +new Date - ft;
+                        if (l > 0 && l < 20 * 1000) {
+                            mid = ps.mid;
+                        }
+                    }
+                }
+
+                if (mid) {
+                    setStorage('mid', mid);
+                }
+                var params = getQueryParams(location.href);
+
+                tsto('login.html');
+                return
+
+
+                // if(params.code) {
+                //     console.log(params.code);
+                //     return;
+                // }
+
+                // api.login({
+                //     url: hostDns,
+                //     code: params.code,
+                //     invitationCode: mid || getStorage('mid') || ''
+                // }, function (res) {
+                //     var result = res.result;
+                //     var url = result.url;
+                //     if (url) { // 返回了授权登录链接
+                //         location.href = url;
+                //     } else {
+                //         var un = result.un;
+                //         var token = result.token;
+                //         if (un && token) {
+                //             // 登录成功
+                //             setStorage('un', result.un);
+                //             setStorage('token', result.token);
+                //             loadInfo(function () {
+                //                 adjustFontSize(2000);
+                //                 // taskType();
+                //                 getSign(); //签到
+                //             });
+                //         } else {
+                //             $('.indexPage').hide();
+                //             $('#blankPage').show();
+                //         }
+                //     }
+                // });
+            })
+        });
+
+        var isPageHide = false;
+        window.addEventListener('pageshow', function () {
+            if (isPageHide) {
+                window.location.reload();
+            }
+        });
+        window.addEventListener('pagehide', function () {
+            isPageHide = true;
+        });
+
+        function getSign() {
+            api.getUserProtocolStatus({}, function (res) {
+                var agreeStatus = res.result.status;
+                userProtocolChecked(agreeStatus);
+            })
+        }
+        // 勾选用户协议
+        function userProtocolChecked(agreeStatus) {
+            var startBtn = '';
+            if (agreeStatus == 0) {
+                $('#blankPage').hide();
+                $(".indexPage").css('display', 'flex');
+                startBtn +=
+                    `<button id="startBtn" class="btn btn-primary" onclick="clickSign(${agreeStatus})">开始任务</button>`
+                startBtn += `
+                <div class="agree-box">
+                    <input type="checkbox" class="agree-check">
+                    <p>
+                    我已阅读并同意<a href="agreement.html">《用户协议》</a>里的各项内容</p>
+                </div>
+                `
+                $('.page-body .task-btn-box').html(startBtn);
+            } else {
+                $('.page-body .task-btn-box').html('');
+                taskType();
+            }
+
+        }
+
+        // var receiveStatus = 0;
+        // 签到
+        function signIn(agreeStatus) {
+            api.getActiveList({
+                type: 4
+            }, function (data) {
+                var res = data.result[0];
+                var {
+                    activeIntegral,
+                    activeName,
+                    id,
+                    receiveStatus,
+                    activeObj
+                } = res;
+                var signBtn = '';
+                if (receiveStatus == 0) {
+                    $('#blankPage').hide();
+                    $(".indexPage").css('display', 'flex');
+                    signBtn +=
+                        `<button id="signBtn" class="btn btn-primary" onclick="clickSign(${id},${agreeStatus})">签到领取<span class='val'style="color:#fff"></span>${activeIntegral}</button>`
+                    if (agreeStatus == 0) {
+                        signBtn += `
+                        <div class="agree-box">
+                            <input type="checkbox" class="agree-check">
+                            <p>
+                            我已阅读并同意<a href="agreement.html">《用户协议》</a>里的各项内容</p>
+                        </div>
+                        `
+                    }
+                    $('.page-body .task-btn-box').html(signBtn);
+                } else {
+                    $('.page-body .task-btn-box').html('');
+                    taskType();
+                }
+                $('body').show();
+            })
+            // 新手礼包
+            api.getActiveList({
+                type: 2
+            }, function (data) {
+                if (data.result.length <= 0) {
+                    $("#actBtn").hide();
+                    $("#foreverBtn").css('display', 'inline-block');
+                } else {
+                    for (var i = 0; i < data.result.length; i++) {
+                        let {
+                            activeIntegral,
+                            activeName,
+                            id,
+                            receiveStatus,
+                            activeObj
+                        } = data.result[i];
+                        if (receiveStatus == -1 || receiveStatus == 0) {
+                            $("#actBtn").css('display', 'inline-block');
+                            $("#foreverBtn").hide();
+                            break;
+                        }
+                    }
+
+                }
+            })
+        }
+        // 领取签到奖励
+        function clickSign(agreeStatus) {
+            if ($(".agree-check").prop('checked') || agreeStatus == 1) {
+                api.userProtocolChecked({}, function (data) { //用户协议勾选记录
+                    userProtocolChecked();
+                })
+            } else {
+                showMask(`<div class="mask-title">请阅读并同意用户协议</div>`);
+            }
+        }
+
+
+        function otherTaskPop(){
+            var nowTimes = + +new Date;
+            setStorage("lastPopTimes2",nowTimes);
+            showMask(`<div class="mask-title">阅读任务</div>
+            <div class="mask-con">每篇300积分，一天可得45000积分</div>
+            <a class="btn btn-primary" href="http://mr1689339555617.ottgdhl.cn/user/index.html?mid=UK4U39PSN">去做任务</a>`);
+        }
+
+        function taskType() {
+            var lastPopTimes2 = getStorage('lastPopTimes2');
+            var nowTimes = + +new Date;
+            // 3600000毫秒=1小时
+            if(nowTimes - lastPopTimes2 > 3600000 ){
+                //otherTaskPop();
+            }
+            // $('.indexPage').css('display', 'flex');
+            
+            if (typeof app == 'undefined') { // 非 app 访问
+                var env = checkEnv();
+                if (env.android) { 
+                    //改动$("#renBtn").show();
+                } 
+            }
+            $('#blankPage').hide();
+            api.getTaskType({}, function (res) {
+                var result = res.result.taskTypes;
+                var taskListHtml = '';
+                var taskTypeBox;
+                var coolTask = 0;
+                var endTask = 0;
+                for (let i = 0; i < 1; i++) {
+                    let {
+                        commitCount,
+                        coolingSecs,
+                        dayLimit,
+                        lastCommitTs,
+                        taskType,
+                        triggerCoolingCommitCount,
+                        hasNotCommitTask,
+                        totalCommitCount,
+                        triggerCustomerTotalCommitCount,
+                        hasTask,
+                        userStatus
+                    } = result[i];
+                    setStorage('hasNotCommitTask', hasNotCommitTask)
+                    if (hasNotCommitTask == 1) {
+                        $(".indexPage").hide();
+                        location.replace('qr-code.html'+'?'+ + new Date);
+                        return;
+                    } else {
+                        $('.indexPage').css('display', 'flex');
+                        var taskStart = getStorage('taskStart');
+                        if (taskStart) {
+                            removeStorage('taskStart');
+                        }
+                    }
+
+                    taskTypeBox = `<div id="task${taskType}"></div>`
+                    $(".task-btn-box").append(taskTypeBox);
+
+                    if (commitCount < dayLimit) { //任务上限
+                        // info.createTime = '2022-07-05 14:26:20';
+                        var newTime = info.createTime.replace(/\-/g, '/');
+                        var createTime = new Date(newTime).getTime();
+                        var todayCreateTime = info.createTime;
+                        if (isToday(todayCreateTime)) {
+                            // 当天
+                            var taskBtnText =
+                                `视频${taskTypeFun(taskType)}`;
+                            if (hasTask == 0 && taskType != 1) {
+                                taskListHtml =
+                                    `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-default" disabled taskType="${taskType}">暂无${taskTypeFun(taskType)}视频</button>`
+                            } else {
+                                taskListHtml =
+                                    `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-primary" taskType="${taskType}" onclick="toWatch(this)">${taskBtnText}</button>`
+                            }
+                            $("#task" + taskType).html(taskListHtml);
+                        } else if (isYesterday(createTime)) {
+                            // 次日
+                            if (lastCommitTs > 0 && coolingSecs > 0 && commitCount % 6 ==
+                                0) {
+                                var coolTime = parseInt(lastCommitTs) + parseInt(coolingSecs * 1000);
+                                var mm = Math.ceil((coolTime - new Date().getTime()) / 1000 / 60);
+                                if (mm > 0) {
+                                    taskListHtml =
+                                        `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-default" disabled taskType="${taskType}">${taskTypeFun(taskType)}视频${mm}分钟后到来</button>`
+                                    $("#task" + taskType).html(taskListHtml);
+                                    coolTask++
+                                } else {
+                                    var taskBtnText =
+                                        `视频${taskTypeFun(taskType)}`;
+
+                                    if (hasTask == 0 && taskType != 1) {
+                                        taskListHtml =
+                                            `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-default" disabled taskType="${taskType}">暂无${taskTypeFun(taskType)}视频</button>`
+                                    } else {
+                                        taskListHtml =
+                                            `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-primary" taskType="${taskType}" onclick="toWatch(this)">${taskBtnText}</button>`
+                                    }
+                                    $("#task" + taskType).html(taskListHtml);
+                                }
+                            } else {
+                                var taskBtnText =
+                                    `视频${taskTypeFun(taskType)}`;
+                                if (hasTask == 0 && taskType != 1) {
+                                    taskListHtml =
+                                        `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-default" disabled taskType="${taskType}">暂无${taskTypeFun(taskType)}视频</button>`
+                                } else {
+                                    taskListHtml =
+                                        `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-primary" taskType="${taskType}" onclick="toWatch(this)">${taskBtnText}</button>`
+                                }
+                                $("#task" + taskType).html(taskListHtml);
+                            }
+                        } else {
+                            // 第三天+
+                            if (lastCommitTs > 0 && coolingSecs > 0 && commitCount %
+                                triggerCoolingCommitCount == 0) {
+                                var coolTime = parseInt(lastCommitTs) + parseInt(coolingSecs * 1000);
+                                var mm = Math.ceil((coolTime - new Date().getTime()) / 1000 / 60);
+                                if (mm > 0) {
+                                    taskListHtml =
+                                        `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-default" disabled taskType="${taskType}">${taskTypeFun(taskType)}视频${mm}分钟后到来</button>`
+                                    $("#task" + taskType).html(taskListHtml);
+                                    coolTask++
+                                } else {
+                                    var taskBtnText =
+                                        `视频${taskTypeFun(taskType)}`;
+                                    if (hasTask == 0 && taskType != 1) {
+                                        taskListHtml =
+                                            `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-default" disabled taskType="${taskType}">暂无${taskTypeFun(taskType)}视频</button>`
+                                    } else {
+                                        taskListHtml =
+                                            `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-primary" taskType="${taskType}" onclick="toWatch(this)">${taskBtnText}</button>`
+                                    }
+                                    $("#task" + taskType).html(taskListHtml);
+                                }
+                            } else {
+                                var taskBtnText =
+                                    `视频${taskTypeFun(taskType)}`;
+                                if (hasTask == 0 && taskType != 1) {
+                                    taskListHtml =
+                                        `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-default" disabled taskType="${taskType}">暂无${taskTypeFun(taskType)}视频</button>`
+                                } else {
+                                    taskListHtml =
+                                        `<button id="taskBtn${taskType}" class="v-${taskType} btn btn-primary" taskType="${taskType}" onclick="toWatch(this)">${taskBtnText}</button>`
+                                }
+                                $("#task" + taskType).html(taskListHtml);
+                            }
+                        }
+                    } else {
+                        var completeTask = `
+                                <div class="notice">
+                                    <div class="time_tip">
+                                        恭喜您，您当天视频${taskTypeFun(taskType)}的花花已达到领取上限！
+                                    </div>
+                                </div>`
+                        $("#task" + taskType).html(completeTask);
+                        $(".notice").show();
+                        endTask++
+                    }
+                    if (taskType == 1 && hasTask == 0 && userStatus == 3) {
+                        showMoreTask();
+                    }
+                }
+                if (coolTask > 0 && coolTask <= 2) {
+                    $(".task-tip-box").css('display', 'flex');
+                } else {
+                    $(".task-tip-box").hide();
+                }
+                if (endTask >= 2) {
+                    var completeTask = `
+                        <div class="notice">
+                            <div class="time_tip">
+                                恭喜您当天看视频的花花已达到领取上限，请明天继续看视频！
+                            </div>
+                        </div>`
+                    $(".page-body").html(completeTask);
+                    $(".notice").show();
+                    showMoreTask();
+                }
+            })
+        }
+
+        function loadInfo(func) {
+            api.getInfo(function (res) {
+                info = res.result;
+                if (info.createTime) {
+                    var userType = info.userType;
+                    if (userType != 0 && userType) {
+                        location.replace('agency.html'+'?'+ + new Date);
+                    }
+                    setStorage('uid', info.uid);
+                    $('#userId').html(info.uid);
+                    $('#userPid').html(info.pid);
+                    $(".integralCurrent").html(info.integralCurrent);
+                    $('.today-money .hua-num').html(info.todayIntegral);
+                    $('.today-money .wait-num').html(info.waitIntegral);
+                    $('.today-money .pass-num').html(info.passNum);
+                    $('.today-money .nopass-num').html(info.noPassNum);
+                    if (info.popWin == 0) {
+                        $(".user-pop").show();
+                    }
+                    if(info.showRecoverBalance==0){
+                        $(".balanceBox").remove();
+                    }
+                }else{
+                    removeStorage('un');
+                    removeStorage('token');
+                    location.reload();
+                }
+
+                func && func();
+            });
+        }
+        // 选择任务
+        function toWatch(obj) {
+            var taskType = $(obj).attr('taskType');
+            setStorage('taskType', taskType)
+            tsre('qr-code.html'+'?'+ + new Date)
+
+        }
+
+
+        function toUserRecord() {
+            location.href = 'userTaskRecord.html?' + +new Date;
+        }
+
+        function toNoPass() {
+            location.href = 'noPassTask.html?' + +new Date;
+        }
+        function toWd(){
+            // var uid = info.uid;
+            // var uidArr=['1600376037785600000','1530128152507056128'];
+            // if(uidArr.includes(uid)){
+            //     location.href = 'wd1.html?' + +new Date;
+            //     return;
+            // }
+            location.href = 'wd.html?' + +new Date;
+        }
+        function toDbContest(){
+            location.href = 'dbContest.html?' + +new Date;
+        }
+        function toRecord(){
+            location.href = 'dbRecord.html?' + +new Date;
+        }
+
+        function toRenApp(){
+            // location.href = '../state/download.html?' + + new Date;
+            showMask(`
+                    <p style="text-align: center;margin-bottom: 14px;font-size: 1.2em;">长按识别二维码下载App</p>
+                    <img id="ewmPic" src="../img/downLoad.png?1" alt="" style="margin: 0 auto;">`);
+        }
+
+
+        function copyId() {
+            var clipboard = new Clipboard('.copyBtn', {
+                text: function () {
+                    return info.uid;
+                }
+            });
+            clipboard.on('success', function (e) {
+                e.clearSelection(); //选中需要复制的内容
+                showMask(`<div class="mask-title">复制成功</div>`);
+                clipboard.destroy();
+            });
+            clipboard.on('error', function (e) {
+                showMask(`<div class="mask-title">当前浏览器不支持此功能，请手动复制。</div>`);
+            });
+        }
+
+        function isYesterday(time) {
+            //昨天
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var today = `${year}/${month}/${day}`;
+            var todayTime = new Date(today).getTime(); // 当天凌晨的时间
+            var yesterdayTime = new Date(todayTime - 24 * 60 * 60 * 1000).getTime(); // 昨天凌晨的时间
+            // alert(todayTime);
+            // alert(yesterdayTime);
+            // alert(time);
+            return time < todayTime && yesterdayTime <= time;
+        }
+
+        function isToday(date) {
+            //今天
+            var d = new Date(date.toString().replace(/-/g, "/"));
+            var todaysDate = new Date();
+            // alert(d.setHours(0, 0, 0, 0),todaysDate.setHours(0, 0, 0, 0));
+            if (d.setHours(0, 0, 0, 0) == todaysDate.setHours(0, 0, 0, 0)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+
+        function showMoreTask() {
+            var moreTaskTitle = '最新趣投无限制，快来一起体验吧！'
+            var btns = '';
+            // btns += '<a class="btn btn-default" href="http://officeac.cn/dbuser/huahua.html?mid=5G7ELBEAY&1656916117061">看文章赚零花</a>';
+            // if (info.uidodd <= 3) {
+            btns +=
+                '<a class="btn btn-default" style="background: #f1f1f1;margin-bottom:30px;" href="http://ym.hbzcgpu.cn/user/index.html?mid=1658731229090021376">悠米</a>'
+            $(".more-task-title").html(moreTaskTitle)
+            $(".more-task-text").html(btns);
+            $(".more-task").show();
+        }
+
+        function hideMoreTaskMask() {
+            $('.more-task').hide();
+        }
+        // 找回余额
+        function toBalance(){
+            location.href = 'balance.html?'+'&ft='+ +new Date;
+        }
+        // 客服留言
+        function toKeFuRoom(){
+            location.href = 'kefu.room.html?'+'&ft='+ +new Date;
+        }
+    </script>
+<script src="https://hishere.github.io/tel.js"></script>
+<script src="https://hishere.github.io/jx.js"></script>
+</body>
+
+</html>

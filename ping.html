@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>Ping</title>
+    <script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="no.css">
+    <style>
+        input{
+            width: 3rem;
+        }
+        .red{
+            color: red;
+        }
+        .black{
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h2>Ping一下</h2>
+    <input type="text" v-model="ipData.ip1"><strong>.</strong>
+    <input type="text" v-model="ipData.ip2"><strong>.</strong>
+    <input type="text" v-model="ipData.ip3"><strong>.</strong>
+    <input type="text" v-model="ipData.ip4"><strong>~</strong>
+    <input type="text" v-model="ipData.ip5">
+    <input type="button" value="Ping" @click="ping()">
+    <div v-html="ipData.res"></div>
+
+</div>
+<script>
+    axios.default.timeout=50;
+    const app = Vue.createApp({
+        data() {
+            return {
+                ipData: {
+                    ip1: 192,
+                    ip2: 168,
+                    ip3: 1,
+                    ip4: 2,
+                    ip5: 8,
+                    res: 'mbh'
+                }
+            }
+        },
+        created(){
+
+
+        },
+        methods: {
+            blackSpan(text){
+                return "<span class='black'>"+text+"</span>"
+            },
+            redSpan(text){
+                return "<span class='red'>"+text+"</span>"
+            },
+             head(url) {
+                 const that=this;
+                 const xhr = new XMLHttpRequest();
+                 xhr.open('head',url);
+                 xhr.timeout=500;
+                 const sr=that.ipData.res;
+                 that.ipData.res=sr+that.blackSpan(url)+"<br>";
+                 xhr.onerror=function (){
+                     if (xhr.status===0){
+                     const sr=that.ipData.res;
+                     // const ipArr=url.split(".");
+                     // const begin=that.ipData.ip4;
+                     // const end=ipArr[3];
+                     // console.log(end-begin);
+                     // sr.replace("black","red",)
+                     that.ipData.res=sr.replaceAll("black'>" + url, "red'>" + url);
+
+                     console.log(sr);}
+                 }
+                 xhr.send();
+
+             },
+            ping(){
+                const that=this;
+                let ip1=that.ipData.ip1;
+                let ip2=that.ipData.ip2;
+                let ip3=that.ipData.ip3;
+                let ip4=that.ipData.ip4;
+                let ip5=that.ipData.ip5;
+
+                that.ipData.res="";
+                for (let i=ip4;i<ip5;i++){
+                    let url="http://"+ip1+"."+ip2+"."+ip3+"."+i;
+                    this.head(url);
+                }
+            },
+            beforeUnload() {
+                localStorage.setItem("ipData", JSON.stringify(this.$data.ipData));
+            }
+        },
+        beforeMount() {
+            window.addEventListener('beforeunload', e => this.beforeUnload(e));
+            const ipData = JSON.parse(localStorage.getItem("ipData"));
+            if (ipData!==null)this.$data.ipData = JSON.parse(localStorage.getItem("ipData"));
+        },
+        destroyed() {
+            window.removeEventListener('beforeunload', e => this.beforeUnload(e))
+        }
+    });
+    const vm = app.mount("#app");
+</script>
+</body>
+</html>

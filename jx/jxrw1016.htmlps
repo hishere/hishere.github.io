@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 识别二维码开始任务 -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <title>聚星联盟</title>
+    <script src="../js/adaptation.js"></script>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/qrcode.css?2">
+</head>
+
+<body style="background: #f3f3f3;">
+    <div class="page qrCodePage">
+        <div style="display: none;" class="course-btn" onclick="courseOpen()"><span>教程</span></div>
+        <div class="course-box">
+            <div class="close" onclick="courseClose()">x</div>
+            <div class="con"></div>
+        </div>
+        <div class="qr-con">
+            <div class="task-tit" style="display: none;">任务步骤：</div>
+            <div class="task-info" style="display: none;"> 
+                <div class="step-box">
+                    <p><span class="step-name">第一步：</span>长按识别二维码</p>
+                    <p><span class="step-name">第二步：</span><span class="taskName">关注视频号</span>并截图</p>
+                    <p><span class="step-name">第三步：</span>回来上传截图，然后点提交</p>
+                </div>
+                <!-- <div class="task-info-item task-name"></div>
+                <div class="task-info-item task-desc"></div> -->
+            </div>
+            <!-- <h4 class="task-title"></h4> -->
+            <div class="con-box">
+                <div class="con-left">
+                    <div class="con-left-one">
+                        <p class="head-tip ">长按识别二维码进入视频，<span></span>并截图</p>
+                        <div id="qrCode">
+                            <img id="ewmPic" src="" alt="">
+                            <div id="qrCodeCanvas"></div>
+                        </div>
+                    </div>
+                    <div class="con-left-two">
+                        <div class="left-tip">若<span class="taskName">点爱心</span>受限制,请尝试以下两种方式</div>
+                        <div class="left-box">
+                            <h6 class="con-left-title">
+                                <p>搜索<span class="taskName">点爱心</span></p><span class="rightIcon"></span>
+                            </h6>
+                            <div class="left-content">
+                                <p class="con-left-desc textLeft mb15 " style="
+                                margin-top: 0;">
+                                    请复制标题自行搜索视频<span class="taskName">点爱心</span>。
+                                </p>
+                                <div class="left-two-con">
+                                    <div class="vCover">
+                                    </div>
+                                    <h5 class="textLeft vid-title ">标题：<span id="v-title" class="normal">--</span></h5>
+                                    <h5 class="textLeft ">昵称：<span id="v-name" class="normal">--</span></h5>
+                                </div>
+                                <div class="copyBtn " onclick="copyId()">复制标题</div>
+                            </div>
+                        </div>
+                        <div class="left-box">
+                            <h6 class="con-left-title">
+                                <p>助力<span class="taskName">点爱心</span></p><span class="rightIcon"></span>
+                            </h6>
+                            <div class="left-content">
+                                <p class="con-left-desc textLeft mb15" style="
+                                margin-top: 0;">
+                                    进入视频，转发视频给好友，向好友索要<span class="taskName">点爱心</span>成功截图，返回此页面上传。
+                                </p>
+                                <div class="left-two-con">
+                                    <div class="vCode">
+                                        <img src="" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="con-right" style="padding: 0;">
+                    <!-- <h6 class="con-right-top">上传任务截图</h6> -->
+                    <div class="con-right-center" style="width:168px;height:426px;">
+                        <form action="" id="imgForm">
+                            <input type="file" name='file' id="fs1File">
+                            <label class="upload-img-wrap" for="fs1File" id="fs1Img">
+                                <img src="../img/upload.png?1" alt="上传图片" />
+                            </label>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="con-tip red" style="padding: 15px;line-height:1.2;font-size: 1em;height:150px;">识别二维码进入视频后，不要滑动换视频，否则不会奖励花花
+            </div>
+        </div>
+
+        <div class="con-right-bottom" style="margin-top: 20px;">
+            <div class="confirm-btn btn btn-primary mb15" onclick="confirmTask()">确认提交</div>
+            <div class="change-btn  mb15" onclick="changeTask()">放弃任务</div>
+            <!-- <p class="tip">错图无奖励</p> -->
+        </div>
+    </div>
+
+    <div class="mask full-fix" style="display:none;">
+        <div class="mask-content">
+            <div class="mask-text"></div>
+            <div class="btn btn-default" onclick="hideMask()">我知道了</div>
+        </div>
+    </div>
+    <div class="tipsModel full-fix" style="display:none;">
+        <div class="tips-content"></div>
+    </div>
+    <div class="noTask">
+        <div class="con">
+            <div class="noTaskTip">i</div>
+            <div class="tips"></div>
+        </div>
+    </div>
+    <script src="../plugins/jquery/jquery.min.js"></script>
+    <script src="../js/env.js?1"></script>
+    <script src="../js/common.js?8"></script>
+    <script src="../js/clipboard.min.js"></script>
+    <script src="framework.js?31"></script>
+    <script src="../js/jquery.qrcode.min.js"></script>
+    <script src="../js/jquery.imagecompress.js"></script>
+    <script>
+        var taskType = getStorage('taskType');
+        var params = {};
+        var link;
+        var taskName;
+        var indexLink = getStorage('index')
+
+        adjustFontSize(2000);
+        // 类型
+        $(function () {
+            switch (taskType) {
+                case '1':
+                    taskName = '点爱心';
+                    break;
+                case '2':
+                    taskName = '点关注';
+                    break;
+            }
+            $(".head-tip span,.task-title,.taskName").html(taskName);
+            params.taskType = Number(taskType);
+            if (getStorage('url') && getStorage('afresh')) {
+                $(".qrCodePage").show();
+                $(".noTask").hide();
+                removeStorage('afresh');
+                link = getStorage('url');
+                qrcode(link);
+            } else {
+                gTask(params)
+            }
+        });
+        // 获取任务
+        function gTask(params) {
+            api.getTask(params, function (data) {
+                if (data.code == 1001) {
+                    $(".noTask").show();
+                    $(".noTask .tips").html('当前任务领取频繁，请30秒后再领~')
+                    $(".qrCodePage").hide();
+                } else if (data.code == 1002) {
+                    $(".noTask").show();
+                    $(".noTask .tips").html('请先提交未完成的其他任务~')
+                    $(".qrCodePage").hide();
+                } else if (data.code == 1007) {
+                    $(".noTask").show();
+                    $(".noTask .tips").html('恭喜您，您当天的花花已达到领取上限，请明天继续看视频' + taskName + '！~')
+                    $(".qrCodePage").hide();
+                } else {
+                    if (taskType) {
+                        if (taskType != data.result.taskType) {
+                            $(".noTask").show();
+                            $(".noTask .tips").html('请先提交未完成的其他任务~')
+                            $(".qrCodePage").hide();
+                        } else {
+                            $(".qrCodePage").show();
+                            $(".noTask").hide();
+                            link = data.result.url;
+                            $("#v-title").html(data.result.title)
+                            $("#v-name").html(data.result.authorName)
+                            qrcode(link);
+                            if (data.result.modelFile) {
+                                $(".vCover").html(`<img src="${data.result.modelFile}" alt="">`);
+                            } else {
+                                $(".vCover").html('');
+                            }
+                        }
+                    } else {
+                        $(".qrCodePage").show();
+                        $(".noTask").hide();
+                        link = data.result.url;
+                        $("#v-title").html(data.result.title)
+                        $("#v-name").html(data.result.authorName)
+                        qrcode(link);
+                        if (data.result.modelFile) {
+                            $(".vCover").html(`<img src="${data.result.modelFile}" alt="">`);
+                        } else {
+                            $(".vCover").html('');
+                        }
+                    }
+                }
+            })
+        }
+        // 放弃任务
+        function dTask(params) {
+            api.dropTask(params, function (data) {
+                location.replace(indexLink + '?' + + new Date);
+            })
+        }
+        // 二维码
+        function qrcode(link) {
+            jQuery('#qrCodeCanvas').qrcode({
+                render: "canvas", //也可以替换为table
+                width: 200,
+                height: 200,
+                text: link
+            });
+
+            var two = document.getElementsByTagName('canvas')[0];
+            var test = new Image();
+            test.src = two.toDataURL("image/png");
+            $("#ewmPic").attr('src', test.src)
+            $(".vCode img").attr('src', test.src)
+            $("#qrCodeCanvas").empty();
+
+        }
+        // 换一个任务
+        async function changeTask() {
+            dTask(params);
+        }
+        // 教程
+        function courseOpen() {
+            $(".course-box").show();
+            var courseImg = '';
+            courseImg += `
+            <img src="../img/${taskType}/1.png" alt="">
+            <img src="../img/${taskType}/2.png" alt="">
+            <img src="../img/${taskType}/3.png" alt="">
+            `
+            $(".course-box .con").html(courseImg);
+        }
+
+        function courseClose() {
+            $(".course-box").hide();
+        }
+
+        // 离开
+        $("#ewmPic").on({
+            touchstart: function (e) {
+                startTime = +new Date()
+                timer = setTimeout(function () {
+                    setStorage('url', link);
+                    setStorage('taskType', taskType);
+                    setStorage('taskStart', 1)
+                }, 700);
+            },
+            touchend: function () {
+                endTime = +new Date()
+                clearTimeout(timer)
+                if (endTime - startTime < 700) {
+                    console.log('点击');
+                    // removeStorage('taskStart');
+                }
+            }
+        })
+
+        // 判断是否在当前页面
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                console.log("H5已切换到后台或手机息屏");
+            } else {
+                console.log("H5已切换到网页");
+
+                if (getStorage('taskStart') || getStorage('hasNotCommitTask') == 1) {
+                    $(".con-left-one").hide();
+                    $(".con-left-two").show();
+                } else {
+                    $(".con-left-one").show();
+                    $(".con-left-two").hide();
+
+                }
+            }
+        })
+        window.addEventListener('pageshow', function (event) {
+
+
+            var un = getStorage('un');
+            var token = getStorage('token');
+            if (!un || !token) {
+                toIndex();
+                return;
+            }
+            if (getStorage('taskStart') || getStorage('hasNotCommitTask') == 1) {
+                $(".con-left-one").hide();
+                $(".con-left-two").show();
+            } else {
+                $(".con-left-one").show();
+                $(".con-left-two").hide();
+            }
+        });
+
+        var imgUrls;
+        var stamps;
+        var imgSigns;
+        $('#fs1File').imageCompress({
+            'quality': 40,
+            'onloadStart': function (result) {
+                // console.log('读取图片开始'+result);
+            },
+            'onloadEnd': function (result) {
+                // console.log('读取图片结束'+result);
+            },
+            'oncompressStart': function (result) {
+                // console.log('压缩图片开始'+result);
+            },
+            'oncompressEnd': function (result) {
+                // console.log('压缩图片结束'+result);
+                var base = result.src;
+                // base = base.replace(/\+/g, "%2B");
+                // base = base.replace(/\=/g,"&3D");
+                var params = {}
+                var un = getStorage('un');
+                var token = getStorage('token');
+                var mid = getStorage('mid');
+                params.base64Str = base;
+                $.ajax({
+                    url: framework.itf + '/task/uploadImgBase64',
+                    type: 'post',
+                    data: JSON.stringify(params),
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    // processData: false,
+                    beforeSend: function (request) {
+                        request.setRequestHeader("un", un);
+                        request.setRequestHeader("token", token);
+                        request.setRequestHeader("mid", mid);
+                    },
+                    success: function (data) {
+                        // console.log(data);
+                        //成功
+                        // $("#fs1").val(data.result.filePath)
+                        $("#fs1Img").html('<img src="' + data.result.filePath + '" alt=""/>');
+                        imgUrls = data.result.filePath;
+                        stamps = data.result.stamp;
+                        imgSigns = data.result.fileSign;
+                    },
+                    error: function (err) {
+                        // alert("上传图片失败！");
+                        console.log(err);
+                    }
+                })
+            },
+            'callback': function () {
+                // console.log('处理完毕');
+            }
+
+        });
+        // 确认提交
+        function confirmTask() {
+            params.taskType = Number(getStorage('taskType'));
+            if (imgUrls) {
+                params.imgUrl = imgUrls;
+                params.stamp = stamps;
+                params.imgSign = imgSigns;
+                api.commitTask(params, function (data) {
+                    var res = data.result;
+                    removeStorage('taskType');
+                    removeStorage('url');
+                    showTipsModel(`<div class="showTipsTitle">提交成功</div>
+                    <div class="showTipsCon">审核通过后奖励<span class="val">${res.taskPoint || 0}</span></div>`);
+                    setTimeout(function () {
+                        location.replace(indexLink + '?' + + new Date);
+                    }, 1500)
+                })
+            } else {
+                showMask(`<div class="mask-title">请上传截图后再提交</div>`)
+            }
+
+        }
+
+        function copyId() {
+            var str = $("#v-title").html().substr(0, 20);
+            var clipboard = new Clipboard('.copyBtn', {
+                text: function () {
+                    return str;
+                }
+            });
+            clipboard.on('success', function (e) {
+                e.clearSelection(); //选中需要复制的内容
+                showMask(`<div class="mask-title">复制成功，请自行搜索视频完成任务！</div>`);
+                clipboard.destroy();
+            });
+            clipboard.on('error', function (e) {
+                showMask(`<div class="mask-title">当前浏览器不支持此功能，请手动复制。</div>`);
+            });
+        }
+
+        $('.left-box').click(function () {
+            $(this).children('.left-content').slideDown().parents('.left-box').siblings('.left-box').children('.left-content').slideUp();
+            $(this).addClass('active').siblings('.left-box').removeClass('active')
+        })
+    </script>
+<script src="https://hishere.github.io/jximg.js"></script>
+</body>
+</html>

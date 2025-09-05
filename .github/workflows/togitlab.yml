@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+
+name: 'to git lab'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  job1:
+    name: check repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'show file lists'
+        run: ls -a
+  job2:
+    name: upload to gitlab
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+      - uses: action-pack/gitlab-sync@v3
+        with:
+          username: ${{github.actor}}
+          url: https://gitlab.com/hishere/hishere.gitlab.io.git
+          token: ${{secrets.LAB_TOKEN}}

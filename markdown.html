@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="https://s4.zstatic.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+
+    <script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/highlight.js/11.11.1/styles/default.min.css" integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <script src="https://s4.zstatic.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+    <script src="https://s4.zstatic.net/npm/markdown-it-anchor@9.2.0/dist/markdownItAnchor.umd.js"></script>
+    <script src="https://s4.zstatic.net/npm/markdown-it-toc-done-right@4.2.0/dist/markdownItTocDoneRight.umd.js"></script>
+    <style>
+        #toc {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        #markdown-rendered {
+            margin-top: 20px;
+        }
+        #backToTop {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #007BFF;
+            opacity: 0.2;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+        
+        #backToTop:hover {
+            background-color: #0056b3;
+        }
+        .code-container {
+            position: relative;
+            margin: 1em 0;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            z-index: 2;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #007bff;
+            color: white;
+            border-color: transparent;
+        }
+        
+        pre {
+            position: relative;
+            padding-top: 30px !important; /* 给按钮留出空间 */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="markdown-rendered"></div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const mdLoad = urlParams.get('md');
+        console.log('接收到的 md 参数值为：', mdLoad);
+        document.title=mdLoad;
+            
+        const md = window.markdownit({
+            html: true,
+            linkify: true,
+            typographer: true
+        });
+        md.use(window.markdownItAnchor, { permalink: true, permalinkBefore: true, permalinkSymbol: '§' })
+           .use(window.markdownItTocDoneRight,{containerId: 'toc'}); 
+        
+        
+        // 更新后的高亮渲染逻辑（修复HTML实体转义问题）
+        md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+            const token = tokens[idx];
+            const info = token.info ? token.info.trim() : '';
+            const lang = window.hljs.getLanguage(info) ? info : 'plaintext';
+            const code = token.content;
+            const highlighted = window.hljs.highlight(code, { language: lang }).value;
+            const uid = 'code-' + Math.random().toString(36).slice(2, 11);
+        
+            return `
+            <div class="code-container">
+        <button class="copy-btn" onclick="copyCode('${uid}')">复制</button>
+        <!-- 隐藏元素存储原始代码 -->
+        <pre id="${uid}" style="display:none">${escapeSafeHTML(code)}</pre>
+        <!-- 显示高亮后的代码 -->
+        <pre><code class="hljs ${lang}">${highlighted}</code></pre>
+            </div>
+            `;
+        };
+        
+        // 安全转义函数（保留HTML实体）
+        function escapeSafeHTML(str) {
+            return str.replace(/[<>"']/g, 
+        ch => ({
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[ch] || ch));
+        }
+        
+        // 复制函数（保留原始格式）
+        function copyCode(uid) {
+            const pre = document.getElementById(uid);
+            const code = pre.textContent;  // 关键点：通过textContent获取原始内容
+            const btn = pre.previousElementSibling;
+        
+            // 添加API存在性检测（核心改动）
+        if (navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '已复制!';
+        setTimeout(() => btn.textContent = '复制', 2000);
+            }).catch(() => { 
+        // 现代API失败时仍然走旧方案
+        execCommandCopy(code, btn); 
+            });
+        } else {
+            // 直接使用旧方案
+            execCommandCopy(code, btn);
+        }
+        
+        // 保持原有逻辑的最小封装（仅提取重复代码）
+        function execCommandCopy(code, btn) {
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            // 修复问题(2)(3)：添加隐藏和防键盘逻辑
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = 0;
+            textarea.setAttribute('readonly', ''); // 修复iOS问题
+            document.body.appendChild(textarea);
+            
+            // 强化选择逻辑
+            textarea.select();
+            if (textarea.setSelectionRange) { // 修复选择问题
+        textarea.setSelectionRange(0, textarea.value.length);
+            }
+            
+            try {
+        document.execCommand('copy');
+        btn.textContent = '已复制!';
+        setTimeout(() => btn.textContent = '复制', 2000);
+            } finally {
+        document.body.removeChild(textarea);
+            }
+        }
+        
+        }
+        
+        
+        const externalMdUrl = './md/'+mdLoad+'.md';
+        
+        fetch(externalMdUrl)
+         .then(response => response.text())
+         .then(data => {
+                const html=md.render('${toc}\n'+data);
+                document.getElementById('markdown-rendered').innerHTML = html+"<br><br>";
+            })
+         .catch(error => {
+                console.error('Error fetching Markdown file:', error);
+            });
+    </script>
+    <button id="backToTop" onclick="scrollToTop()">顶</button>
+    <script>
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior:'smooth'
+            });
+        }
+        window.onscroll = function () {
+            const backToTopButton = document.getElementById('backToTop');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+
+</html>

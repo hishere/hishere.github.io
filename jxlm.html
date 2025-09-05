@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-security-policy" content="upgrade-insecure-requests">
+    <title>山海聚力</title>
+    <script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <style>
+        [v-cloak] {
+            display: none;
+        !important;
+        }
+        #app{
+            /*margin: 0 auto;*/
+            /*text-align: center;*/
+            /*display: block;*/
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        table{
+            width: fit-content;
+        }
+        .inRD{
+            color: darkgrey;
+            font-size: 0.8rem;
+            float: right;
+        }
+        .ac0{
+            color: springgreen;
+        }
+        .ac1{
+            color: orangered;
+        }
+    </style>
+    <link rel="stylesheet" href="./no.css">
+</head>
+<body>
+<div id="app">
+    <h2>聚山海之力</h2>
+    <div>
+        <input v-model.number="mData.start" placeholder="0" style="width: 50px;text-align: center" type="text">
+        ~
+        <input v-model.number="mData.end" :placeholder="unMax" style="width: 50px;text-align: center" type="text">&nbsp;
+        <input @click="loadData()" type="button" value="请求" style="width: 50px">
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <td style="width: 3rem;">
+                    <span v-cloak>总值:</span>
+                </td>
+                <td style="width: 5rem;">
+                    <span v-cloak>{{ mData.mon }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 3rem;">
+                    <span v-cloak>今日:</span>
+                </td>
+                <td style="width: 5rem;">
+                    <span v-cloak>{{ mData.todayMon }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 3rem" @click="pxIndex()">索引</th>
+                <th style="width: 5rem">账户</th>
+                <th style="width: 3.5rem" @click="pxValue()">价值</th>
+                <th style="width: 3rem" @click="pxPass()">通过</th>
+                <th style="width: 3rem" @click="pxToday()">今日</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-cloak v-for="(i,index) in mData.users" :key="index">
+                <td :class="{'mod2is0': index%2===0}" style="width: 3rem">
+                    <span>{{ i.index }}</span>
+                </td>
+                <td :class="{'mod2is0': index%2===0}" style="width: 5rem">{{ i.user.mobile.replace("****","_") }}</td>
+                <td :class="{'mod2is0': index%2===0}" style="width: 3.5rem">{{i.user.integralCurrent }}</td>
+                <td :class="{'mod2is0': index%2===0}" style="width: 3rem">
+                    <span> {{ i.user.passNum }}</span>
+                    <span :class="'inRD ac'+acTypes[parseInt(i.index)]">{{index}}</span>
+                </td>
+                <td :class="{'mod2is0': index%2===0}">{{i.user.todayIntegral }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script src="tel.js"></script>
+<script>
+    let ua = "5.0 (Linux; Android 12; RM8117 Build/QP1A.199711.020; wv) AppleWebKit/527.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4340.99 XWEB/4375 MMWEBSDK/20220804 Mobile Safari/537.36 MMWEBID/7789 MicroMessenger/8.0.27.2120(0x28001B59) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64";
+    let host = "http://mvd1322.laihezuo.cn";
+    var k = 100;
+    const app = Vue.createApp({
+        data() {
+            return {
+                mData: {
+                    users: [],
+                    others: others,
+                    mon: 0,
+                    todayMon: 0,
+                    start: 0,
+                    end: 50
+                },
+                unMax: unArr.length - 1,
+                acTypes: [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,
+                    1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1
+                    ,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,1,1,0,0,0,1,1,0,0,1,0,0,0,1,0,1,
+                    0,1,0,1,0]
+
+
+            }
+        },
+        methods: {
+            //转化小数,能够补零
+            toDecimal(x) {
+                let pf = parseFloat(x);
+                if (isNaN(pf)) {
+                    return false;
+                }
+                pf = Math.round(x * 100) / 100;
+                let s = pf.toString();
+                let rs = s.indexOf('.');
+                if (rs < 0) {
+                    rs = s.length;
+                    s += '.';
+                }
+                while (s.length <= rs + 2) {
+                    s += '0';
+                }
+                return s;
+            },
+            beforeUnload() {
+                localStorage.setItem("mData", JSON.stringify(this.$data.mData));
+            },
+            compareIntegralCurrent(a, b) {
+                const aI = a.user.integralCurrent;
+                const bI = b.user.integralCurrent;
+                let comparison = 0;
+                if (aI < bI) comparison = 1;
+                else comparison = -1;
+                return comparison;
+            },
+            compareIndex(a, b) {
+                const aI = a.index;
+                const bI = b.index;
+                let comparison = 0;
+                if (aI < bI) comparison = 1;
+                else comparison = -1;
+                return comparison;
+            },
+            compareX(x1,x2){
+                if(typeof(x1)==="undefined"){
+                    if (typeof(x2)==="undefined"){
+                        return -1;
+                    }
+                    return 1;
+                }
+                if(typeof(x2)==="undefined"){
+                    return -1;
+                }
+                if (x1<x2){
+                    return 1;
+                }
+                return -1;
+            },
+            comparePass(a, b) {
+                return this.compareX(a.user.passNum,b.user.passNum)
+            },
+            compareToday(a,b){
+                return this.compareX(a.user.todayIntegral,b.user.todayIntegral)
+            },
+            pxValue() {
+                this.mData.users = this.mData.users.sort(this.compareIntegralCurrent)
+            },
+            pxIndex(){
+                this.mData.users = this.mData.users.sort(this.compareIndex)
+            },
+            pxPass(){
+                this.mData.users = this.mData.users.sort(this.comparePass)
+            },
+            pxToday(){
+                this.mData.users = this.mData.users.sort(this.compareToday)
+            },
+            usersFilter() {
+                const users = this.mData.users;
+                if (users) {
+                    return users.filter(item => {
+                        return others.indexOf(item.mobile) === -1;
+                    });
+                }
+            },
+            loadData() {
+                app.mData.users = [];
+                app.mData.mon = 0;
+                app.mData.todayMon = 0;
+                const start = this.mData.start;
+                const end = this.mData.end;
+                for (let i = start; i <= end; i++) {
+                    k = k + 101;
+                    setTimeout(function () {
+                        axios.post("http://u.aoaos.cn/duobaoapi/user/info", {pageSize: 10}, {
+                            headers: {
+                                token: i,
+                                un: unArr[i],
+                                mid: 1601180774730694656,
+                                "User-Agent": ua + i,
+                                Origin: host,
+                                Referer: host
+                            }
+                        }).then(res => {
+                            // let mobile = res.data.result.mobile;
+                            // mobile=mobile.replaceAll("****","*");
+                            console.log(res);
+                            let integralCurrent = res.data.result.integralCurrent;
+                            let todayIntegral = res.data.result.todayIntegral;
+                            app.mData.mon += integralCurrent;
+                            if(todayIntegral)app.mData.todayMon += todayIntegral;
+                            let index = "";
+                            if (i < 10) {
+                                index = "00" + i;
+                            } else if (i < 100) {
+                                index = "0" + i;
+                            } else {
+                                index = "" + i;
+                            }
+                            app.mData.users.push({index: index, mobile: unArr[i], user: res.data.result})
+                        })
+                    }, k);
+                }
+            }
+        },
+        beforeMount() {
+            window.addEventListener('beforeunload', e => this.beforeUnload(e));
+            const mData = JSON.parse(localStorage.getItem("mData"));
+            if (mData !== null) this.$data.mData = JSON.parse(localStorage.getItem("mData"));
+			console.log("ac类型长度:"+this.acTypes.length)
+		},
+        destroyed() {
+            window.removeEventListener('beforeunload', e => this.beforeUnload(e))
+        }
+    }).mount("#app");
+
+
+</script>
+</body>
+</html>

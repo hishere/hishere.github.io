@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>soc排行</title>
+    <script src="https://s4.zstatic.net/ajax/libs/vue/3.5.13/vue.global.prod.min.js" integrity="sha512-66fV4MXSQdGN0KQxZ0Bw627HalhTQYQbOoF24EtMXN2FaAoKMgAZ7nDi77d9xWwrRjEEUfE+7rxjTt+cA2IuJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/axios/1.9.0/axios.min.js" integrity="sha512-FPlUpimug7gt7Hn7swE8N2pHw/+oQMq/+R/hH/2hZ43VOQ+Kjh25rQzuLyPz7aUWKlRpI7wXbY6+U3oFPGjPOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        th, td {
+            text-align: left;
+            vertical-align: top;
+            padding: 8px;
+            cursor: pointer;
+        }
+        td {
+            white-space: pre-line;
+        }
+        .gra {
+            background-color: #f6fefe; 
+        }
+        table {
+            border-spacing: .5rem;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #f0f0f0;
+            position: relative;
+        }
+        .sort-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        .price-header {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <table>
+        <tr>
+            <th>型号</th>
+            <th>cpu</th>
+            <th>电池</th>
+            <th @click="sortByPrice">
+                <div class="price-header">
+                    价格
+                    <span class="sort-icon" v-if="sortField === 'price'">
+                        {{ sortOrder === 'asc' ? '↑' : '↓' }}
+                    </span>
+                </div>
+            </th>
+            <th>内存</th>
+            <th>发布日</th>
+            <th>特点</th>
+        </tr>
+        <tr v-for="(p, index) in sortedProds" :class="{ 'gra': index % 2 === 0 }">
+            <td>{{ p[0] }}</td>
+            <td>{{ p[1] }}</td>
+            <td>{{ p[2] }}</td>
+            <td>{{ p[3] }}</td>
+            <td>{{ p[4] }}</td>
+            <td>{{ p[5] }}</td>
+            <td>{{ p[6] }}</td>
+        </tr>
+    </table>
+</div>
+<script>
+    const app = {
+        data() {
+            return {
+                prods: [
+                    ["moto g55", "天玑7025\n1☆2.5+6☆2.0", "5000/30w", "720", "8+128", "2024年10", "LCD"],
+                    ["moto g34", "骁龙695\n22☆2.2+6☆1.8", "5000/18w", "710", "8+128", "2023年12", "LCD"],
+                    ["moto g75", "骁龙6gen3\n4☆2.4+4☆1.8", "5000/30w", "1050", "8+256", "2024年10", "LCD"],
+                    ["moto s50neo", "骁龙6sgen3\n2☆2.3+6☆2.0", "5000/30w", "1000", "8+256", "2024年6", "OLED"],
+                    ["天翼1号2022", "紫光t770\n1☆2.5+3☆2.2+4☆2.0", "5000/20w", "540", "6+128", "2022年5", "LCD"],
+                    ["vivo y200t", "骁龙6gen1\n4☆2.2+4☆1.8", "6000/44w", "680", "8+128", "2024年5", "LCD"],
+                    ["vivo y300t", "天玑7300\n4☆2.5+4☆2.0\n安卓15橘5", "6500/44w", "865", "8+128", "2025年3", "LCD,nfc,红外"],                  
+                    ["vivo z10x", "天玑7300\n4☆2.5+4☆2.0\n安卓15橘5", "6500/44w", "787", "8+128", "2025年5", "LCD,红外"],
+                    ["iqoo z9x", "骁龙6gen1\n4☆2.2+4☆1.8", "6000/44w", "626", "8+128", "2024年5", "LCD"],
+                    ["真我GT6", "骁龙8gen3\n1☆3.3+5☆3.2+2☆2.3", "5800/120w", "1296", "12+256", "2024年7月", "OLED,nfc,红外"],
+                    ["真我Neo7x", "骁龙6gen4\n1☆2.3+3☆2.2+4☆1.8", "6000/45w", "820", "8+256", "2025年2月", "OLED,nfc"],
+                    ["真我Neo7SE", "天玑8400max\n1☆3.25+3☆3.0+4☆2.1", "7000/80w", "1172", "8+256\nufs4.0", "2025年2月", "OLED,nfc,红外"],
+                    ["红米turbo4", "天玑8400Ultra\n1☆3.25+3☆3.0+4☆2.1", "6550/90w", "1349", "12+256\nufs4.0", "2025年1月", "OLED,nfc,红外"],
+                    ["红米14C", "联发科g81-ultra\n2☆2.0+6☆1.8\n安卓14澎湃", "5160/18w", "397", "4+64", "2024年12", "LCD"],
+                    ["红米14R", "骁龙4gen2\n2☆2.2+6☆2.0", "5100/18w", "540", "4+128", "2024年9", "LCD"],
+                    ["红米note15", "骁龙6gen3\n4☆2.4+4☆1.8\n安卓14澎湃2", "5800/45w", "849", "6+128", "2025年8", "OLED"],
+                    ["中兴畅行60", "紫光t760/t7520/t8100\n4☆2.2+4☆2.0", "3000/5w", "250", "4+128", "2024年3月", "LCD"],
+                    ["魅族Note 16", "紫光t8200/t765\n2☆2.3+6☆2.1", "6600/40w", "594", "8+128", "2025年5月", "LCD"],
+                    ["wiko畅80S", "天玑6300\n2☆2.2+6☆2.0\n鸿蒙OS", "5000/22w", "600", "6+128", "2025年5月", "LCD"],
+                    ["魅族note16pro", "骁龙7sg3\n1☆2.5+3☆2.4+4☆1.8", "6200/80W", "1198", "8+256GB", "2025年5月", "OLED,nfc,红外"]  
+                ],
+                sortField: '',
+                sortOrder: 'asc' // 'asc' 或 'desc'
+            }
+        },
+        computed: {
+            sortedProds() {
+                if (!this.sortField) {
+                    return this.prods;
+                }
+                
+                // 创建数组副本以避免修改原始数据
+                const sorted = [...this.prods];
+                
+                sorted.sort((a, b) => {
+                    // 提取价格数值（假设价格是字符串形式的数字）
+                    const priceA = parseInt(a[3]);
+                    const priceB = parseInt(b[3]);
+                    
+                    if (this.sortOrder === 'asc') {
+                        return priceA - priceB;
+                    } else {
+                        return priceB - priceA;
+                    }
+                });
+                
+                return sorted;
+            }
+        },
+        methods: {
+            sortByPrice() {
+                if (this.sortField === 'price') {
+                    // 如果已经在按价格排序，切换排序顺序
+                    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+                } else {
+                    // 如果是第一次点击价格，设置为按价格升序排序
+                    this.sortField = 'price';
+                    this.sortOrder = 'asc';
+                }
+            }
+        }
+    };
+    const vue = Vue.createApp(app);
+    vue.mount("#app")
+</script>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <title>中国象棋-双人对战</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f5f5f5;
+            touch-action: manipulation;
+            overflow: hidden;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        #chessboard {
+            width: 90vw;
+            height: calc(90vw * 10 / 9);
+            max-width: 450px;
+            max-height: 500px;
+            border: 2px solid #333;
+            position: relative;
+            background: #f0d9b5;
+            margin: 10px 0;
+        }
+
+        .grid {
+            position: absolute;
+            width: calc(100% / 9);
+            height: calc(100% / 10);
+            border: 1px dashed #999;
+            box-sizing: border-box;
+            cursor: pointer;
+            z-index: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .start-highlight {
+            background-color: rgba(76, 175, 80, 0.5);
+            transition: background-color 0.3s;
+        }
+
+        .end-highlight {
+            background-color: rgba(255, 193, 7, 0.5);
+            transition: background-color 0.3s;
+        }
+
+        .valid-move {
+            background-color: rgba(169, 169, 169, 0.3);
+            transition: background-color 0.3s;
+        }
+
+        .piece {
+            position: absolute;
+            width: calc(100% / 9 * 0.8);
+            height: calc(100% / 10 * 0.8);
+            border-radius: 50%;
+            text-align: center;
+            line-height: calc(90vw * 0.8 / 9);
+            font-size: calc(90vw * 0.4 / 9);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 2;
+            user-select: none;
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        .piece.selected {
+            transition: transform 0.5s ease;  
+            transform: rotate(180deg);
+        }
+
+        @media (min-width: 500px) {
+            .piece {
+                line-height: 40px;
+                font-size: 24px;
+            }
+        }
+
+        .red {
+            background: #c81717;
+            color: white;
+        }
+
+        .black {
+            background: #2d2d2d;
+            color: white;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: space-evenly;
+            gap: 20px;
+            margin-top: 20px;
+            width: 90%;
+            max-width: 450px;
+        }
+
+        #controls button {
+            padding: 10px 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        #controls button:active {
+            background: #3e8e41;
+        }
+
+        #status {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #network-status {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <form id="loginForm" style="display:none">
+        <div class="col" style="min-width: 433px; max-width: 443px">
+            <div class="card" style="margin-top: 0px; margin-bottom: 0px;">
+                <div class="row card-content" style="margin-bottom: 0px; margin-top: 10px;">
+                
+                    <div class="input-field">
+                        <label>Peer username</label>
+                        <input type="text" placeholder="Peer username" id="peerId">
+                    </div>
+                    <div class="input-field">
+                        <label>Peer Message</label>
+                        <input type="text" placeholder="Peer message" id="peerMessage">
+                        <button type="button" id="send_peer_message">send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="log" style=""></div>
+    <div id="log2"></div>   
+    
+    <div id="game-container">
+        <div id="chessboard"></div>
+        <div id="status">红方走棋</div>
+        <div id="network-status" style="display:none">本地: </div>
+        <div id="controls">
+            <button id="joinRed">玩家1</button>
+            <button id="joinBlack">玩家2</button>
+            <button id="exitPlayer" style="display:none">退出</button><button id="unMo" onclick="undoMove()">悔棋</button>
+            <button id="reG" onclick="resetGame()">开局</button>
+            
+        </div>
+        
+    </div>
+
+<script>
+let sendTar='';
+// 1. 观察者类（独立模块）
+class Observer {
+  callbacks = [];
+  subscribe(callback) {
+    this.callbacks.push(callback);
+  }
+  notify(newValue) {
+    this.callbacks.forEach(cb => cb(newValue));
+  }
+}
+
+// 2. 定义变量（无监听逻辑）
+const observer = new Observer();
+const logCmd = { 
+  _str: "",
+  get str() { return this._str; },
+  set str(newVal) {
+    this._str = newVal;
+    observer.notify(newVal); // 仅触发通知
+  }
+};
+
+
+
+// 测试
+//logCmd.str = "Hello"; // 输出：字符串变为：Hello
+
+let currentPlayer = 'red';
+let selectedPiece = null;
+let moveHistory = [];
+let highlightedGrids = [];
+let validMoveGrids = [];
+const boardSize = 10;
+const pieceData = [
+    [0, 0, '車', 'black'], [0, 8, '車', 'black'],
+    [0, 1, '馬', 'black'], [0, 7, '馬', 'black'],
+    [0, 2, '象', 'black'], [0, 6, '象', 'black'],
+    [0, 3, '士', 'black'], [0, 5, '士', 'black'],
+    [0, 4, '将', 'black'],
+    [2, 1, '炮', 'black'], [2, 7, '炮', 'black'],
+    [3, 0, '卒', 'black'], [3, 2, '卒', 'black'], [3, 4, '卒', 'black'], [3, 6, '卒', 'black'], [3, 8, '卒', 'black'],
+    
+    [9, 0, '車', 'red'], [9, 8, '車', 'red'],
+    [9, 1, '馬', 'red'], [9, 7, '馬', 'red'],
+    [9, 2, '相', 'red'], [9, 6, '相', 'red'],
+    [9, 3, '仕', 'red'], [9, 5, '仕', 'red'],
+    [9, 4, '帅', 'red'],
+    [7, 1, '炮', 'red'], [7, 7, '炮', 'red'],
+    [6, 0, '兵', 'red'], [6, 2, '兵', 'red'], [6, 4, '兵', 'red'], [6, 6, '兵', 'red'], [6, 8, '兵', 'red']
+];
+
+function clearHighlights() {
+    highlightedGrids.forEach(grid => {
+        grid.classList.remove('start-highlight');
+        grid.classList.remove('end-highlight');
+    });
+    highlightedGrids = [];
+}
+
+function clearValidMoves() {
+    validMoveGrids.forEach(grid => {
+        grid.classList.remove('valid-move');
+    });
+    validMoveGrids = [];
+}
+
+function initBoard() {
+    const board = document.getElementById('chessboard');
+    board.innerHTML = '';
+    
+    for(let row = 0; row < boardSize; row++) {
+        for(let col = 0; col < 9; col++) {
+            const grid = document.createElement('div');
+            grid.className = 'grid';
+            grid.style.left = `calc(${col * 100 / 9}%)`;
+            grid.style.top = `calc(${row * 100 / 10}%)`;
+            grid.dataset.row = row;
+            grid.dataset.col = col;
+            grid.addEventListener('click', handleGridClick);
+            board.appendChild(grid);
+        }
+    }
+    
+    pieceData.forEach(data => createPiece(...data));
+    updateStatus();
+}
+
+function createPiece(row, col, name, color) {
+    const piece = document.createElement('div');
+    piece.className = `piece ${color}`;
+    piece.style.left = `calc(${col * 100 / 9}% + 10% / 18)`;
+    piece.style.top = `calc(${row * 100 / 10}% + 10% / 20)`;
+    piece.textContent = name;
+    piece.dataset.row = row;
+    piece.dataset.col = col;
+    piece.dataset.color = color;
+    piece.dataset.name = name;
+    document.getElementById('chessboard').appendChild(piece);
+}
+
+function updateStatus() {
+    document.getElementById('status').textContent = 
+        (currentPlayer === 'red' ? '红方' : '黑方') + '走棋';
+    document.getElementById('status').style.color = 
+        currentPlayer === 'red' ? '#c81717' : '#2d2d2d';
+}
+
+function getPieceAt(row, col) {
+    return Array.from(document.getElementsByClassName('piece')).find(p => {
+        return parseInt(p.dataset.row) === row && 
+               parseInt(p.dataset.col) === col;
+    });
+}
+
+function getGridAt(row, col) {
+    return Array.from(document.getElementsByClassName('grid')).find(g => {
+        return parseInt(g.dataset.row) === row && 
+               parseInt(g.dataset.col) === col;
+    });
+}
+
+function showValidMoves(piece) {
+    clearValidMoves();
+    const row = parseInt(piece.dataset.row);
+    const col = parseInt(piece.dataset.col);
+    
+    for(let r = 0; r < boardSize; r++) {
+        for(let c = 0; c < 9; c++) {
+            if(isValidMove(piece, r, c)) {
+                const grid = getGridAt(r, c);
+                if(grid) {
+                    grid.classList.add('valid-move');
+                    validMoveGrids.push(grid);
+                }
+            }
+        }
+    }
+}
+
+function isValidMove(piece, toRow, toCol) {
+    const fromRow = parseInt(piece.dataset.row);
+    const fromCol = parseInt(piece.dataset.col);
+    const name = piece.dataset.name;
+    const color = piece.dataset.color;
+    const targetPiece = getPieceAt(toRow, toCol);
+    
+    if(targetPiece && targetPiece.dataset.color === color) {
+        return false;
+    }
+    
+    const rowDiff = Math.abs(toRow - fromRow);
+    const colDiff = Math.abs(toCol - fromCol);
+    
+    switch(name) {
+        case '車':
+        case '車':
+            if(fromRow !== toRow && fromCol !== toCol) return false;
+            if(fromRow === toRow) {
+                const min = Math.min(fromCol, toCol);
+                const max = Math.max(fromCol, toCol);
+                for(let c = min + 1; c < max; c++) {
+                    if(getPieceAt(fromRow, c)) return false;
+                }
+            } else {
+                const min = Math.min(fromRow, toRow);
+                const max = Math.max(fromRow, toRow);
+                for(let r = min + 1; r < max; r++) {
+                    if(getPieceAt(r, fromCol)) return false;
+                }
+            }
+            return true;
+            
+        case '馬':
+        case '馬':
+            if((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2)) {
+                const legRow = fromRow + (toRow > fromRow ? 1 : -1);
+                const legCol = fromCol + (toCol > fromCol ? 1 : -1);
+                if(rowDiff === 2) {
+                    return !getPieceAt(legRow, fromCol);
+                } else {
+                    return !getPieceAt(fromRow, legCol);
+                }
+            }
+            return false;
+            
+        case "相":
+        case "象":
+            if (rowDiff !== 2 || colDiff !== 2) return false; // 非田字格
+            const midRow = (fromRow + toRow) / 2;
+            const midCol = (fromCol + toCol) / 2;
+            if (getPieceAt(midRow, midCol)) return false; // 塞象眼
+            if (color === "红" && toRow > 4) return false; // 红象不过河
+            if (color === "黑" && toRow < 5) return false; // 黑象不过河
+            return true; // 合法移动
+    
+        case '士':
+        case '仕':
+            if(colDiff !== 1 || rowDiff !== 1) return false;
+            if(toCol < 3 || toCol > 5) return false;
+            if(color === 'red' && toRow < 7) return false;
+            if(color === 'black' && toRow > 2) return false;
+            return true;
+            
+        case '将':
+        case '帅':
+            if((rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1)) {
+                if(toCol < 3 || toCol > 5) return false;
+                if(color === 'red' && toRow < 7) return false;
+                if(color === 'black' && toRow > 2) return false;
+                return true;
+            }
+            return false;
+            
+        case '炮':
+            if(fromRow !== toRow && fromCol !== toCol) return false;
+            let pieceCount = 0;
+            if(fromRow === toRow) {
+                const min = Math.min(fromCol, toCol);
+                const max = Math.max(fromCol, toCol);
+                for(let c = min + 1; c < max; c++) {
+                    if(getPieceAt(fromRow, c)) pieceCount++;
+                }
+            } else {
+                const min = Math.min(fromRow, toRow);
+                const max = Math.max(fromRow, toRow);
+                for(let r = min + 1; r < max; r++) {
+                    if(getPieceAt(r, fromCol)) pieceCount++;
+                }
+            }
+            if(targetPiece) {
+                return pieceCount === 1;
+            } else {
+                return pieceCount === 0;
+            }
+            
+        case '卒':
+        case '兵':
+            const forward = color === 'red' ? -1 : 1;
+            if(fromRow + forward === toRow && fromCol === toCol) {
+                return true;
+            }
+            if((color === 'red' && fromRow <= 4) || (color === 'black' && fromRow >= 5)) {
+                return fromRow === toRow && colDiff === 1;
+            }
+            return false;
+            
+        default:
+            return false;
+    }
+}
+
+function handleGridClick(e) {
+    e.preventDefault();
+    
+    const grid = e.target.closest('.grid');
+    if (!grid) return;
+    
+    const row = parseInt(grid.dataset.row);
+    const col = parseInt(grid.dataset.col);
+    const piece = getPieceAt(row, col);
+    
+    if (!selectedPiece) {
+        if (piece && piece.dataset.color === currentPlayer) {
+            selectedPiece = piece;
+            piece.classList.add('selected');
+            clearHighlights();
+            showValidMoves(piece);
+        }
+        return;
+    }
+    
+    const oldRow = parseInt(selectedPiece.dataset.row);
+    const oldCol = parseInt(selectedPiece.dataset.col);
+    
+    if (row === oldRow && col === oldCol) {
+        selectedPiece.classList.remove('selected');
+        selectedPiece = null;
+        clearValidMoves();
+        return;
+    }
+    
+    if (piece && piece.dataset.color === currentPlayer) {
+        selectedPiece.classList.remove('selected');
+        selectedPiece = piece;
+        piece.classList.add('selected');
+        clearValidMoves();
+        showValidMoves(piece);
+        return;
+    }
+    
+    if(!isValidMove(selectedPiece, row, col)) {
+        return;
+    }
+    
+    const history = {
+        from: [oldRow, oldCol],
+        to: [row, col],
+        captured: piece ? {
+            row: parseInt(piece.dataset.row),
+            col: parseInt(piece.dataset.col),
+            name: piece.dataset.name,
+            color: piece.dataset.color
+        } : null
+    };
+    
+    if (piece) {
+        piece.remove();
+    }
+    
+    const startGrid = getGridAt(oldRow, oldCol);
+    const endGrid = getGridAt(row, col);
+    if (startGrid) {
+        startGrid.classList.add('start-highlight');
+        highlightedGrids.push(startGrid);
+    }
+    if (endGrid) {
+        endGrid.classList.add('end-highlight');
+        highlightedGrids.push(endGrid);
+    }
+    
+    movePiece(selectedPiece, row, col);
+    moveHistory.push(history);
+    
+    // 发送走子消息
+    sendMove(history);
+    
+    currentPlayer = currentPlayer === 'red' ? 'black' : 'red';
+    selectedPiece.classList.remove('selected');
+    selectedPiece = null;
+    clearValidMoves();
+    updateStatus();
+}
+
+function movePiece(piece, newRow, newCol) {
+    void piece.offsetWidth;
+    piece.style.top = `calc(${newRow * 100 / 10}% + 10% / 20)`;
+    piece.style.left = `calc(${newCol * 100 / 9}% + 10% / 18)`;
+    piece.dataset.row = newRow;
+    piece.dataset.col = newCol;
+}
+
+function undoMove() {
+    if (moveHistory.length === 0) return;
+    
+    clearHighlights();
+    clearValidMoves();
+    
+    const lastMove = moveHistory.pop();
+    const pieces = document.getElementsByClassName('piece');
+    
+    const movedPiece = Array.from(pieces).find(p => 
+        parseInt(p.dataset.row) === lastMove.to[0] &&
+        parseInt(p.dataset.col) === lastMove.to[1]
+    );
+    
+    if (movedPiece) {
+        movedPiece.classList.remove('selected');
+        movedPiece.style.top = `calc(${lastMove.from[0] * 100 / 10}% + 10% / 20)`;
+        movedPiece.style.left = `calc(${lastMove.from[1] * 100 / 9}% + 10% / 18)`;
+        movedPiece.dataset.row = lastMove.from[0];
+        movedPiece.dataset.col = lastMove.from[1];
+    }
+    
+    if (lastMove.captured) {
+        createPiece(
+            lastMove.captured.row,
+            lastMove.captured.col,
+            lastMove.captured.name,
+            lastMove.captured.color
+        );
+    }
+    
+    currentPlayer = currentPlayer === 'red' ? 'black' : 'red';
+    updateStatus();
+}
+
+function resetGame() {
+    moveHistory = [];
+    currentPlayer = 'red';
+    clearHighlights();
+    clearValidMoves();
+    initBoard();
+    document.getElementById("log").textContent="reset";    
+}
+var tmpp=0;
+function resetGame2() {
+    
+    //第一次认输加1
+    if(tmpp<1){
+        document.getElementById("log").textContent="认输";
+        tmpp=1;
+    } else{
+        //第二次开局
+        moveHistory = [];
+        currentPlayer = 'red';
+        clearHighlights();
+        clearValidMoves();
+        initBoard();
+        tmpp=0
+    }   
+}
+
+
+// 网络通信相关函数
+function sendMove(move) {
+                var mS=JSON.stringify(move);
+                var toM=document.getElementById("peerId");
+                var toC=document.getElementById("peerMessage");
+                var toBtn=document.getElementById("send_peer_message");
+                toM.value = sendTar;
+                toC.value=mS;
+                toBtn.click();
+    // 这里应该发送HTTP请求
+    // 暂时只做本地模拟
+    //console.log('发送走子消息:', toC.value);
+    document.getElementById("log").textContent="-";    
+    //document.getElementById('network-status').textContent = '本地: '+mS;
+    
+    // 模拟网络延迟
+    
+}
+
+function receiveMove(move) {
+    console.log('接收走子消息:', move);
+    document.getElementById("log").textContent="-";    
+    //document.getElementById('network-status').textContent = '网络: '+JSON.stringify(move);
+    
+    // 更新棋盘状态
+    const piece = getPieceAt(move.from[0], move.from[1]);
+    if (!piece) return;
+    
+    if (move.captured) {
+        const capturedPiece = getPieceAt(move.captured.row, move.captured.col);
+        if (capturedPiece) capturedPiece.remove();
+    }
+    
+    movePiece(piece, move.to[0], move.to[1]);
+    
+    clearHighlights();
+    const startGrid = getGridAt(move.from[0], move.from[1]);
+    const endGrid = getGridAt(move.to[0], move.to[1]);
+    if (startGrid) {
+        startGrid.classList.add('start-highlight');
+        highlightedGrids.push(startGrid);
+    }
+    if (endGrid) {
+        endGrid.classList.add('end-highlight');
+        highlightedGrids.push(endGrid);
+    }
+    
+    currentPlayer = currentPlayer === 'red' ? 'black' : 'red';
+    updateStatus();
+}
+
+</script>
+<script src="./bundle.js"></script>
+<script>
+resetGame();
+
+window.addEventListener('resize', function() {
+    const pieces = document.getElementsByClassName('piece');
+    Array.from(pieces).forEach(p => {
+        const row = parseInt(p.dataset.row);
+        const col = parseInt(p.dataset.col);
+        p.style.top = `calc(${row * 100 / 10}% + 10% / 20)`;
+        p.style.left = `calc(${col * 100 / 9}% + 10% / 18)`;
+    });
+});
+
+// 3. 创建观察者实例并绑定监听
+
+observer.subscribe(newVal => {
+  //document.getElementById("qqss").innerText=newVal;
+  
+  if(newVal.startsWith("{")){
+    receiveMove(JSON.parse(newVal));
+  } else if(newVal=="reset"){
+    resetGame2();
+  }
+});
+
+document.getElementById("reG").addEventListener('click', function() {
+    var toM=document.getElementById("peerId");
+                var toC=document.getElementById("peerMessage");
+                var toBtn=document.getElementById("send_peer_message");
+                toM.value = sendTar;
+                toC.value="reset";
+                toBtn.click();
+});
+
+</script>
+</body>
+</html>

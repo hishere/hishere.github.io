@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>myMsg</title>
+    <style></style>
+    <link rel="stylesheet" href="no.css">
+</head>
+<body>
+
+<button id="refresh">刷新</button>
+<div id="msg"></div>
+<script>
+    function ajax(options) {
+        options = options || {};
+        const xhr = new XMLHttpRequest();
+        xhr.open(options.type, options.url);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                const status = xhr.status;
+                if (status >= 200 && status < 300 || status === 304) {
+                    options.success && options.success(xhr.responseText, xhr.responseXML);
+                } else {
+                    options.error && options.error(status);
+                }
+            }
+        };
+        return xhr;
+    }
+    const refresh=document.getElementById("refresh");
+    refresh.onclick=function (){
+        getData();
+    }
+    const msg=document.getElementById("msg");
+    function getData(){
+        ajax({
+            url: "https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/myMsg",
+            type: "get",
+            success: res => {
+                const data = JSON.parse(res);
+                msg.innerText=data.data.msg;
+            }
+        }).send()
+    }
+   getData();
+</script>
+</body>
+</html>

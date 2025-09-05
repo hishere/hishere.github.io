@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.min.js"
+            integrity="sha512-Pdnl+dKWHA0jEnmhogUHlOw3FqDeujiEc3XQDkvMrPUAvytiU2cZiknw2xDPgDS+u2prg2n+6eKz3CPG588gTQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"
+            integrity="sha512-zJYu9ICC+mWF3+dJ4QC34N9RA0OVS1XtPbnf6oXlvGrLGNB8egsEzu/5wgG90I61hOOKvcywoLzwNmPqGAdATA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .t {
+            width: 3rem;
+        }
+        .t1{
+            width: 5rem;
+        }
+
+        .dcdcdc {
+            background-color: #dcdcdc;
+        }
+    </style>
+    <title>shangb</title>
+    <link rel="stylesheet" href="./no.css">
+</head>
+<body>
+<div id="app">
+    <h2>一键式操作</h2>
+    任务id: <input type="text" class="t1" placeholder="1234567" v-model="taskId"/>
+    <button v-on:click="paste()">粘贴</button>
+    <br>
+    <button v-on:click="fetchWb">文宝</button>
+    <button v-on:click="fetchJd">记娣</button>
+    <button v-on:click="fetchFs">富生</button>
+    <button v-on:click="fetchAll">全部</button>
+    <h2>赏帮筛选器</h2>
+    <p>用途: 用价格区间筛选出简单的任务</p>
+<!--    <h3><a href="http://bnmh.ftvip.cn/4877987">下载</a></h3>-->
+    排序: <input type="text" class="t" v-model.number="sortBy"/>1综合2最新3简单4高价5未做<br>
+    当前: <input type="text" class="t" v-model.number="current"/><br>
+    大小: <input type="text" class="t" v-model.number="size"/><br>
+    金额: <input type="text" class="t" v-model.number="moneyLimitLeft"/> ~
+    <input type="text" class="t" v-model.number="moneyLimitRight"/>
+    <br><br>
+    <button v-on:click="hallList">请求</button>
+    &nbsp
+    <button v-on:click="lastPage">上一页</button>
+    &nbsp
+    <button v-on:click="nextPage">下一页</button>
+    &nbsp
+    快审<input type="checkbox" v-model="ks"/>
+    <hr>
+    <ul>
+        金额-------项目---------id
+        <li v-for="(i,index) in res" :class="{'dcdcdc': index%2==0}">{{ i.money }}元---{{ i.name }}---{{ i.id }}</li>
+    </ul>
+</div>
+<script>
+
+    Vue.createApp({
+        created() {
+            const state = localStorage.getItem('state');
+            if (state != null) {
+                let obj = JSON.parse(state);
+                this.ks = obj.ks;
+                this.moneyLimitLeft = obj.moneyLimitLeft;
+                this.moneyLimitRight = obj.moneyLimitRight;
+                this.sortBy = obj.sortBy;
+                this.size = obj.size;
+            }
+        },
+        updated() {
+            let that = this;
+            localStorage.setItem('state', JSON.stringify({
+                ks: this.ks,
+                moneyLimitLeft: this.moneyLimitLeft,
+                moneyLimitRight: this.moneyLimitRight,
+                sortBy: this.sortBy,
+                size: this.size
+            }));
+        },
+        data() {
+            return {
+                ks: true,
+                msg: "hello",
+                moneyLimitLeft: 0,
+                moneyLimitRight: 99,
+                url: "http://gateway.shangbangzhuan.com/task/hallList",
+                sortBy: 1,
+                current: 1,
+                size: 50,
+                res: "",
+                odd: 0,
+                taskId: '',
+                headers: {
+                    'Host': 'gateway.shangbangzhuan.com',
+                    'Connection': 'Keep-Alive',
+                    'Accept-Encoding': 'gzip',
+                    'User-Agent': 'okhttp/4.0.1',
+                    'uuid': '',
+                    'deviceInfo': '',
+                    'device': 'android',
+                    'version': '2.37'
+                },
+                fsId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6ImIzNThiNTRkLWFlNDMtNDM1MS1iZDA0LTYzMTAzZjJlZGQzOSIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjo0ODc3OTg3fQ.dgSQfqSejLEZA5eI5DlCxgDd95lg9i-F-xjVuVqqeD8',
+                jdId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6ImUxMTI1MWRhLWJjNTEtNDhhYi04NDJmLThhZTMxNTBlNDk0ZSIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjozNTk0NjExfQ.Ae6Y0MypR2fmTItY5hqPEEVc3jXpbjVwIEB36I_VllU',
+                wbId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6IjdmNjdkZWMxLTZhYjAtNDQwOC1hYWU2LTc4M2VhYTZmOTk3NSIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjozNTc4MTc0fQ.Hr9_4Y9GB18mkFDoVsRpO8axzgF2qv1lQi36xQdW5f8',
+                realme: 'BRAND:realme,MODEL:RMX2117,VERSION:10,DEVICE:RMX2117CN,BOARD:oppo6853,NETWORK:NETWORK_WIFI',
+                redmi: 'BRAND:Redmi,MODEL:22041216C,VERSION:12,DEVICE:xaga,BOARD:xaga,NETWORK:NETWORK_WIFI'
+            }
+        },
+        methods: {
+            paste(){
+                const taht=this;
+                navigator.clipboard.readText().then(text=>{
+                    taht.taskId=text;
+                });
+            },
+            fetchWb(){
+                let headers=this.headers;
+                headers["uuid"]=this.wbId;
+                headers["deviceInfo"]=this.realme;
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+
+            },
+            fetchJd(){
+                let headers=this.headers;
+                headers["uuid"]=this.jdId;
+                headers["deviceInfo"]=this.realme;
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+
+            },
+            fetchFs(){
+                let headers=this.headers;
+                headers["uuid"]=this.fsId;
+                headers["deviceInfo"]=this.redmi;
+                let taskId=this.taskId;
+                fetch('http://gateway.shangbangzhuan.com/task/fetch/'+taskId, {headers: headers});
+            },
+            fetchAll(){
+                this.fetchWb();
+                setTimeout(()=>{this.fetchJd()},500)
+                setTimeout(()=>{this.fetchFs()},1000)
+            },
+            hallList() {
+                const that = this;
+                axios.get(that.url, {
+                    params: {
+                        sortBy: that.sortBy,
+                        current: that.current,
+                        size: that.size
+                    }
+                }).then(res => {
+//console.log(res);
+                    that.res = res.data.data.filter(item => {
+                        if (!that.ks) if (item.auditFast) return false;
+                        return item.money > that.moneyLimitLeft && item.money < that.moneyLimitRight;
+                    });
+
+                })
+            },
+            nextPage() {
+                this.current += 1;
+                this.hallList();
+            },
+            lastPage() {
+                if (this.current === 1) return;
+                this.current -= 1;
+                this.hallList();
+            }
+        }
+    }).mount("#app")
+
+</script>
+</body>
+</html>

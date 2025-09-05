@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-security-policy" content="upgrade-insecure-requests">
+    <title>图片</title>
+    <script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="./no.css">
+    <style>
+        #upp{
+            font-size: 15px;
+            margin-top: 50vh;
+        }
+    </style>
+</head>
+<body>
+<div>
+	  <input type="file" accept="image/*" id="upp"/>
+	  <img id="img2"/>
+	</div>
+	<script>
+		var upp=document.getElementById("upp");
+		var img2=document.getElementById("img2");
+		upp.onchange=function upp(ev){
+	  		var imgg=ev.target.files[0];
+			var reader=new FileReader();
+			reader.readAsDataURL(imgg);
+			reader.onloadend=function(ev2){
+			  img2.src=ev2.target.result;
+			}
+	  	}
+	</script>
+</body>
+</html>

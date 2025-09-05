@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>丰衣足食</title>
+
+    <meta http-equiv="content-language" content="*">
+
+
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+
+    <script src="https://s4.zstatic.net/ajax/libs/vue/3.5.13/vue.global.prod.min.js" integrity="sha512-66fV4MXSQdGN0KQxZ0Bw627HalhTQYQbOoF24EtMXN2FaAoKMgAZ7nDi77d9xWwrRjEEUfE+7rxjTt+cA2IuJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    <script src="https://s4.zstatic.net/ajax/libs/axios/1.9.0/axios.min.js" integrity="sha512-FPlUpimug7gt7Hn7swE8N2pHw/+oQMq/+R/hH/2hZ43VOQ+Kjh25rQzuLyPz7aUWKlRpI7wXbY6+U3oFPGjPOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="no.css">
+    <style>
+        table {
+            vertical-align: top;
+        }
+
+        .mTd {
+            min-width: 2rem;
+        }
+
+        a:hover {
+            cursor: default;
+            user-select: none;
+        }
+
+        .red {
+            color: orangered;
+        }
+
+        .green {
+            color: lawngreen;
+        }
+
+        .fR {
+            position: absolute;
+            left: 20rem;
+        }
+    </style>
+    <script src="./mock.js"></script>
+</head>
+<body>
+<div id="app">
+    <h3>丰衣足食</h3>
+    <a v-text="totalEc()"></a>
+    <a @click="saveHis()">记录</a>
+    <a @click="undo()">回撤</a>
+    <a contenteditable="true" v-text="mykey" style="width: 5rem;" @input="mykey=$event.target.innerText"></a>
+    <a @click="upL()">备份</a>
+    <a @click="downL()">恢复</a><br>
+    <div style="display: inline-block" v-for="i in ec">
+        <table>
+            <tr>
+                <th v-text="i.na" contenteditable="true" @input="i.na=$event.target.innerText"></th>
+            </tr>
+            <tr>
+                <td>花呗&emsp;</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[0]" @input="i.c[0]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>余额&emsp;</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[1]" @input="i.c[1]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>余额宝</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[2]" @input="i.c[2]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>黄金&emsp;</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[3]" @input="i.c[3]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>券商&emsp;</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[4]" @input="i.c[4]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>余利宝</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[5]" @input="i.c[5]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>网商&emsp;</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[6]" @input="i.c[6]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>基金&emsp;</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[7]" @input="i.c[7]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>微信&emsp;</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[8]" @input="i.c[8]=(+$event.target.innerText)"></td>
+            </tr>
+            <tr>
+                <td>天天&emsp;</td>
+                <td class="mTd" contenteditable="true" v-text="i.c[9]" @input="i.c[9]=(+$event.target.innerText)"></td>
+            </tr>
+        </table>
+    </div>
+    <div v-for="(i,index) in his">
+        <a>{{i.m}}</a>
+        <a>{{i.v}}</a>
+        <span :class="{'red': i.r>0,'green': i.r<0}">{{Math.abs((i.r))}}%</span>
+        <a class="fR" v-show="index==(his.length-1)" :class="{'red': baseRate>0,'green': baseRate<0}">{{baseRate}}%</a>
+    </div>
+</div>
+<script>
+    const app = {
+        data() {
+            return {
+                baseRate: '100',
+                mykey: 'mykey',
+                ec: {
+                    no: {
+                        na: '刘备',
+                        c: [1]
+                    },
+                    jd: {
+                        na: '关羽',
+                        c: []
+                    },
+                    fs: {
+                        na: '张飞',
+                        c: []
+                    }
+                },
+                his: [],
+                st: ""
+            }
+        },
+        methods: {
+            undo() {
+                const his = this.his;
+                his.pop();
+                this.his = his;
+            },
+            upL() {
+                const mykey = this.mykey;
+                console.log("k:"+mykey);
+                const dataObj = {
+                    ec: this.ec,
+                    his: this.his
+                };
+                const jStr = JSON.stringify(dataObj)
+
+                let id="6648c7ec94e3e514624f7876";
+                if (mykey=="mykey"){
+
+                }else if (mykey=="oneb0"){
+                    id="6648c52b94e3e514624f7713"
+                }else if (mykey=="oneb1"){
+                    id="6648c812fa29401478438770";
+                }
+                let bd = {
+                    "url": "/"+mykey,
+                    "mode": "{\n  \"data\": " + jStr + "\n}",
+                    "method": "get",
+                    "description": mykey,
+                    "id": id
+                };
+                axios.post("https://mock.presstime.cn/api/mock/update",
+                    bd,
+                    {
+                        // params:{},
+                        headers: {"Authorization": mockAuth, "Content-Type": "application/json;charset=UTF-8"}
+                    }).then(res => {
+                    if (res.status == 200) {
+                        alert("备份成功!");
+                    }
+                })
+            },
+            downL() {
+                const mykey = this.mykey;
+                const that = this;
+                axios.get("https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/" + mykey).then(ress => {
+                    const jsonRes=ress.data;
+                    console.log(jsonRes);
+                    const ec = jsonRes.data.ec;
+                    const his = jsonRes.data.his;
+                    that.$data.ec = ec;
+                    that.$data.his = his;
+                    alert("恢复成功!");
+                    const hisStart = his[0];
+                    const hisEnd = his[his.length - 1];
+                    const per = (hisEnd.v - hisStart.v) / hisStart.v;
+                    let baseRate = per * 100;
+                    baseRate = baseRate.toFixed(4);
+                    this.$data.baseRate = baseRate;
+                })
+            },
+            beforeUnload() {
+                localStorage.setItem("ec", JSON.stringify(this.$data.ec));
+                localStorage.setItem("his", JSON.stringify(this.$data.his));
+                localStorage.setItem("baseRate", JSON.stringify(this.$data.baseRate));
+                localStorage.setItem("mykey", JSON.stringify(this.$data.mykey));
+            },
+            toDecimal(x) {
+                let pf = parseFloat(x);
+                if (isNaN(pf)) {
+                    return false;
+                }
+                pf = Math.round(x * 100) / 100;
+                let s = pf.toString();
+                let rs = s.indexOf('.');
+                if (rs < 0) {
+                    rs = s.length;
+                    s += '.';
+                }
+                while (s.length <= rs + 2) {
+                    s += '0';
+                }
+                return s;
+            },
+            totalEc() {
+                const ec = this.ec;
+                let sum = 0;
+                for (const i in ec) {
+                    ec[i].c.forEach(value => {
+                        sum += value || 0;
+                    })
+                }
+                // return this.toDecimal(sum);
+                return sum.toFixed(2);
+            },
+            getNow() {
+                const now = new Date();
+                // const year = now.getFullYear();
+                let month = now.getMonth() + 1;
+                if (month < 10) month = "0" + month;
+                let day = now.getDate();
+                if (day < 10) day = "0" + day;
+                let h = now.getHours();
+                if (h < 10) h = "0" + h;
+                let m = now.getMinutes();
+                if (m < 10) m = "0" + m;
+                // let s = now.getSeconds();
+                // if (s<10)s="0"+s;
+                return month + "." + day + " " + h + ":" + m;
+            },
+            saveHis() {
+                const that = this;
+                let hiis = that.his;
+                let len = hiis.length;
+                const newV = this.totalEc();
+                let oldV = "1";
+                if (len > 0) {
+                    oldV = hiis[len - 1].v;
+                    if (len > 1) {
+                        const first = hiis[0].v
+                        const newRate = (newV - first) / first * 100;
+                        that.baseRate = newRate.toFixed(4);
+                    }
+                }
+                // const fOldV=parseFloat(oldV);
+                // let r = (parseFloat(newV) - fOldV) / fOldV;
+                let r = (newV - oldV) / oldV * 100;
+                // console.log(r);
+                r = r.toFixed(4);
+                if (hiis.length > 20) hiis.shift();
+                hiis.push({m: this.getNow(), v: newV, r: r})
+
+
+                that.his = hiis;
+            }
+        },
+        beforeMount() {
+            window.addEventListener('beforeunload', e => this.beforeUnload(e));
+            const ec = JSON.parse(localStorage.getItem("ec"));
+            const his = JSON.parse(localStorage.getItem("his"));
+            const baseRate = JSON.parse(localStorage.getItem("baseRate"));
+            const mykey = JSON.parse(localStorage.getItem("mykey"));
+            if (ec != null) this.$data.ec = JSON.parse(localStorage.getItem("ec"));
+            if (his != null) this.$data.his = JSON.parse(localStorage.getItem("his"));
+            if (baseRate != null) this.$data.baseRate = JSON.parse(localStorage.getItem("baseRate"));
+            if (mykey != null) this.$data.mykey = JSON.parse(localStorage.getItem("mykey"));
+        },
+        destroyed() {
+            window.removeEventListener('beforeunload', e => this.beforeUnload(e))
+        }
+    };
+    let vm = Vue.createApp(app).mount("#app");
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>瓷砖用量计算器</title>
+    <script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    {{msg}}
+</div>
+<script>
+
+    const app=Vue.createApp({
+        data(){
+            return {
+                formx:{
+                    'room_long.value': 0,
+                    'room_width.value': 0,
+                    'floorbrick_long.value': 0,
+                    'floorbrick_width.value': 0,
+                    'floorbricknum.value': 0,
+                }
+            }
+        }
+    });
+    const vm=app.mount("#app")
+    function floor_brick(form) {
+        let room_long = 0,
+            room_width = 0,
+            floorbrick_long = 0,
+            floorbrick_width = 0;
+        let floorbricknum = 0;
+        const rate = 1.05;
+        //给各个变量赋值
+        room_long = form.room_long.value * 1000;
+        room_width = form.room_width.value * 1000;
+        floorbrick_long = form.floorbrick_long.value;
+        floorbrick_width = form.floorbrick_width.value;
+        //开始计算
+        // 用砖数量（块数）=（房间的长度÷砖长）×（房间宽度÷砖宽）×1.05
+        floorbricknum = Math.round((room_long / floorbrick_long) * (room_width / floorbrick_width) * rate);
+        $('#floorbricknum').html(floorbricknum);
+        $('#room_total').html(floorbricknum * form.floor_price.value);
+    }
+</script>
+</body>
+</html>

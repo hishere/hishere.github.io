@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>Nooneb的导航站</title>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="no.css">
+    <script src="./mock.js"></script>
+</head>
+<style>
+
+    #time {
+        position: absolute;
+        right: 8px;
+        top: 8px;
+    }
+
+    #count {
+        position: absolute;
+        left: 8px;
+        top: 8px;
+    }
+    #rightPanel{
+        position: absolute;
+        right: 8px;
+        top: 8px;
+    }
+
+    h3 {
+        margin: 0.25rem auto;
+    }
+
+    #history {
+        font-size: 1rem;
+    }
+    input{
+        width: 2rem;
+    }
+    #txturl{
+        width: 5rem;
+    }
+    #local-ip{
+        font-size: 80%;
+    }
+
+</style>
+<body>
+<span id="count">
+    访问量: <span id="count1">0</span><br>
+    用户量: <span id="count2">0</span>
+</span>
+<span id="rightPanel">
+    <span id="time">00:00:00</span><br>
+    <span id="local-ip"></span>
+</span>
+<h2 id="title" style="text-align:center">Day0</h2>
+<div>
+<button id="luyo">路由器</button>
+<span>访问：<span>
+<span id="iptar">192.168.1.1</span>.<input type="text"/>:<input type="text" value="1111"/>
+<button id="ip1to">前往</button>
+</div>  
+<span>
+    <a href="https://github.com/hishere/hishere.github.io">源仓库</a>
+    <a href="https://getman.cn">接口测试</a>
+    <a href="https://getman.cn/mock">模拟接口</a>
+    <a href="https://netcut.cn/nooneb">剪切板</a>
+<!--    <a href="/shangb.html">找任务</a>-->
+    <a href="/weiqi21.html">21路围棋</a>
+    <a href="/iflife.html">如果先生</a>
+    <a href="/economy.html">丰衣足食</a>
+    <a href="./img.html">图片预览</a>
+    <a href="./pass/pass.html">密码本</a>
+    <a href="./markdown.html?md=git">精通GitAction</a>
+    <a href="./markdown.html?md=md">精通MD</a>
+    <a href="./markdown.html?md=html">精通HTML</a>
+    <a href="./markdown.html?md=vue">精通Vue</a>
+    <a href="./markdown.html?md=node">精通Node</a>
+    <a href="./markdown.html?md=java">精通Java</a>
+    <a href="./markdown.html?md=py">精通Python</a>
+    <a href="./markdown.html?md=droi">精通Android</a>
+    <a href="./markdown.html?md=dart">精通Dart</a>
+    <a href="./markdown.html?md=sh">精通Shell</a>
+    <a href="./markdown.html?md=ter">精通Termux</a>
+    <a href="./markdown.html?md=ida">精通逆向</a>
+    <a href="./markdown.html?md=phone">刷机搞机</a>
+    <a href="./markdown.html?md=av">影音处理</a>
+    
+    <a href="./sgk/sgk.html">SGK</a>
+    <a href="./msg.html">msg</a>
+    <a href="./xf/item.html">侠风</a>
+    <a href="./soc.html">SOC</a>
+   
+    <a href="./18.html">刚满18岁</a>
+    <a href="./zhuan.html">铺地砖</a>
+    <a href="./chess/chessNet.html">象棋对战</a>
+    <a href="./chess/chessPlus.html">象棋：界限突破</a>
+    <a href="./chess/chessMix.html">融合象棋</a>
+    <input type="text" id="txturl" placeholder="文本解析url" />
+</span>
+<h3>搜索引擎</h3>
+<span>
+    <a href="http://m.baidu.com/">手机百度</a>
+    <a href="http://www.baidu.com/">电脑百度</a>
+    <a href="http://so.m.sm.cn">神马搜索</a>
+    <a href="http://m.sogou.com">搜狗</a>
+    <a href="https://cn.bing.com">必应Bing</a>
+    <a href="https://www.google.com">Google</a>
+    <a href="http://i.jandan.net">煎蛋</a>
+    <a href="https://www.bilibili.com">哔哩哔哩</a>
+</span>
+<h3>影视</h3>
+<span>
+    
+    <a href="https://hhkan.app">好好看</a>
+    <a href="https://www.dushe04.com">DS</a>
+    
+    <a href="https://www.keke1.app">可可</a>
+    <a href="http://ffzy1.tv/">非凡资源</a>
+	<a href="https://www.bj-sj.net/">夏沫电影</a>
+    <a href="https://xslap.com/">大米星球(快)</a>
+    
+    <a href="https://www.zbk001.com/">真不卡</a>
+   
+    <a href="https://yhzy.cc">樱花采集(墙)</a>
+    <a href="https://shandianzy.cc">闪电采集</a>
+<a href="https://43.248.139.19:12210/sanguo.m3u8">三国</a>
+<a href="https://43.248.139.19:12210/renmingdemingyi.m3u8">人民的民义</a>
+<a href="https://43.248.139.19:12210/langyabang.m3u8">琅琊榜</a>
+<a href="https://43.248.139.19:12210/aiqinggongyu.m3u8">爱情公寓</a>
+<a href="https://43.248.139.19:12210/labixiaoxin.m3u8">蜡笔小新</a>
+<a href="https://43.248.139.19:12210/diaosinanshi.m3u8">屌丝男士</a>
+<a href="https://43.248.139.19:12210/hooligan.m3u8">古惑仔</a>
+<a href="https://43.248.139.19:12210/poker.m3u8">德州扑克</a>
+<a href="https://43.248.139.19:12210/aisiwangjiqiren.m3u8">爱死亡机器人</a>
+<a href="https://43.248.139.19:12210/xiaopin.m3u8">小品</a>
+<a href="https://43.248.139.19:12210/restricted.m3u8">末代皇帝</a>
+
+</span>
+<h3>音乐</h3>
+<span>
+    <a href="http://tools.liumingye.cn/music">MyFreeMp3</a>
+    <a href="https://www.gequbao.com">歌曲宝</a>
+    <a href="https://www.hifini.com">HiFiNi</a>
+    <a href="https://cenguigui.cn/music">guigui</a>
+</span>
+<h3>社区资源</h3>
+<span>
+<a href="https://pan.huang1111.cn/s/RYQPRCB">网盘备用</a>
+    <a href="https://cloud.189.cn/t/EVRf2u77zYF3">装机资源_f7le</a>
+    <a href="https://tieba.baidu.com">百度贴吧</a>
+    <a href="https://m.weibo.cn">新浪微博</a>
+    <a href="https://web.telegram.org">Telegram</a>
+    <a href="https://m.youtube.com">YouTobe</a>
+    <a href="https://imyshare.com">iMyShare导航</a>
+    <a href="https://www.aliyundrive.com/drive">阿里云盘</a>
+    <a href="https://pan.baidu.com">百度网盘</a>
+<a href="https://apps.evozi.com/apk-downloader">Play商店解析</a>
+</span>
+<h3>电脑软件</h3>
+<span>
+    <a href="https://www.mpyit.com">老殁</a>
+    <a href="https://www.ghxi.com">果核剥壳</a>
+    <a href="https://www.crsky.com">非凡软件站</a>
+    <a href="https://www.6yit.com">六音软件</a>
+    <a href="https://www.winos.me">Win10溯潮汐</a>
+    <a href="http://msdn.itellyou.cn">MSDN I tell you</a>
+    <a href="https://next.itellyou.cn">NEXT I tell you</a>
+    <a href="https://www.423down.com">423 Down</a>
+    <a href="https://www.yxssp.com">异星</a>
+    <a href="https://www.whg6.com">无痕哥</a>
+    <a href="https://www.yikurj.com">易酷软件</a>
+    <a href="https://www.ypojie.com">亿破姐</a>
+    <a href="https://www.luochenzhimu.com">落尘之木</a>
+    <a href="https://www.mfrjz.com">木风软件站</a>
+    <a href="http://www.dugubest.com">独孤求软</a>
+    <a href="https://www.isharepc.com">乐软博客</a>
+    <a href="https://www.extfans.com">chrome插件下载</a>
+    <a href="https://u.tools">效率工具utools</a>
+    <a href="http://webact.185.hk/sharedkey.php">小爱密钥共享</a>
+</span>
+<h3>安卓软件</h3>
+<span>
+    <a href="https://f-droid.org/">F-Droid</a>
+    <a href="https://m.wandoujia.com">豌豆荚</a>
+    <a href="https://m.sm.cn">神马应用</a>
+    <a href="https://mobile.baidu.com/">百度手机助手</a>
+    <a href="https://h5.appstore.vivo.com.cn/">vivo商店</a>
+    <a href="https://lestore.lenovo.com/">联想商店PC&安卓</a>
+    <a href="http://bbs.ydss.cn">移动叔叔</a>
+    <a href="https://lanzoux.com/u/yoyodadada">yoyodadada</a>
+    <a href="https://m.apkpure.com/cn">apkpure</a>
+    <a href="https://appstore.trgame.cn">天火同人</a>
+    <a href="https://www.ieasytech.com">欧陆系列</a>
+    <a href="https://www.wo1wan.com">畅玩空间</a>
+    <a href="https://www.vqs.com">骑士下载</a>
+    <a href="https://www.pilifx.com">霹雳分享</a>
+    <a href="https://modyolo.com">mod yolo</a>
+    <a href="https://cn.uptodown.com/android">up to down</a>
+    <a href="https://apkmody.io">apkmody</a>
+</span>
+<h3>模拟器/在线游戏</h3>
+<span>
+    <a href="https://store.hzqiangzhi.cn/">强智</a>
+    <a href="https://blog.hnqydzkj.cn/">擎亿</a>
+    <a href="https://game.hzjinyiyuan.cn/">精义元</a>
+    <a href="http://java.52emu.cn">52emu</a>
+    <a href="https://www.dospy.wang">dospy塞班论坛</a>
+    <a href="https://lovecia.com">爱cia</a>
+    <a href="https://i3ds.fun">爱3ds</a>
+    <a href="https://lanzoux.com/i70q2fa">蘑菇下载器steam</a>
+    <a href="https://byrut.org">俄罗斯Steam</a>
+    <a href="http://gbtgame.ysepan.com">GBT游戏空间</a>
+    <a href="http://ysusb.ysepan.com">FC怀旧游戏</a>
+    <a href="https://nes.heheda.top">红白之家</a>
+    <a href="http://www.okemu.com/1/r_15_1.html">OK模拟网</a>
+    <a href="https://www.yikm.net">小霸王</a>
+    <a href="https://nandgame.com">NandGame</a>
+    <a href="https://frvr.com">frvr</a>
+    <a href="https://www.friv.com">FRIV在线</a>
+    <a href="https://www.gamesforthebrain.com">益智游戏</a>
+    <a href="http://www.physicsgames.net">物理游戏</a>
+    <a href="https://www.pacogames.com">pocogame</a>
+    <a href="https://m.saolei123.com">扫雷在线</a>
+    <a href="https://www.mazegenerator.net">迷宫生成器</a>
+    <a href="https://www.puzzle-nonograms.com">拼图解谜</a>
+    <a href="https://dos.zczc.cz">dos在线</a>
+    <a href="https://poki.com">poki</a>
+    <a href="https://www.crazygames.com">crazy game</a>
+    <a href="https://www.mutegame.com">MuteGame</a>
+    <a href="http://www.wesane.com">微伞</a>
+    <a href="https://iogames.space">io游戏空间</a>
+    <a href="http://www.io233.com">io233</a>
+    <a href="https://tanx.io">坦克io</a>
+    <a href="https://yorg.io">塔防在线</a>
+    <a href="https://gartic.io">你画我猜io</a>
+    <a href="https://garticphone.com">传话游戏</a>
+    <a href="https://cuber.heheda.top">电子魔方</a>
+    <a href="https://iamthecu.be">魔方在线</a>
+    <a href="https://github.blog/2020-10-11-top-ten-games-from-the-js13k-2020-competition">JS13K</a>
+    <a href="https://zh.y8.com">Y8游戏</a>
+</span>
+<h3>知识</h3>
+<span>
+    <a href="https://baike.baidu.com">百度百科</a>
+    <a href="https://www.mbalib.com">MBA智库</a>
+    <a href="https://wyw.hwxnet.com">文言文字典</a>
+    <a href="https://m.gushiwen.org">古诗文网</a>
+    <a href="https://m.51voa.com">51VOA</a>
+    <a href="https://www.cgtn.com">CGTN</a>
+    <a href="http://www.jyeoo.com">菁优网</a>
+    <a href="http://m.leleketang.com">乐乐课堂</a>
+    <a href="https://www.rwtext.com">瑞文文摘</a>
+    <a href="http://www.chnmuseum.cn/Portals/0/web/vr">国家博物馆VR</a>
+</span>
+<h3>编程</h3>
+<span>
+    <a href="https://mvnrepository.com">MVN Repository</a>
+    <a href="https://developer.aliyun.com/mvn/view">阿里云Maven</a>
+    <a href="https://www.w3school.com.cn">W3 school</a>
+    <a href="https://www.w3cschool.cn">W3C school</a>
+    <a href="https://www.runoob.com">菜鸟教程</a>
+    <a href="http://www.java1234.com">java1234</a>
+    <a href="http://download.java1234.com">java1234下载</a>
+    <a href="http://www.vue5.com">V5在线教程</a>
+    <a href="https://www.techempower.com/benchmarks">Web框架大全</a>
+    <a href="https://segmentfault.com/a/1190000018922732">45个CSS形状</a>
+    <a href="https://cdnjs.com">cdnjs</a>
+    <a href="https://www.webjars.org">WebJars</a>
+    <a href="https://jitpack.io">JitPack</a>
+    <a href="https://element.eleme.cn">饿了吗UI</a>
+    <a href="https://mp.weixin.qq.com">微信公众平台</a>
+    <a href="https://mirrors.tuna.tsinghua.edu.cn">清华大学镜像</a>
+    <a href="https://www.workerman.net">workerman</a>
+    <a href="http://gym.openai.com">OpenAI</a>
+    <a href="https://bestcclm.com/portal.php">虫虫教学</a>
+    <a href="https://m.bilibili.com">哔哩哔哩</a>
+    <a href="https://apachecn.org">布客</a>
+    <a href="https://www.mooc.cn">慕课中国</a>
+    <a href="https://m.imooc.com">慕课网</a>
+    <a href="https://www.aliyundrive.com/s/wAhE12o8JRy/folder/6083d86b75913ab3de8d473ba1f12cdf1a29a1ea">一只鱼分享</a>
+    <a href="https://www.aliyundrive.com/s/f4pweefi4oE/folder/61827292e5d42743fc6748909f07093757eca59e">CEZMFQ分享</a>
+    <a href="https://www.aliyundrive.com/s/JwU7Q4DLzFc/folder/6151a5b51d4b481b4784459791063175302bfdd5">自媒体分享</a>
+    <a href="https://www.aliyundrive.com/s/EXktMb6YBpP/folder/61bc19787a8d1c51c7c14172b03ed397328381f8">青睿分享</a>
+    <a href="https://javaguide.cn">JavaGuide</a>
+    <a href="https://report.amap.com">高德交通</a>
+    <a href="https://heat.qq.com/wap_qqmap_big_data/index99.html">腾讯位置大数据</a>
+    <a href="https://top.chinaz.com">ChinaZ排行</a>
+    <a href="https://w3techs.com">万维网技术调查</a>
+    <a href="https://gs.statcounter.com">startCount统计</a>
+    <a href="https://trendinsight.oceanengine.com">巨量算数</a>
+    <a href="https://trends.google.com">Google趋势</a>
+    <a href="https://index.baidu.com">百度指数</a>
+    <a href="https://data.weibo.com/index/newindex">微指数</a>
+    <a href="https://greasyfork.org/zh-CN/scripts/329484-豆瓣资源下载大师-1秒搞定豆瓣电影-音乐-图书下载">搞定豆瓣</a>
+    <a href="https://greasyfork.org/zh-CN/scripts/418804-解锁b站大会员番剧-b站视频解析下载-全网vip视频免费破解去广告-全网音乐直接下载-油管-facebook等国外视频解析下载-网盘搜索引擎破解无限下载等">全网vip解锁</a>
+    <a href="https://greasyfork.org/zh-CN/scripts/425955-阿里云盘">突破阿里2分钟</a>
+    <a href="https://github.com/judasn/IntelliJ-IDEA-Tutorial">idea学习</a>
+    <a href="https://kaifa.baidu.com">开发者搜索</a>
+    <a href="https://ipapi.co/json">获取ip</a>
+</span>
+<h3>工具</h3>
+<span>
+    <a href="https://img.logosc.cn/">ai改图</a>
+    <a href="https://fish.audio/zh-CN/">fish语音模型</a>
+    <a href="https://airportal.cn">在线传文本</a>
+    <a href="https://www.wenshushu.cn">文叔叔传文件</a>
+    <a href="https://www.bazhuayu.com">八爪鱼采集</a>
+    <a href="http://pngimg.com">透明图</a>
+    <a href="http://www.ixiqi.com">爱稀奇</a>
+    <a href="https://www.17he.net">兔二工具</a>
+    <a href="https://tools.miku.ac">Miku工具</a>
+    <a href="http://tool.mkblog.cn">孟坤工具箱</a>
+    <a href="https://jiemahao.com">接收验证码</a>
+    <a href="https://xinghai.party">接码平台</a>
+    <a href="https://clearcode.cn">无敌云短信</a>
+    <a href="http://24mail.chacuo.net">接收邮箱</a>
+    <a href="https://iconpark.oceanengine.com/official">图标库</a>
+    <a href="https://github.com/majorworld/MousePlus">鼠标增强</a>
+    <a href="https://shuax.com/project/mouseinc">鼠标手势</a>
+    <a href="https://docs.hipc.cn">HiPC远程控制</a>
+    <a href="https://www.polebrief.com/index">极简简历</a>
+    <a href="http://www.ico51.cn">ico在线转</a>
+    <a href="https://calculator.yunser.com">进制计算器</a>
+    <a href="https://mathsolver.microsoft.com/zh">微软数学计算</a>
+    <a href="https://www.tooleyes.com/app/3d_editor.html">3d max在线</a>
+    <a href="https://photokit.com/editor">图片编辑在线</a>
+    <a href="https://www.tooleyes.com/app/icon_studio.html">安卓图标工厂</a>
+    <a href="https://lab.magiconch.com/nbnhhsh">好好说话</a>
+    <a href="https://toonme.com">卡通头像</a>
+    <a href="https://www.lalal.ai/zh-hans">人声分离</a>
+    <a href="https://vocalremover.org/ch">人声分离</a>
+    <a href="https://www.tosound.com">淘声</a>
+    <a href="http://hi.pcmoe.net">与熊论道</a>
+    <a href="https://www.gifhome.com">GIF之家</a>
+    <a href="https://m.soogif.com">GIF图库</a>
+    <a href="https://www.vmgirls.com">VMGrils</a>
+    <a href="https://xibi.tv">嘻哔嘻哔</a>
+    <a href="https://www.latexlive.com">在线LateX</a>
+</span>
+<h3>电子书</h3>
+<span>
+    <a href="https://www.jb51.net/books">脚本之家电子书</a>
+    <a href="https://sn9.us/dir/17192461-27868687-4e3441">掌阅万本书籍</a>
+    <a href="https://ebook2.lorefree.com">lorefree</a>
+    <a href="https://sobooks.cc">SoBooks</a>
+    <a href="https://book.sciencereading.cn">科学文库</a>
+    <a href="http://www.ladouban.com">辣豆瓣</a>
+    <a href="https://www.aliyundrive.com/s/MJ7qoRVpnT3">EPUBB整站电子书</a>
+    <a href="https://www.aliyundrive.com/s/DaNNsdvi9bi">知乎1090篇</a>
+    <a href="https://www.aliyundrive.com/s/5XhmZLwf6Kh">400+优质PPT模板</a>
+    <a href="https://www.officeplus.cn">微软模板模板</a>
+    <a href="https://www.aliyundrive.com/s/Ji6sfKR5Dfp">10000+PPT模板&素材</a>
+    <a href="https://www.aliyundrive.com/s/rFnFNmJmo84">极客时间 - 专栏</a>
+    <a href="https://www.aliyundrive.com/s/YCZqsjdZ3wC">极客时间 - 视频</a>
+    <a href="https://docs.qq.com/sheet/DRU5MWHZCTHFGQnhM">公开课知识库</a>
+    <a href="http://www.j9p.com">精品下载</a>
+</span>
+<h3>访客记录(保留10条)</h3>
+<span id="history"></span>
+<script>
+    let count1 = document.getElementById("count1");
+    let count2 = document.getElementById("count2");
+
+    function ajax(options) {
+        options = options || {};
+        const xhr = new XMLHttpRequest();
+        xhr.open(options.type, options.url);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                const status = xhr.status;
+                if (status >= 200 && status < 300 || status === 304) {
+                    options.success && options.success(xhr.responseText, xhr.responseXML);
+                } else {
+                    options.error && options.error(status);
+                }
+            }
+        };
+        return xhr;
+    }
+
+    // ajax({
+    //     url: "https://getman.cn/mock/no/one/but/you",
+    //     type: "get",
+    //     success: res => {
+    //         count1.innerText = res;
+    //         ajax({
+    //             url: "https://getman.cn/api/mock?route=/no/one/but/you&body=" + (parseInt(res) + 1),
+    //             type: "post"
+    //         }).send()
+    //     }
+    // }).send();
+    ajax({
+        url: "https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/no/one/but/you",
+        type: "get",
+        success: res => {
+            const data = JSON.parse(res)
+            count1.innerText = data.data.count1;
+            const sendCount1 = parseInt(data.data.count1) + 1;
+            let sendCount2 = parseInt(data.data.usersformysite);
+            const isNewUser = localStorage.getItem("isNewUserOfMySite");
+            if (isNewUser == null) {//是新用户
+                localStorage.setItem("isNewUserOfMySite", "1");
+                sendCount2 = sendCount2 + 1;
+            }
+            count2.innerText = sendCount2;
+
+            const bd = {
+                "url": "/no/one/but/you",
+                "mode": "{\n  data: {\n    count1: " + sendCount1 + ",\n    usersformysite: " + sendCount2 + "\n  }\n}",
+                "method": "get",
+                "description": "首页数量",
+                "id": "6648b1be94e3e514624f65ea"
+            };
+            const xhr = ajax({
+                url: "https://mock.presstime.cn/api/mock/update",
+                type: "post",
+                success: function (res) {
+                    console.log(res);
+                }
+            });
+            xhr.setRequestHeader('Authorization', mockAuth);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+            xhr.send(JSON.stringify(bd));
+        }
+    }).send();
+
+
+    // ajax({
+    //     url: "https://a6.qikekeji.com/txt/data/detail?txt_name=usersformysite",
+    //     type: "get",
+    //     success: res => {
+    //         let res1 = JSON.parse(res);
+    //         let users = JSON.parse(res1.data.txt_content)[0].content;
+    //         let v_id = res1.data.v_id;
+    //
+    //         const isNewUser = localStorage.getItem("isNewUserOfMySite");
+    //         if (isNewUser == null) {//是新用户
+    //             localStorage.setItem("isNewUserOfMySite", "1");
+    //             const xhr = ajax({
+    //                 type: "post",
+    //                 url: "https://a6.qikekeji.com/txt/data/save",
+    //                 success: res => {
+    //                     console.log(res);
+    //                 }
+    //             });
+    //             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    //             const obj = [{"title": "在线用户", "content": parseInt(users) + 1}];
+    //             const objStr = JSON.stringify(obj);
+    //             xhr.send("txt_name=usersformysite&txt_content=" + objStr + "&v_id=" + v_id);
+    //             users = parseInt(users) + 1;
+    //         }
+    //         count2.innerText = users;
+    //     }
+    // }).send();
+
+    function random() {
+        // return "?random=" + (Math.random() + '').substring(4, 8);
+        return "?" + (Math.random() + '').substring(4, 8);//只要?xxx足以证明是新文件
+    }
+
+    function hasDay() {
+        const currentYear = new Date().getFullYear().toString();
+        const hasTimestamp = new Date() - new Date(currentYear);
+        return Math.ceil(hasTimestamp / 86400000) + 1;
+    }
+
+    document.getElementById("title").innerText = "Day" + hasDay();
+
+    const time = document.getElementById("time");
+    setInterval(function () {
+        const date = new Date();
+        let h = date.getHours().toString();
+        if (h.length === 1) {
+            h = "0" + h;
+        }
+        let m = date.getMinutes().toString();
+        if (m.length === 1) {
+            m = "0" + m;
+        }
+        let s = date.getSeconds().toString();
+        if (s.length === 1) {
+            s = "0" + s;
+        }
+        time.innerText = h + ":" + m + ":" + s
+    }, 2000);
+
+    const hostname = window.location.hostname
+    let hostFlag = 0;
+    if (hostname.indexOf("github") !== -1) {
+        hostFlag = 1;
+    }
+    if (hostname.indexOf("gitlab") !== -1) {
+        hostFlag = 2;
+    }
+    //a标签追加尾巴,github变gitlab
+    const as = document.getElementsByTagName("a");
+    const randomTmp = random();
+    for (let i = 0, len = as.length; i < len; i++) {
+       // if (hostFlag === 2) {
+        //    as.item(i).href = as.item(i).href.replaceAll("github", "gitlab") + randomTmp;
+       // } else {
+       if(as.item(i).href.indexOf('?')==-1){
+        as.item(i).href = as.item(i).href + randomTmp;
+       }
+      //  }
+        //新标签打开
+        as.item(i).target = "_blank"
+    }
+
+    function getDate() {
+        const date = new Date();
+        return date.getFullYear() + "年" + (date.getMonth() + 1) + "月" + date.getDate() + "日";
+    }
+
+    function getShortDate() {
+        const date = new Date();
+        return (date.getMonth() + 1) + "月" + date.getDate() + "日";
+    }
+
+    setTimeout(function () {
+        ajax({
+            url: "https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/history",
+            type: "get",
+            success: res => {
+                const jsonRes = JSON.parse(res);
+                const json = jsonRes.data.his;
+                if (json.length >= 8) json.shift();
+
+                ajax({
+                    url: "https://ipapi.co/json",
+                    type: "get",
+                    success: res2 => {
+                        const ipRes = JSON.parse(res2)
+                        console.log(ipRes);
+                        const ip = ipRes.ip;
+                        const city = ipRes.city;
+                        const ua = navigator.userAgent;
+                        json.push(getShortDate() + " " + ip + " " + city + " " + ua);
+                        let h = document.getElementById("history");
+                        let s = "";
+                        for (let i = json.length - 1; i >= 0; i--) {
+                            // s += (i + 1) + "." + json[i] + "<hr>";
+                            s += json[i] + "<hr>";
+                        }
+                        h.innerHTML = s;
+                        // ajax({
+                        //     url: "https://getman.cn/api/mock?route=/nooneb/history&body=" + JSON.stringify(json),
+                        //     type: "post"
+                        // }).send()
+
+                        const sendJson = JSON.stringify(json);
+                        const bd = {
+                            "url": "/history",
+                            "mode": "{\n  \"data\": {\n    his: " + sendJson + "\n  }\n}",
+                            "method": "get",
+                            "description": "主页历史",
+                            "id": "6648b9d7fa29401478437cbf"
+                        }
+                        const xhr = ajax({
+                            url: "https://mock.presstime.cn/api/mock/update",
+                            type: "post",
+                            success: function (res) {
+                                console.log(res);
+                            }
+                        });
+                        xhr.setRequestHeader('Authorization', mockAuth);
+                        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+                        xhr.send(JSON.stringify(bd));
+                    }
+                }).send()
+            }
+        }).send();
+    }, 5000);
+
+
+
+    var luyoVa="192.168.1.1"
+    function getLocalIP() {
+      const RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+      // 创建一个虚拟的RTCPeerConnection，不连接任何STUN服务器
+      const pc = new RTCPeerConnection({ iceServers: [] });
+      // 创建一个数据通道
+      pc.createDataChannel('');
+      // 创建offer（提议）
+      pc.createOffer().then(offer => pc.setLocalDescription(offer));
+      // 监听ICE候选信息
+      pc.onicecandidate = function(event) {
+        if (event.candidate) {
+          const candidate = event.candidate.candidate;
+          // 使用正则表达式从候选信息中匹配IPv4地址
+          const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3})/;
+          const match = ipRegex.exec(candidate);
+          if (match) {
+            const ip = match[1];
+            // 检查是否是局域网IP（以192.168、172.16-31、10.开头）
+            if (ip.startsWith('192.168.') || ip.startsWith('172.1') || ip.startsWith('10.')) {
+              document.getElementById('local-ip').textContent = ip;
+              document.getElementById('iptar').textContent = ip.replace(/\.?\d+$/, '');
+              luyoVa = ip.replace(/\.?\d+$/, '.1');
+              pc.onicecandidate = null; // 获取到后取消监听
+              pc.close(); // 关闭连接
+            }
+          }
+        }
+      };
+    }
+    getLocalIP();
+    
+document.getElementById('luyo').onclick=function(){
+    location.href='http://'+luyoVa;
+}
+
+
+document.getElementById('ip1to').addEventListener('click', function(event) {
+  let clickedElement = event.target;
+  let parentElem = clickedElement.parentElement;
+
+  // 获取父元素下所有input元素
+  let inputs = parentElem.querySelectorAll('input');
+  
+  // 创建一个数组来存放所有input的值
+  
+  let ipstr=parentElem.textContent;
+  
+  let tarurl=ipstr.replace(':',inputs[0].value+':'+inputs[1].value).replace('前往','').replace('路由器','');
+  location.href='http://'+tarurl;
+});
+
+function extractURLsAndAlert(text) {
+    
+    const urlRegex = /(https?|ftp):\/\/[^\s/$.?#].[^\s]*/gi;
+    
+    // 使用正则表达式匹配文本中的所有 URL
+    const urls = text.match(urlRegex) || [];
+    
+    // 将匹配到的 URL 数组用换行符连接成一个字符串，用于 alert 显示
+    const alertMessage = urls.length > 0 
+        ? urls.join('\n') 
+        : '未在文本中发现 URL';
+    
+    // 弹出显示结果
+    alert(alertMessage);
+    
+    // 同时也返回这个数组，方便后续使用
+    return urls;
+}
+
+
+
+
+
+document.getElementById('txturl').addEventListener('change', function(event) {
+    
+       
+        const inputText = this.value;
+        extractURLsAndAlert(inputText);
+        //alert(inputText);
+        // 执行你的操作
+    
+});
+
+
+</script>
+</body>
+</html>

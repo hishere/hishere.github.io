@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>侠客风云的店铺</title>
+    <style>
+        span{
+        margin: 0.5rem;
+    }
+    </style>
+</head>
+<body>
+
+    <h2>侠风商店</h2>
+    <div style="color: gray">新手村,武器商人旁边货物加购,先选好id,再Save存档上传文件后即可下载,复制到android/data/com.bianfen..../config,存档也在此处寻找</div>
+    id标识m_iItemID: <br>
+    <textarea name="iid" placeholder="100102,100103" id="iid" cols="30" rows="10"></textarea><br>
+    数量m_iBuyAmount: <br>
+    <input type="text" value="1" id="num"><br><br>
+    <input type="file" id="upF">
+    <hr>
+    <div>
+
+
+        <span>100010石灰粉</span>
+        <span>100011香灰</span>
+        <span>100012泥丸子</span>
+        <span>100013霹雳雷火蛋</span>
+        <span>100014断魂尸骨丸</span>
+        <br>
+        <span>100051箭枝</span>
+        <span>100052响箭</span>
+        <span>100053木弓</span>
+        <br>
+
+        <span>100161生地黄</span>
+        <span>100162延胡索</span>
+        <br>
+
+        <span>100201草鱼</span>
+        <span>100202青鱼</span>
+        <span>100203鲤鱼</span>
+        <span>100204红鲤鱼</span>
+        <span>100205神鱼</span>
+        <span>100206鲫鱼</span>
+        <span>100207怪鲇鱼</span>
+        <span>100208链鱼</span>
+        <span>100209镛鱼</span>
+        <span>100210阙鱼</span><br><br>
+
+        <span>100251青江菜</span>
+        <span>100252大白菜</span>
+        <span>100253麻婆豆腐</span>
+        <span>100254粽子</span>
+        <br>
+
+        <span>100301川青</span>
+        <span>100302嗔红</span>
+        <span>100303陀茶</span>
+
+        <span>100351杜康酒</span>
+        <span>100351汾酒</span>
+
+        <span>100402道口烧鸡</span>
+        <span>100412鲤鱼培面</span>
+        <span>100413小白豆浆</span>
+        <span>100414洛阳燕菜</span>
+        <br>
+
+        <span>200204法华经</span>
+        <span>200301玉虎</span>
+        <span>200323撒迦牟尼画像</span>
+
+        <span>220501湘笔</span>
+        <span>220502宣笔</span>
+
+        <span>231008雨丝锦</span>
+        <span>232001黄山烟云伞</span>
+
+        <span>300001逍遥丹</span>
+        <span>300002三顺散</span>
+        <span>300003生脉丹</span>
+        <span>300004白虎散</span>
+        <span>300005再造膏</span>
+        <span>300006承气饮</span><br><br>
+
+        <span>310006青龙散</span>
+
+        <span>600014斩马剑</span>
+        <span>600015清风剑</span>
+        <span>600016莲花剑</span>
+        <span>600017盘月剑</span>
+        <span>600018九真剑</span>
+        <span>600019太乙剑</span>
+        <span>600020巨阙剑</span>
+        <span>600021青冥剑</span>
+        <span>600022龙渊剑</span>
+        <span>600023太虚剑</span>
+        <span>600024傲天神剑</span>
+        <span>600025幽冥剑</span>
+
+        <span>600102弯刀</span>
+        <span>660001皮甲</span>
+        <span>670005拳套</span>
+
+        <span>910001老旧木箱三十级</span>
+
+        <br>
+        <br>
+        <span>920001风神腿秘籍</span>
+        <span>920002如来神掌秘籍</span>
+        <span>920003打狗棒法秘籍</span>
+        <span>920004独孤九剑秘籍</span>
+        <span>920005诸子剑法秘籍</span>
+        <span>920006醉棍秘籍</span>
+        <span>920007飞瀑连环指秘籍</span>
+        <span>920008五毒宝典</span>
+        <span>920009逍遥棍法</span>
+        <span>920010华山剑经书</span>
+        <span>920011太极拳经书</span>
+        <span>920012拜月七绝</span>
+        <span>920013飞刀秘籍</span>
+        <span>920014佛山无影脚</span>
+        <span>920015野球拳</span>
+        <span>920016残花宝鉴</span>
+        <span>920017东方宝典</span>
+        <span>920018天剑经书</span>
+        <span>920019绝刀经书</span>
+        <span>920020霹雳九天心法</span>
+        <span>920021北冥神功</span>
+        <span>920022阿猴挽仙桃</span>
+        <span>920023唐家霸王枪</span>
+        <span>920024十二路镇魂腿</span>
+        <br>
+        <br>
+
+        <span>990045檀木香</span>
+        <span>990056黄纸</span>
+    </div>
+
+<script>
+
+    const upF = document.getElementById("upF");
+
+    let iidAr=[100102];
+    let v=1;
+
+    const iid = document.getElementById("iid");
+    iid.onchange=function (e){
+        iidAr=iid.value.split(",");
+        console.log(iidAr);
+    }
+    var vaa=document.getElementsByTagName("span");
+    let jj=0;
+    for (let i = 0; i < vaa.length; i++) {
+        vaa[i].onclick=function (e){
+            var inn=vaa[i].innerText;
+            if (jj===0){
+                iid.value=parseInt(inn);
+            }else {
+                iid.value=iid.value+","+parseInt(inn);
+            }
+            jj=jj+1;
+
+            iid.onchange();
+        }
+    }
+    const num = document.getElementById("num");
+    num.onchange=function (e){
+        v=num.value;
+    }
+    function download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    upF.onchange = function () {
+        var res = document.getElementById("upF").files[0];
+        if (res) {
+            var red = new FileReader();
+            red.readAsText(res, "UTF-8");
+            red.onload = function (e) {
+                const dat = this.result;
+
+                var star = "1100010,\"m_iStoreNamaID\":400009,\"m_strStroreIconID\":\"malltop-01\",\"m_iStoreType\":0,\"m_StoreItemNodeList\":";
+                var end = "},{\"m_iStoreID\":1100011";
+                var ma = dat.match(/1100010.*1100011/).toString();
+
+                if (ma==""||ma==null)return
+
+                var ma1 = ma.replace(star, "");
+                var ma2 = ma1.replace(end, "");
+                var jma=JSON.parse(ma2);
+
+
+                let ik=0;
+                for (let i in iidAr){
+                    ik=ik+1;
+                    let obj = {
+                        m_iAddBackpack: 0,
+                        m_iBuyAmount: v,
+                        m_iCheckAch: 0,
+                        m_iItemID: 100102,
+                        m_iRandom: 0,
+                        m_iRandomValue: 0,
+                        m_iResetAmount: 0,
+                    }
+                    obj.m_iItemID=parseInt(iidAr[i]);
+                    jma.push(obj);
+                }
+                console.log(jma);
+
+                const jmaS=JSON.stringify(jma);
+                // console.log(jmaS);
+                const datRp=dat.replace(/1100010.*1100011/,star+jmaS+end)
+                // console.log(datRp);
+
+                // setTimeout(function (){
+                download("SaveX.Save",datRp.toString())
+                // },3000);
+
+            }
+        }
+
+    }
+</script>
+</body>
+</html>

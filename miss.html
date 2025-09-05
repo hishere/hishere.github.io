@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="never">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>图片下载</title>
+    <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+    <link rel="shortcut icon" href="./favicon.ico"/>
+    <link rel="stylesheet" href="./no.css"/>
+    <style>
+        #con,#c1,#c2{
+            width: 5rem;
+        }
+        iframe{
+            transform: scale(0.55);
+            transform-origin: left top;
+            display: block;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<h2>图片下载</h2>
+<input id="con" type="text" value="" placeholder="编号">
+<input id="c1" type="text" value="" placeholder="开始>=100">
+<input id="c2" type="text" value="" placeholder="结束<=999">
+<input id="got" type="button" value="获取"><br>
+<script>
+    const got=document.getElementById("got");
+
+    got.onclick=async function(){
+
+        const con=document.getElementById("con");
+        const c1=document.getElementById("c1");
+        const c2=document.getElementById("c2");
+
+        for(let i=parseInt(c1.value);i<=parseInt(c2.value);i++){
+
+            const na=con.value+"-"+i;
+            const url="https://cdn82.bestjavcdn.com/"+na+"/cover.jpg?class=normal"
+            // axios.get(url).then(res=>{
+            //     console.log(res);
+            //     // let img = document.createElement('img');
+            //     // img.style = 'width:90vw';
+            //     // document.body.append(img);
+            //     // img.src = URL.createObjectURL(blob);
+            // })
+            // let resp=await fetch(url);
+            // let blob=await resp.blob();
+            let fr = document.createElement('iframe');
+            fr.style="width: 800px;height: 538px;";
+            fr.src=url;
+            document.body.append(na);
+            document.body.append(fr);
+        }
+    }
+</script>
+</body>
+</html>

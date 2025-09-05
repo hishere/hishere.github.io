@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=0.1,maximum-scale=1.0,user-scalable=yes">
+    <title>网格填充工具</title>
+    <style>
+        #targetDiv {
+            width: 1000px;
+            height: 800px;
+            background-color: rgba(240, 240, 240, 0.5);
+            margin:0 20px;
+            position: relative;
+            
+        }
+        input {
+            margin: 10px;
+            width: 80px;
+        }
+        body {
+            margin-top: 100px;
+            
+            font-family: Arial, sans-serif;
+ width: 120%
+        }
+        .size-btn {
+            width: 80px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 4px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            background-color: #f8f8f8;
+        }
+        .size-btn:hover {
+            background-color: #e8e8e8;
+        }
+        .item {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            box-sizing: border-box;
+        }
+        .item-outline {
+            border: 1px dashed #999;
+            background-color: transparent;
+        }
+        .controls {
+            margin-bottom: 15px;
+        }
+        .status {
+            margin-top: 10px;
+            font-size: 20px;
+            color: #666;
+        }
+        #swap {
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .row-label, .col-label {
+            position: absolute;
+            font-size: 8px;
+            color: #333;
+            z-index: 10;
+            background-color: rgba(255,255,255,0.7);
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        .row-label {
+            left: 2px;
+            text-align: right;
+        }
+        .col-label {
+            top: 2px;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <input type="number" placeholder="宽度" value="1000" id="widthInput"/>
+        <span id="swap"><></span>
+        <input type="number" placeholder="高度" value="800" id="heightInput"/><br>
+        <div class="size-btn" data-size="30x30">30x30</div>
+        <div class="size-btn" data-size="40x40">40×40</div>
+        <div class="size-btn" data-size="60x60">60×60</div>
+        <div class="size-btn" data-size="60x30">60x30</div>
+        <div class="size-btn" data-size="60x120">60x120</div><br>
+        <div class="size-btn" data-size="80x40">80×40</div>
+        <div class="size-btn" data-size="80x80">80x80</div>
+        <div class="size-btn" data-size="75x150">75x150</div>
+        <div class="size-btn" data-size="80x135">80x135</div>
+
+</div>
+    <div id="targetDiv"></div>
+    <div class="status" id="statusInfo"></div>
+    <div class="status" id="statusInfo2"></div>
+
+    <script>
+        const widthInput = document.getElementById('widthInput');
+        const heightInput = document.getElementById('heightInput');
+        const targetDiv = document.getElementById('targetDiv');
+        const statusInfo = document.getElementById('statusInfo');
+        const statusInfo2 = document.getElementById('statusInfo2');
+        const swapBtn = document.getElementById('swap');
+        
+        const sizeBtns = document.querySelectorAll('.size-btn');
+
+        function updateDivSize() {
+            targetDiv.textContent = '';
+            const width = parseInt(widthInput.value) || 0;
+            const height = parseInt(heightInput.value) || 0;
+            targetDiv.style.width = width + 'px';
+            targetDiv.style.height = height + 'px';
+            statusInfo.textContent = `当前容器尺寸: ${width}×${height}cm`;
+            statusInfo2.textContent='';
+        }
+
+        function parseSize(size) {
+            const parts = size.split('x');
+            return {
+                x: parseInt(parts[0]),
+                y: parseInt(parts[1])
+            };
+        }
+
+        function addElements(size) {
+            targetDiv.textContent = '';
+            
+            const containerWidth = targetDiv.clientWidth;
+            const containerHeight = targetDiv.clientHeight;
+            const spacing = 0;
+            
+            const {x: sizeX, y: sizeY} = parseSize(size);
+            
+            const fullCols = Math.floor(containerWidth / sizeX);
+            const fullRows = Math.floor(containerHeight / sizeY);
+            const fullGrids = fullCols * fullRows; // 新增：计算完整网格数量
+            
+            const remainingWidth = containerWidth - (fullCols * sizeX);
+            const remainingHeight = containerHeight - (fullRows * sizeY);
+            
+            const fragment = document.createDocumentFragment();
+            let totalItems = 0;
+            
+            // 添加行号
+            for(let row = 0; row < fullRows; row++) {
+                const rowLabel = document.createElement('div');
+                rowLabel.className = 'row-label';
+                rowLabel.textContent = row + 1;
+                rowLabel.style.top = (row * sizeY + sizeY/2) + 'px';
+                fragment.appendChild(rowLabel);
+            }
+            
+            // 添加列号
+            for(let col = 0; col < fullCols; col++) {
+                const colLabel = document.createElement('div');
+                colLabel.className = 'col-label';
+                colLabel.textContent = col + 1;
+                colLabel.style.left = (col * sizeX) + 'px';
+                colLabel.style.width = sizeX + 'px';
+                fragment.appendChild(colLabel);
+            }
+            
+            // 填充完整网格
+            for(let row = 0; row < fullRows; row++) {
+                for(let col = 0; col < fullCols; col++) {
+                    createGridItem(fragment, sizeX, sizeY, col * sizeX, row * sizeY, (col + row) % 2 === 0);
+                    totalItems++;
+                }
+                
+                // 填充右侧剩余空间
+                if(remainingWidth > 0) {
+                    // 先添加完整网格的虚线轮廓
+                    createGridItem(fragment, sizeX, sizeY, fullCols * sizeX, row * sizeY, false, true);
+                    // 再添加实际剩余部分
+                    createGridItem(fragment, remainingWidth, sizeY, fullCols * sizeX, row * sizeY, (fullCols + row) % 2 === 0);
+                    totalItems += 2;
+                }
+            }
+            
+            // 填充下方剩余空间
+            if(remainingHeight > 0) {
+                for(let col = 0; col < fullCols; col++) {
+                    // 先添加完整网格的虚线轮廓
+                    createGridItem(fragment, sizeX, sizeY, col * sizeX, fullRows * sizeY, false, true);
+                    // 再添加实际剩余部分
+                    createGridItem(fragment, sizeX, remainingHeight, col * sizeX, fullRows * sizeY, (col + fullRows) % 2 === 0);
+                    totalItems += 2;
+                }
+                
+                // 填充右下角剩余空间
+                if(remainingWidth > 0 && remainingHeight > 0) {
+                    // 先添加完整网格的虚线轮廓
+                    createGridItem(fragment, sizeX, sizeY, fullCols * sizeX, fullRows * sizeY, false, true);
+                    // 再添加实际剩余部分
+                    createGridItem(fragment, remainingWidth, remainingHeight, fullCols * sizeX, fullRows * sizeY, (fullCols + fullRows) % 2 === 0);
+                    totalItems += 2;
+                }
+            }
+            
+            targetDiv.appendChild(fragment);
+            const sizeText = size.replace('x', '×');
+            statusInfo.textContent = `填充完成: ${totalItems}个网格 | 完整网格: ${fullGrids}（${fullCols}*${fullRows}） | 容器尺寸: ${containerWidth}×${containerHeight}cm`;
+            const totAr=containerWidth*containerHeight;
+            const oneAr=sizeY*sizeX;
+            const resAr=Math.ceil(totAr/oneAr);
+            statusInfo2.textContent=`根据公式: 面积÷单片面积，${totAr}÷${oneAr}=${resAr}（向上取整），如果上方虚线空白（边角料）不可复用，那么这个数据将偏差极大`;
+        }
+
+        function createGridItem(fragment, width, height, left, top, isEven, isOutline = false) {
+            const item = document.createElement('div');
+            item.className = 'item' + (isOutline ? ' item-outline' : '');
+            item.style.width = width + 'px';
+            item.style.height = height + 'px';
+            item.style.left = left + 'px';
+            item.style.top = top + 'px';
+            
+            if(!isOutline) {
+                item.style.backgroundColor = isEven ? 'rgba(100, 149, 237, 0.3)' : 'rgba(65, 105, 225, 0.5)';
+            }
+            
+            item.textContent = isOutline ? '' : `${width}×${height}`;
+            fragment.appendChild(item);
+        }
+
+        function swapValues() {
+            const temp = widthInput.value;
+            widthInput.value = heightInput.value;
+            heightInput.value = temp;
+            updateDivSize();
+        }
+
+        sizeBtns.forEach(btn => {
+            btn.addEventListener('click', () => addElements(btn.dataset.size));
+        });
+        
+        widthInput.addEventListener('input', updateDivSize);
+        heightInput.addEventListener('input', updateDivSize);
+        swapBtn.addEventListener('click', swapValues);
+        
+        // 初始化
+        updateDivSize();
+    </script>
+</body>
+</html>

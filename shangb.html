@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="font-size:20px;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Referrer" content="origin">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=0.9,minimum-scale=0.9,maximum-scale=0.9,user-scalable=no">
+    <script src="https://unpkg.zhimg.com/vue/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+    <style>
+        .t {
+            width: 3rem;
+        }
+        .t1{
+            width: 5rem;
+        }
+
+        .dcdcdc {
+            background-color: #dcdcdc;
+        }
+    </style>
+    <title>shangb</title>
+    <link rel="stylesheet" href="./no.css">
+</head>
+<body>
+<div id="app">
+    <h2>赏帮筛选器</h2>
+    <p>用途: 用价格区间筛选出简单的任务</p>
+<!--    <h3><a href="http://bnmh.ftvip.cn/4877987">下载</a></h3>-->
+    排序: <input type="text" class="t" v-model.number="sortBy"/>1综合2最新3简单4高价5未做<br>
+    当前: <input type="text" class="t" v-model.number="current"/><br>
+    大小: <input type="text" class="t" v-model.number="size"/><br>
+    金额: <input type="text" class="t" v-model.number="moneyLimitLeft"/> ~
+    <input type="text" class="t" v-model.number="moneyLimitRight"/>
+    <input type="button" value="Less" @click="lessdot3">
+    <input type="button" value="Then" @click="thendot3"><br>
+    禁用词:  <input type="text" v-model="ban"/>
+    <br><br>
+    <button v-on:click="hallList">请求</button>
+    &nbsp
+    <button v-on:click="lastPage">上一页</button>
+    &nbsp
+    <button v-on:click="nextPage">下一页</button>
+    &nbsp
+    快审<input type="checkbox" v-model="ks"/>
+    <hr>
+    <div>
+        金额-------项目---------id
+        <div style="margin: 0.1rem;" v-for="(i,index) in res" :class="{'dcdcdc': index%2==0}">
+            {{ i.money }}元---<span v-on:dblclick="addBan(i.name)">{{ i.name.substring(0,10) }}</span>---<span v-on:click="detailFs(i.id)">{{ i.id }}</span>
+        </div>
+    </div>
+</div>
+<script>
+
+    Vue.createApp({
+        created() {
+            const state = localStorage.getItem('state');
+            if (state != null) {
+                let obj = JSON.parse(state);
+                this.ks = obj.ks;
+                this.moneyLimitLeft = obj.moneyLimitLeft;
+                this.moneyLimitRight = obj.moneyLimitRight;
+                this.ban=obj.ban;
+                this.sortBy = obj.sortBy;
+                this.size = obj.size;
+            }
+
+            // this.banList();
+        },
+        updated() {
+            let that = this;
+            localStorage.setItem('state', JSON.stringify({
+                ks: this.ks,
+                moneyLimitLeft: this.moneyLimitLeft,
+                moneyLimitRight: this.moneyLimitRight,
+                ban: this.ban,
+                sortBy: this.sortBy,
+                size: this.size
+            }));
+        },
+        data() {
+            return {
+                ks: true,
+                msg: "hello",
+                moneyLimitLeft: 0,
+                moneyLimitRight: 99,
+                ban: '',
+                url: "http://gateway.shangbangzhuan.com/task/hallList",
+                sortBy: 1,
+                current: 1,
+                size: 50,
+                res: "",
+                odd: 0,
+                taskId: '',
+                headers: {
+                    'Host': 'gateway.shangbangzhuan.com',
+                    'Connection': 'Keep-Alive',
+                    'Accept-Encoding': 'gzip',
+                    'User-Agent': 'okhttp/4.0.1',
+                    'uuid': '',
+                    'deviceInfo': '',
+                    'device': 'android',
+                    'version': '2.59'
+                },
+                wbId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6IjIwZjM3ZDNlLWZjMzUtNGQ4NS05ZWUwLWUxNTk4ZTRkODJjNyIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjo0ODc3OTg3fQ.teDGRNzf3rtqVLmkPJloam9_hkFhgcNztGBgP6FHgK4',
+                jdId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6ImE2MTVjMTI5LTM4ZWYtNDhlYy05OGMxLWJjNmI4MTc1ZjE5YiIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjozNTk0NjExfQ.1MH1SJSr0Dyb-aZ_bQGdGsxOVgx1lMtP6OBfd5vozyI',
+                fsId: 'eyJhbGciOiJIUzI1NiJ9.eyJvdGhlciI6ImVlMDRiNDZkLTRiNDYtNDMxZC04YjAyLTQ2M2ZlNmFlMmQ5YSIsImxvZ2luVHlwZSI6MSwiYWNjb3VudFR5cGUiOjEsImlkIjozNTc4MTc0fQ.2I7LlFU6G3QMU3XPhwU8VMJMVNoruHmcJHHTmV7BHkk',
+                realme: 'BRAND:realme,MODEL:RMX2117,VERSION:10,DEVICE:RMX2117CN,BOARD:oppo6853,NETWORK:NETWORK_WIFI',
+                redmi: 'BRAND:Redmi,MODEL:22041216C,VERSION:12,DEVICE:xaga,BOARD:xaga,NETWORK:NETWORK_WIFI'
+            }
+        },
+        computed: {
+            //用不上
+            banList(){
+                const ban = this.ban;
+                return ban.split(",");
+            }
+        },
+        methods: {
+            lessdot3(){
+                this.moneyLimitLeft=0;
+                this.moneyLimitRight=0.3;
+            },
+            thendot3(){
+                this.moneyLimitLeft=0.29;
+                this.moneyLimitRight=1.5;
+            },
+            addBan(name){
+                let ban = this.ban;
+                ban=ban+name+',';
+                this.ban=ban;
+            },
+            paste(){
+                const taht=this;
+                navigator.clipboard.readText().then(text=>{
+                    taht.taskId=text;
+                });
+            },
+            //点击后浏览记录中就能找到了
+            detailFs(taskId){
+                let headers=this.headers;
+                headers["uuid"]=this.fsId;
+                headers["deviceInfo"]=this.redmi;
+                console.log("点击了:"+taskId);
+                fetch('http://gateway.shangbangzhuan.com/task/detail/'+taskId, {headers: headers});
+            },
+            hallList() {
+                const that = this;
+                axios.get(that.url, {
+                    params: {
+                        sortBy: that.sortBy,
+                        current: that.current,
+                        size: that.size
+                    }
+                }).then(res => {
+//console.log(res);
+                    that.res = res.data.data.filter(item => {
+                        if (!that.ks) if (item.auditFast) return false;
+                        return item.money > that.moneyLimitLeft && item.money < that.moneyLimitRight && that.ban.indexOf(item.name)===-1;
+                    });
+
+                })
+            },
+            nextPage() {
+                this.current += 1;
+                this.hallList();
+            },
+            lastPage() {
+                if (this.current === 1) return;
+                this.current -= 1;
+                this.hallList();
+            }
+        }
+    }).mount("#app")
+
+</script>
+</body>
+</html>

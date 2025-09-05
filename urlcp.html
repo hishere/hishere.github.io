@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL解析与复制工具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            margin: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1a2a6c;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            border-radius: 2px;
+        }
+        
+        .description {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            border-color: #1a2a6c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        #pasteBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #parseBtn {
+            background-color: #1a2a6c;
+            color: white;
+        }
+        
+        #clearBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #pasteBtn:hover {
+            background-color: #388E3C;
+        }
+        
+        #parseBtn:hover {
+            background-color: #0f1c55;
+        }
+        
+        #clearBtn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .output-section {
+            margin-top: 30px;
+        }
+        
+        .url-list {
+            list-style: none;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .url-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+        
+        .url-item:last-child {
+            border-bottom: none;
+        }
+        
+        .url-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .url-text {
+            flex: 1;
+            word-break: break-all;
+            padding-right: 15px;
+            color: #1a2a6c;
+            font-weight: 500;
+        }
+        
+        .url-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .copy-btn {
+            padding: 8px 15px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background-color: #0b7dda;
+        }
+        
+        .copy-btn.copied {
+            background-color: #4CAF50;
+        }
+        
+        .no-urls {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(150%);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL解析与复制工具</h1>
+        <p class="description">粘贴任意文本到下方文本框，点击"解析URL"按钮提取所有URL地址，然后点击单个URL旁边的复制按钮</p>
+        
+        <div class="input-section">
+            <textarea id="inputText" placeholder="在此粘贴包含URL的文本..."></textarea>
+            <div class="button-group">
+                <button id="pasteBtn">粘贴文本</button>
+                <button id="parseBtn">解析URL</button>
+                <button id="clearBtn">清除内容</button>
+            </div>
+        </div>
+        
+        <div class="output-section">
+            <h2>提取的URL列表：</h2>
+            <ul id="urlList" class="url-list">
+                <li class="no-urls">尚未解析任何URL</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">URL已复制到剪贴板！</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const inputText = document.getElementById('inputText');
+            const pasteBtn = document.getElementById('pasteBtn');
+            const parseBtn = document.getElementById('parseBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const urlList = document.getElementById('urlList');
+            const notification = document.getElementById('notification');
+            
+            // 粘贴按钮事件
+            pasteBtn.addEventListener('click', async function() {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    inputText.value = text;
+                } catch (err) {
+                    alert('无法访问剪贴板内容，请手动粘贴文本');
+                }
+            });
+            
+            // 解析按钮事件
+            parseBtn.addEventListener('click', function() {
+                const text = inputText.value.trim();
+                
+                if (!text) {
+                    alert('请输入文本内容');
+                    return;
+                }
+                
+                // 使用正则表达式提取URL
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                const urls = text.match(urlRegex) || [];
+                
+                // 清空URL列表
+                urlList.innerHTML = '';
+                
+                if (urls.length === 0) {
+                    urlList.innerHTML = '<li class="no-urls">未找到URL</li>';
+                    return;
+                }
+                
+                // 去重并添加URL项
+                const uniqueUrls = [...new Set(urls)];
+                uniqueUrls.forEach(url => {
+                    const li = document.createElement('li');
+                    li.className = 'url-item';
+                    li.innerHTML = `
+                        <span class="url-text">${url}</span>
+                        <div class="url-actions">
+                            <button class="copy-btn" data-url="${url}">复制</button>
+                        </div>
+                    `;
+                    urlList.appendChild(li);
+                });
+                
+                // 为所有复制按钮添加事件
+                document.querySelectorAll('.copy-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const url = this.getAttribute('data-url');
+                        copyToClipboard(url);
+                        
+                        // 显示通知
+                        notification.classList.add('show');
+                        setTimeout(() => {
+                            notification.classList.remove('show');
+                        }, 2000);
+                        
+                        // 添加复制成功样式
+                        this.classList.add('copied');
+                        this.textContent = '已复制';
+                        setTimeout(() => {
+                            this.classList.remove('copied');
+                            this.textContent = '复制';
+                        }, 2000);
+                    });
+                });
+            });
+            
+            // 清除按钮事件
+            clearBtn.addEventListener('click', function() {
+                inputText.value = '';
+                urlList.innerHTML = '<li class="no-urls">尚未解析任何URL</li>';
+            });
+            
+            // 复制到剪贴板函数
+            function copyToClipboard(text) {
+                try {
+                    // 使用Clipboard API（现代方法）
+                    navigator.clipboard.writeText(text);
+                } catch (err) {
+                    // 如果不支持Clipboard API，使用旧方法
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.top = 0;
+                    textArea.style.left = 0;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    
+                    try {
+                        document.execCommand('copy');
+                    } catch (copyErr) {
+                        console.error('无法复制文本: ', copyErr);
+                        alert('无法复制文本，请手动复制');
+                    }
+                    
+                    document.body.removeChild(textArea);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

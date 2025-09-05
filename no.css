@@ -1,0 +1,97 @@
+body{
+    background-color: #f9f9f9;
+}
+
+input[type="button"],button {
+    text-decoration: none;
+    border: none;
+    box-shadow: 1px 1px 1px 1px #a1c9e6;
+    margin: 0.25rem;
+    padding: 0.25rem;
+    box-sizing: border-box;
+    display: inline-block;
+    background-color: white;
+    color: dodgerblue;
+}
+
+input[type="button"]:active,button:active {
+    text-decoration: none;
+    box-shadow: 1px 1px 1px 1px red;
+    margin: 0.25rem;
+    padding: 0.25rem;
+    box-sizing: border-box;
+    display: inline-block;
+}
+input[type="text"],td[contenteditable="true"] {
+    text-decoration: none;
+    border: none;
+    box-shadow: 1px 1px 1px 1px #a1c9e6;
+    margin: 0.25rem;
+    padding: 0.25rem 0.25rem;
+    box-sizing: border-box;
+    display: inline-block;
+    background-color: white;
+    color: dodgerblue;
+}
+input[type="text"]:active,input[type="text"]:focus,
+td[contenteditable="true"]:active,td[contenteditable="true"]:focus,
+th[contenteditable="true"]:active,th[contenteditable="true"]:focus,
+a[contenteditable="true"]:active,a[contenteditable="true"]:focus,
+td:active,th:active{
+    text-decoration: none;
+    border: none;
+    outline: none;
+    box-shadow: 1px 1px 1px 1px red;
+    margin: 0.25rem;
+    padding:0.25rem 0.25rem;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+a {
+    text-decoration: none;
+    box-shadow: 1px 1px 1px 1px #a1c9e6;
+    margin: 0.25rem;
+    padding: 0.25rem;
+    box-sizing: border-box;
+    display: inline-block;
+    background-color: white;
+    color: dodgerblue;
+}
+
+a:active {
+    text-decoration: none;
+    box-shadow: 1px 1px 1px 1px red;
+    margin: 0.25rem;
+    padding: 0.25rem;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+a:visited {
+    color: #ff0000;
+}
+table{
+    box-shadow: 1px 1px 1px 1px #a1c9e6;
+    margin: 0.25rem;
+    padding: 0.25rem 0.25rem;
+    box-sizing: border-box;
+    display: inline-block;
+    background-color: #f9f9f9;
+    color: dodgerblue;
+}
+th,td{
+    box-shadow: 1px 1px 1px 1px #a1c9e6;
+    margin: 0.25rem;
+    padding: 0.25rem 0.25rem;
+    box-sizing: border-box;
+    display: inline-block;
+    background-color: white;
+    color: dodgerblue;
+    /*width: 3rem;*/
+    text-align: left;
+}
+.mod2is0{
+    background-color: #f0f0f0;
+
+}
