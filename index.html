@@ -364,15 +364,18 @@
                     if (isNewUser == null) { //是新用户
                         localStorage.setItem("isNewUserOfMySite", "1");
                         sendC2 = sendC2 + 1;
+
                     }
                     sendC1 = sendC1 + 1;
                     count1.innerText = sendC1;
                     count2.innerText = sendC2;
+                    setTimeout(function() {
+                        ajax({
+                            url: "https://getman.cn/api/mock?route=/no/one/but/you&body=" + sendC1 + ',' + sendC2,
+                            type: "post"
+                        }).send();
+                    }, 2000);
 
-                    ajax({
-                        url: "https://getman.cn/api/mock?route=/no/one/but/you&body=" + sendC1 + ',' + sendC2,
-                        type: "post"
-                    }).send();
                 }
             }).send();
         }
