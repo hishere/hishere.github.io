@@ -21,9 +21,7 @@ G快捷键地址跳转
 
 N快捷键给函数改名字,方便找
 
-# CE修改器
-
-## 联合搜索
+# CE修改器-联合搜索
 
 generate groupescan command
 
