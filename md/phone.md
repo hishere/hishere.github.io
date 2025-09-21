@@ -1,3 +1,73 @@
+# 禁用广告iframe脚本
+
+``` js
+// ==UserScript==
+// @name         ban_iframe
+// @namespace    https://viayoo.com/iq3wfw
+// @version      0.2
+// @description  强力隐藏所有iframe
+// @author       You
+// @run-at       document-start
+// @match        https://*/*
+// @grant        GM_addStyle
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // 第一道防线：使用CSS全局隐藏所有iframe，最高优先级！
+    GM_addStyle('iframe { display: none !important; visibility: hidden !important; height: 0 !important; width: 0 !important; opacity: 0 !important; pointer-events: none !important; }');
+
+    // 第二道防线：JS逻辑作为补充和兜底
+    function hideAllIframes() {
+        document.querySelectorAll('iframe').forEach(iframe => {
+            // 尝试多种方式确保隐藏
+            iframe.style.display = 'none';
+            iframe.style.visibility = 'hidden';
+            iframe.style.height = '0';
+            iframe.style.width = '0';
+            iframe.style.opacity = '0';
+            iframe.style.pointerEvents = 'none';
+
+            // 尝试阻止iframe加载（对动态生成的iframe有效）
+            iframe.src = 'about:blank';
+            iframe.srcdoc = '';
+        });
+    }
+
+    // 初始化执行一次
+    hideAllIframes();
+
+    // 增强的MutationObserver，监听更广泛的变化
+    const observer = new MutationObserver(function(mutationsList) {
+        let shouldCheck = false;
+        for (let mutation of mutationsList) {
+            // 监听节点添加、属性变化、子树变化
+            if (mutation.type === 'childList' || mutation.type === 'attributes' || mutation.type === 'subtree') {
+                shouldCheck = true;
+                break;
+            }
+        }
+        if (shouldCheck) {
+            // 设置一个微小的延迟，确保DOM操作完成后再执行隐藏
+            setTimeout(hideAllIframes, 100);
+        }
+    });
+
+    // 开始观察body，监听所有可能的变化
+    observer.observe(document.body, {
+        childList: true,
+        attributes: true,
+        attributeFilter: ['src', 'style', 'class'], // 监听这些属性变化
+        subtree: true
+    });
+
+    // 最后一道防线：周期性检查（根据需要启用）
+    // setInterval(hideAllIframes, 2000); // 每2秒检查一次
+})();
+
+```
+
 # 修改文件的hash
 
 双箭头可以向文件追加内容，如下是追加换行符，当然也可以添加一些实体内容，视频音乐之类可以，其他格式就不一定了
