@@ -1,3 +1,7 @@
+# 小米路由-小强模式
+
+小强模式能做到『路由模式』下连接wifi进行扩展，而不用通过『桥接模式』，这样就有比较多的定制权，开启方法待定。ssh或者telnet登录默认是账户root密码root，WLAN配置目标文件为/etc/config/wireless。
+
 # 禁用广告iframe脚本
 
 ``` js
