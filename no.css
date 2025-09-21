@@ -13,6 +13,7 @@ input[type="button"],button {
     background-color: rgba(255,255,255,.8);
     color: dodgerblue;
     border-radius: .5rem;
+    height: 2rem;
 }
 
 input[type="button"]:active,button:active {
@@ -23,6 +24,7 @@ input[type="button"]:active,button:active {
     box-sizing: border-box;
     display: inline-block;
     border-radius: .5rem;
+    height: 2rem;
 }
 input[type="text"],td[contenteditable="true"] {
     text-decoration: none;
@@ -35,6 +37,7 @@ input[type="text"],td[contenteditable="true"] {
     background-color: rgba(255,255,255,.8);
     color: dodgerblue;
     border-radius: .5rem;
+    height: 2rem;
 }
 input[type="text"]:active,input[type="text"]:focus,
 td[contenteditable="true"]:active,td[contenteditable="true"]:focus,
@@ -50,6 +53,7 @@ td:active,th:active{
     box-sizing: border-box;
     display: inline-block;
     border-radius: .5rem;
+    height: 2rem;
 }
 
 a {
@@ -62,6 +66,7 @@ a {
     background-color: rgba(255,255,255,.8);
     color: dodgerblue;
     border-radius: .5rem;
+    height: 2rem;
 }
 
 a:active {
@@ -72,11 +77,13 @@ a:active {
     box-sizing: border-box;
     display: inline-block;
     border-radius: .5rem;
+    height: 2rem;
 }
 
 a:visited {
     color: #ff0000;
     border-radius: .5rem;
+    height: 2rem;
 }
 table{
     box-shadow: 1px 1px 1px 1px #a1c9e6;
@@ -98,6 +105,7 @@ th,td{
     /*width: 3rem;*/
     text-align: left;
     border-radius: .5rem;
+    height: 2rem;
 }
 .mod2is0{
     background-color: #f0f0f0;
