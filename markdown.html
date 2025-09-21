@@ -16,9 +16,14 @@
     <script src="https://s4.zstatic.net/npm/markdown-it-anchor@9.2.0/dist/markdownItAnchor.umd.js"></script>
     <script src="https://s4.zstatic.net/npm/markdown-it-toc-done-right@4.2.0/dist/markdownItTocDoneRight.umd.js"></script>
     <style>
-        h1, h2, h3, h4, h5, h6 {
-            font-size: 50%;
-        }
+        /* 示例：基于 rem 单位，按比例缩小所有标题，但仍保持差异 */
+h1 { font-size: 1.8rem; }   /* 原为 2rem */
+h2 { font-size: 1.6rem; }   /* 原为 1.8rem */
+h3 { font-size: 1.4rem; }   /* 原为 1.6rem */
+h4 { font-size: 1.2rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
         #toc {
             border: 1px solid #ccc;
             padding: 10px;
