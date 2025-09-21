@@ -506,3 +506,8 @@ boot flash 0x140000
 为什么要回官方?官方是稳定的,openwrt有时经常掉wifi拒绝接入,每次都要拔电重插,
 这是很麻烦的,至少是不方便的
 
+# CE修改器-联合搜索
+
+generate groupescan command
+
+添加数据,类型group,搜索即可
