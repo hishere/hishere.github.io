@@ -21,12 +21,21 @@ sudo ffmpeg -ss 00:00:00 -t 00:10:00 -i src.mkv -acodec copy \-vcodec copy part1
 
 硬字幕会增大体积(渲染到视频，合为一体)，这里用了软字幕(独立通道)，需要播放器支持
 
-
-
 ```sh
 ffmpeg -i in.mkv -i in.ass -c copy -c:s ass out.mkv
 sudo ffmpeg -i /storage/emulated/0/ss8.mp4 -i /storage/emulated/0/ss.ass -c copy -c:s mov_text /storage/emulated/0/ss8ass.mp4
 ```
+
+## 扩展字幕
+在1920x1080视频底部添加空白区域放字幕案例
+
+```sh
+ffmpeg -threads 4 -i 03.mp4 -filter_complex "[0:v]pad=1920:1280:0:0[extended]; [extended]subtitles=03.srt:force_style='Alignment=2,MarginV=10,Fontsize=24'" -c:a copy -preset fast -crf 23 output.mp4
+
+```
+
+附加字幕获取 https://downsub.com
+
 
 ## 大小质量问题
 
