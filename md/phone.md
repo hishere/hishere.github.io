@@ -2,6 +2,96 @@
 
 小强模式能做到『路由模式』下连接wifi进行扩展，而不用通过『桥接模式』，这样就有比较多的定制权，开启方法待定。ssh或者telnet登录默认是账户root密码root，WLAN配置目标文件为/etc/config/wireless。
 
+配置案例前后留白
+```sh
+
+config wifi-device 'mt7613'
+        option type 'mt7613'
+        option vendor 'ralink'
+        option channel '0'
+        option bw '0'
+        option autoch '2'
+        option radio '1'
+        option txpwr 'max'
+        option hwband '5G'
+        option hwmode '11ac'
+        option disabled '0'
+        option country 'CN'
+        option region '1'
+        option aregion '0'
+
+config wifi-iface
+        option device 'mt7613'
+        option ifname 'wl0'
+        option network 'lan'
+        option mode 'ap'
+        option ssid 'dell-pc_5G'
+        option encryption 'mixed-psk'
+        option key '12345678'
+        option disabled '0'
+        option macfilter 'deny'
+
+config wifi-device 'mt7628'
+        option type 'mt7628'
+        option vendor 'ralink'
+        option channel '0'
+        option bw '0'
+        option autoch '2'
+        option radio '1'
+        option txpwr 'max'
+        option hwband '2_4G'
+        option hwmode '11ng'
+        option disabled '0'
+        option country 'CN'
+        option region '1'
+        option aregion '0'
+
+config wifi-iface
+        option device 'mt7628'
+        option ifname 'wl1'
+        option network 'lan'
+        option mode 'ap'
+        option ssid 'dell-pc'
+        option encryption 'mixed-psk'
+        option key '12345678'
+        option disabled '0'
+        option macfilter 'deny'
+
+config wifi-iface 'minet_ready'
+        option disabled '0'
+        option device 'mt7628'
+        option ifname 'wl2'
+        option network 'ready'
+        option mode 'ap'
+        option ssid 'minet_ready'
+        option hidden '1'
+        option encryption 'none'
+        option dynbcn '1'
+
+config wifi-iface 'guest_2G'
+        option disabled '1'
+        option device 'mt7628'
+        option ifname 'wl3'
+        option network 'guest'
+        option mode 'ap'
+        option wpsdevicename 'XIAOMI_ROUTER_GUEST'
+        option macfilter 'deny'
+
+config wifi-iface
+        option ifname 'apcli0'
+        option network 'wan'
+        option encryption 'WPA2PSK'
+        option device 'mt7628'
+        option enctype 'AES'
+        option scanifname 'wl1'
+        option apcliband '5g'
+        option key 'chck2976'
+        option mode 'sta'
+        option ssid 'CMCC-6c27-5G'
+        option disabled '0'
+        
+```
+
 # 禁用广告iframe脚本
 
 ``` js
