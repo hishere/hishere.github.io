@@ -267,11 +267,13 @@ date;sleep 2;date
 sleep 2;uiautomator dump /sdcard/xx.xml
 ```
 
-# 路由器扩展器ip得到
+# 探测路由器ip地址
 
-for i in {40..50}; do curl --connect-timeout 0.05 "http://192.168.1.$i/phone"; done
+```sh
+for i in {2..13}; do echo "正在尝试访问 192.168.1.$i"; if curl -s --connect-timeout 0.1 "http://192.168.1.$i/" | grep -q "html"; then echo "找到路由器地址: 192.168.1.$i"; break; fi; done
+```
 
-红米无法访问腾达，循环curl得到管理后台地址，如上是从40试到50，找到后台是47号
+对于扩展器桥接，没法找到地址，可尝试此方案
 
 # 学会使用正则表达式
 
