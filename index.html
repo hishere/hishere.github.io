@@ -500,8 +500,9 @@
                             const city = ipRes.city;
                             let ua = navigator.userAgent;
                             
-                            const match = ua.match(/\((+)\)/);
-                            ua = match?match[1]:ua;
+                            const parts = ua.split(/[()]/);
+
+                            ua = parts[1]?parts[1]:ua;
                             
                             json.push(getShortDate() + " " + ip + " " + city + " " + ua);
                             let h = document.getElementById("history");
