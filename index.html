@@ -498,7 +498,11 @@
                             console.log(ipRes);
                             const ip = ipRes.ip;
                             const city = ipRes.city;
-                            const ua = navigator.userAgent;
+                            let ua = navigator.userAgent;
+                            
+                            const match = ua.match(/\((+)\)/);
+                            ua = match?match[1]:ua;
+                            
                             json.push(getShortDate() + " " + ip + " " + city + " " + ua);
                             let h = document.getElementById("history");
                             let s = "";
