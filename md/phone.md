@@ -1,82 +1,34 @@
+# vi命令语法
+vi aaa.txt编辑文件，按i进行编辑，按esc后，按两次d删除行，输入:wq保存退出，:q退出，:q!不保存退出
 # 小米路由-小强模式
 
 小强模式能做到『路由模式』下连接wifi进行扩展，而不用通过『桥接模式』，这样就有比较多的定制权，开启方法待定。ssh或者telnet登录默认是账户root密码root，WLAN配置目标文件为/etc/config/wireless。
 
-配置案例前后留白
+1开启ssh权限
+
+需要OpenWRTInvasion项目
+
+执行python remote_command_execution_vulnerability.py两次甚至多尝试几次最好是接2.4g的热点
+
+然后telnet 192.168.31.1即可登录，默认账号密码root
+
+## WISP模式
+
+1如此配置的好处在于和上游用不同的ip段，上游可能是192.168.10.1，而桥接永远是192.168.31.1，如此上游将看不到下游设备数量
+
+2桥接路由器后改回路由模式在往下配置
+
+3修改文件../etc/config/wireless，找到带上游信息的wifi-iface
+
+lan改成wan并且改disabled为0，表示不禁用，即启用
+
+4修改文件../etc/network，找到interface 'wan'部分加入一行option type 'bridge'，注意lan部分不要改动
+
+5配置完reboot重启
+
+配置案例如下，ifname可能是其他名字，用iwconfig命令可以查看，scanifname中wl1是5G，极有可能wl0就是2.4G
+
 ```sh
-
-config wifi-device 'mt7613'
-        option type 'mt7613'
-        option vendor 'ralink'
-        option channel '0'
-        option bw '0'
-        option autoch '2'
-        option radio '1'
-        option txpwr 'max'
-        option hwband '5G'
-        option hwmode '11ac'
-        option disabled '0'
-        option country 'CN'
-        option region '1'
-        option aregion '0'
-
-config wifi-iface
-        option device 'mt7613'
-        option ifname 'wl0'
-        option network 'lan'
-        option mode 'ap'
-        option ssid 'dell-pc_5G'
-        option encryption 'mixed-psk'
-        option key '12345678'
-        option disabled '0'
-        option macfilter 'deny'
-
-config wifi-device 'mt7628'
-        option type 'mt7628'
-        option vendor 'ralink'
-        option channel '0'
-        option bw '0'
-        option autoch '2'
-        option radio '1'
-        option txpwr 'max'
-        option hwband '2_4G'
-        option hwmode '11ng'
-        option disabled '0'
-        option country 'CN'
-        option region '1'
-        option aregion '0'
-
-config wifi-iface
-        option device 'mt7628'
-        option ifname 'wl1'
-        option network 'lan'
-        option mode 'ap'
-        option ssid 'dell-pc'
-        option encryption 'mixed-psk'
-        option key '12345678'
-        option disabled '0'
-        option macfilter 'deny'
-
-config wifi-iface 'minet_ready'
-        option disabled '0'
-        option device 'mt7628'
-        option ifname 'wl2'
-        option network 'ready'
-        option mode 'ap'
-        option ssid 'minet_ready'
-        option hidden '1'
-        option encryption 'none'
-        option dynbcn '1'
-
-config wifi-iface 'guest_2G'
-        option disabled '1'
-        option device 'mt7628'
-        option ifname 'wl3'
-        option network 'guest'
-        option mode 'ap'
-        option wpsdevicename 'XIAOMI_ROUTER_GUEST'
-        option macfilter 'deny'
-
 config wifi-iface
         option ifname 'apcli0'
         option network 'wan'
@@ -91,6 +43,28 @@ config wifi-iface
         option disabled '0'
         
 ```
+
+## 定时wifi
+
+对于有些网络白天开，有些网络晚上开，有必要定时连接不同的网络
+
+wifi扫描
+```sh
+iwinfo wl0 scanning | grep SSID
+```
+
+做法案例
+
+复制wireless的副本，wireless.aa，wireless.bb之类的
+
+如果是2.4G网络，一般改apclic0 wl1 2g，总之是2.4g和5g不一样，
+
+创建脚本，复制，重启网络
+```sh
+cp /etc/config/wireless.6c /etc/config/wireless
+/etc/init.d/network restart
+```
+定时任务，执行脚本
 
 # 禁用广告iframe脚本
 
