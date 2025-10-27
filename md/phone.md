@@ -66,6 +66,12 @@ cp /etc/config/wireless.6c /etc/config/wireless
 ```
 定时任务，执行脚本
 
+找到/etc/crontabs/root添加两行定时任务，表示0点执行bb脚本，9点执行aa脚本
+```sh
+0 0    /etc/config/bb.sh
+0 9    /etc/config/aa.sh
+```
+然后etc/init.d/cron restart重启任务
 # 禁用广告iframe脚本
 
 ``` js
@@ -245,6 +251,12 @@ sleep 2;uiautomator dump /sdcard/xx.xml
 
 ```sh
 for i in {2..13}; do echo "正在尝试访问 192.168.1.$i"; if curl -s --connect-timeout 0.1 "http://192.168.1.$i/" | grep -q "html"; then echo "找到路由器地址: 192.168.1.$i"; break; fi; done
+```
+```sh
+m3=1;
+start=2;
+end=13;
+for i in $(seq $start $end); do echo "正在尝试访问 192.168.$m3.$i"; if curl -s --connect-timeout 0.1 "http://192.168.$m3.$i/" | grep -q "html"; then echo "找到路由器地址: 192.168.$m3.$i"; break; fi; done
 ```
 
 对于扩展器桥接，没法找到地址，可尝试此方案

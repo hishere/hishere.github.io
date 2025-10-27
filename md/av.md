@@ -31,7 +31,6 @@ sudo ffmpeg -i /storage/emulated/0/ss8.mp4 -i /storage/emulated/0/ss.ass -c copy
 
 ```sh
 ffmpeg -threads 4 -i 03.mp4 -filter_complex "[0:v]pad=1920:1280:0:0[extended]; [extended]subtitles=03.srt:force_style='Alignment=2,MarginV=10,Fontsize=24'" -c:a copy -preset fast -crf 23 output.mp4
-
 ```
 
 附加字幕获取 https://downsub.com
@@ -48,13 +47,16 @@ ffmpeg -threads 4 -i 03.mp4 -filter_complex "[0:v]pad=1920:1280:0:0[extended]; [
 宽 : 高 : x : y
 
 ```sh
-ffmpeg -i a.mp4 -vf crop=200:400:0:120 -threads 4 -preset ultrafast -strict -2 b.mp4
+crop="200:400:0:120";
+sudo ffmpeg -i a.mp4 -vf crop="$crop" -threads 4 -preset ultrafast -strict -2 b.mp4
 ```
 
 ## 剪切片段
-
+当然也可以精细化裁剪，如00:00:03.100，表示3.1秒的位置
 ```sh
-ffmpeg -ss 00:03:46 -to 00:17:55 -i ssa.mp4 -c:v copy -c:a copy "seg_$(date +"%s%3N").mp4" -y
+start="00:03:46";
+end="00:17:55";
+sudo ffmpeg -ss "$start" -to "$end" -i ssa.mp4 -c:v copy -c:a copy "seg_$(date +"%s%3N").mp4" -y
 ```
 
 ### 自动开头结尾适应
