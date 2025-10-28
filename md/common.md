@@ -1,3 +1,5 @@
+# 倍倍
+data/data/下app-service.js找到to-vipp-invitation-v219
 # vi命令语法
 vi aaa.txt编辑文件，按i进行编辑，按esc后，按两次d删除行，输入:wq保存退出，:q退出，:q!不保存退出
 # 小米路由-小强模式
