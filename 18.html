@@ -9,7 +9,32 @@
     <style>
         name,id{
             user-select: all;
+            
         }
+        id {
+    position: relative;
+  display: inline-block;
+  font-family: monospace;
+
+}
+id::before {
+  content: '******';
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  z-index: 1;
+}
+id::after {
+  content: '****';
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: white;
+  z-index: 1;
+}
+
+        
     </style>
 </head>
 

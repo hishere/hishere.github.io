@@ -70,8 +70,8 @@ cp /etc/config/wireless.6c /etc/config/wireless
 
 找到/etc/crontabs/root添加两行定时任务，表示0点执行bb脚本，9点执行aa脚本
 ```sh
-0 0    /etc/config/bb.sh
-0 9    /etc/config/aa.sh
+0 0 * * * /etc/config/bb.sh >/dev/null 2>&1
+0 9 * * * /etc/config/aa.sh >/dev/null 2>&1
 ```
 然后etc/init.d/cron restart重启任务
 # 禁用广告iframe脚本
