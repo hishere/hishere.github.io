@@ -869,3 +869,96 @@ invoke-static {v3}, Lcn/kaicity/apps/wifikeylook/MainActivity;->sortList(Ljava/u
 ```
 
 一切都是如此完美。并且借助于ai工具，我们不再执着smali语法。而专注自己的逻辑，期间apktool_m是个更好的工具，可以反编译工程为smali再转成java查看。对，仅仅只是查看java代码，别想把smali转成java再转回smali，行不通的。转成java只是用于研究smali是否改得正确而已。tip:在修改dex前备份出来，如果改失败了就覆盖回去，能够运行起来就可以覆盖备份，不断改进smali，直到完成我们所需要的增加删除修改smali代码目标，编译后的apk正常运行，期间操作dex是mt管理器。
+
+
+## Flutter
+
+需要一定的dart基础
+
+```dart
+var name="dart";
+var arr=["dart","java","python"];
+var obj={
+  'name': "张三",
+  'age': 18
+};
+void main(){
+  print("hello "+name);
+  print("hello "+arr.toString());
+  print("hello ${obj['age']!}");
+}
+```
+
+写ui简直和Compose太相似
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:helloflutter/SecondPage.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: SecondPage()
+    );
+  }
+}
+```
+
+```dart
+
+import 'package:flutter/material.dart';
+
+class SecondPage extends StatefulWidget{
+  const SecondPage({super.key});
+
+  @override
+  State<SecondPage> createState() {
+    return _SecondPageState();
+  }
+
+}
+
+class _SecondPageState extends State<SecondPage>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("你好m")
+      )
+    );
+  }
+}
+```
+
+点击事件
+
+```dart
+class SecondPage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: GestureDetector(
+          child: const Text("klk"),
+          onTap: (){
+            print("jfso");
+          },
+        ),
+      ),
+    );
+  }
+}
+```
