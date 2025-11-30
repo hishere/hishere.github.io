@@ -1,7 +1,106 @@
+# proxypin脚本参数
+
+```js
+request.host: baidu.com，域名
+request.url: http://baidu.com，全url
+request.path: 路径
+request.queries["a"]: 参数
+request.headers["User-Agent"]: 浏览器标识
+request.headers["Cookie"]: cookie
+
+response.headers["Content-Type"]: 返回的内容类型，可用于过滤图片或者二进制文件，防止被误转成json造成卡顿
+
+```
+
+body实体
+
+```js
+//修改body的内容
+var body = JSON.parse(response.body);
+body['key'] = "value";
+response.body = JSON.stringify(body);
+
+//开头匹配，body.startsWith("{")判断是不是json
+
+//判断是否存在字段，if((typeof body.msg!=="undefined") && body.msg=="success")
+
+//是否包含，gg.indexOf("ab")，没有返回-1，有则返回内容索引，
+
+//数组的匹配字符串, 案例: ["aa","bb","cc"], 要从"http://baidu.com?kw=bb"查找是否内容能在数组找到，需要先提取kw再循环，避免for中for遍历耗时
+
+if (kw && arr.some(item => item == kw)) {return response;}
+
+```
+
+特别注意的误区: 容易把body.msg写成body.data.msg，导致脚本有误
+
+# 微信进程
+
+SandboxedProcessService进程为浏览器沙箱进程
+
+appbrand0和appbrand1为小程序进程
+
+# termux-api
+
+termux-api的apk要安装，termux中要执行pkg install termux-api，termux-api要在后台挂起，才能有运行能力，测试termux-toast -s "Hello, Termux!"，
+注意来源一致，否则签名不对应不能安装成功。
+
+termux-api并不能连接wifi，但是可以扫描，和开关wifi
+
+更多的是ui交互和系统信息获取，在使用上，价值不大
+
+```sh
+termux-battery-status 获取设备的电池信息.
+
+termux-brightness 设置屏幕亮度, 值域为 [0, 255].
+
+termux-camera-info 获取设备摄像头的信息.
+
+termux-camera-photo 调用相机拍摄照片, 保存为 JPEG 格式.
+
+termux-clipboard-get 获取系统剪贴板.
+
+termux-clipboard-set 设置系统剪贴板.
+
+termux-contact-list 列出联系人信息.
+
+termux-dialog 显示文本输入对话框.
+
+termux-fingerprint 在设备上使用指纹传感器验证身份.
+
+termux-location 获取地理位置信息.
+
+termux-notification 显示系统通知.
+
+termux-sensor 获取有关传感器类型和实时数据的信息.
+
+termux-telephony-call 拨打电话号码.
+
+termux-toast 显示临时弹出通知.
+
+termux-torch 在设备上切换 LED 灯.
+
+termux-vibrate 振动设备.
+
+termux-volume 更改系统音量。
+
+termux-wallpaper 更改桌面壁纸.
+
+termux-wifi-connectioninfo 获取当前连接的 WIFI 信息.
+
+termux-wifi-enable 连接/断开 WIFI.
+
+termux-wifi-scaninfo 获取上次 WIFI 扫描信息.
+```
+
 # 倍倍
-data/data/下app-service.js找到to-vipp-invitation-v219
+
+data/data/下app-service.js找到to-vipp-invitation-v219，实在不行就只能-vip-改成-vipp-了
+
 # vi命令语法
+
 vi aaa.txt编辑文件，按i进行编辑，按esc后，按两次d删除行，输入:wq保存退出，:q退出，:q!不保存退出
+
 # 小米路由-小强模式
 
 小强模式能做到『路由模式』下连接wifi进行扩展，而不用通过『桥接模式』，这样就有比较多的定制权，开启方法待定。ssh或者telnet登录默认是账户root密码root，WLAN配置目标文件为/etc/config/wireless。
@@ -74,6 +173,7 @@ cp /etc/config/wireless.6c /etc/config/wireless
 0 9 * * * /etc/config/aa.sh >/dev/null 2>&1
 ```
 然后etc/init.d/cron restart重启任务
+
 # 禁用广告iframe脚本
 
 ``` js
