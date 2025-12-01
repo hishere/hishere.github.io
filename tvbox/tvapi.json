@@ -10,7 +10,7 @@
     {
       "vod_id": "1",
       "vod_name": "新三国",
-      "vod_pic": "https://example.com/poster.jpg",
+      "vod_pic": "",
       "vod_play_from": "DirectURL",
       "vod_play_url": "播放地址$https://43.248.139.19:12210/sanguo.m3u8?5049"
     }
