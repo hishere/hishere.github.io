@@ -1,16 +1,26 @@
-#中兴畅行60的ROOT方案
+# 函数调用前须判空
 
-0先知条件，U2S模式为紫光平台的刷机模式，骁龙是9008模式，天玑是深度模式
-1开发者模式，开启usb调试
-2打开肥猫助手，先备份，模式2(全量分区备份)，型号7552N，版本origin，未解锁BL，进入等待后，手机关机，音量+和-同时按住，插入数据线，开始备份，备份好的文件多数是bin结尾，boot_a.bin镜像也在里面
-3打开spd_dump禁用avb，用spd模式1，进入fdl2命令行后，看准目标槽位为a，输入w trustos_a trustos-ZTE_7552N-noavb.bin(至于这个文件是如何得到的，有待研究，这里用现成的)，完成后输入reset重启手机，这里禁用avb成功。
+对于数组内容要调用search方法时，我遇到这个问题，对象如果是null或者undefined肯定是要跳过的
+```js
+if( a && a.b() )
+```
 
-4修补boot，在刚备份的目录中将boot_a.bin文件传输到手机用apatch修补，或者面具magisk修补，因为刚显示的槽位确实是a所以是这个boot_a
+# 中兴畅行60的ROOT方案
 
-5将修补的boot传输到pc，重进u2s模式，命令w boot_a 修补文件.img(这里没毛病，bin文件修补后确是img文件)，reset重启，完成
+0 先知条件，U2S模式为紫光平台的刷机模式，骁龙是9008模式，天玑是深度模式
+
+1 开发者模式，开启usb调试
+
+2 打开肥猫助手，先备份，模式2(全量分区备份)，型号7552N，版本origin，未解锁BL，进入等待后，手机关机，音量+和-同时按住，插入数据线，开始备份，备份好的文件多数是bin结尾，boot_a.bin镜像也在里面
+
+3 打开spd_dump禁用avb，用spd模式1，进入fdl2命令行后，看准目标槽位为a，输入w trustos_a trustos-ZTE_7552N-noavb.bin(至于这个文件是如何得到的，有待研究，这里用现成的)，完成后输入reset重启手机，这里禁用avb成功。
+
+4 修补boot，在刚备份的目录中将boot_a.bin文件传输到手机用apatch修补，或者面具magisk修补，因为刚显示的槽位确实是a所以是这个boot_a
+
+5 将修补的boot传输到pc，重进u2s模式，命令w boot_a 修补文件.img(这里没毛病，bin文件修补后确是img文件)，reset重启，完成
 
 话外:附带一篇酷安大佬的root方案，都是备份和禁用avb和修补boot这样的情况，特别的一点是avb禁用方式以命令实现。似乎更加通用些，
-https://www.coolapk.com/feed/67706877?s=YTFhZjMzMGMxZTk5NTVhZzY4ZWI3MzIyegi156&shareUid=807133&shareFrom=com.coolapk.market_15.1.1
+[畅60](https://www.coolapk.com/feed/67706877?s=YTFhZjMzMGMxZTk5NTVhZzY4ZWI3MzIyegi156&shareUid=807133&shareFrom=com.coolapk.market_15.1.1)
 
 # proxypin脚本参数
 
