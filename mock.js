@@ -1,10 +1,10 @@
-let mockBaseUrl0="https://mock.nodjoy.com";
-let mockProjectId0="69373cd1d674ea00189e6e9b";//项目的id，下面是子接口id
-let oneb0_id0="6938408bd674ea00189e6ea1";
-let oneb1_id0="6938408bd674ea00189e6ea2";
-let mykey_id0="6938408bd674ea00189e6ea3";
-let history_id0="69384069d674ea00189e6ea4";
-let noby_id0="6938408bd674ea00189e6ea5";
+let mockBaseUrl="https://mock.nodjoy.com";
+let mockProjectId="69373cd1d674ea00189e6e9b";//项目的id，下面是子接口id
+let oneb0_id="6938408bd674ea00189e6ea1";
+let oneb1_id="6938408bd674ea00189e6ea2";
+let mykey_id="6938408bd674ea00189e6ea3";
+let history_id="69384069d674ea00189e6ea4";
+let noby_id="6938408bd674ea00189e6ea5";
 
 
 function gToken(){
@@ -54,11 +54,11 @@ let mockAuth="Bearer "+localStorage.getItem("mockTok");
 
 if(typeof(exports) != "undefined"){
     exports.mockAuth= mockAuth;
-    exports.mockBaseUrl= mockBaseUrl0;
-    exports.mockProjectId= mockProjectId0;
-    exports.oneb0_id= oneb0_id0;
-    exports.oneb1_id= oneb1_id0;
-    exports.mykey_id= mykey_id0;
-    exports.history_id= history_id0;
-    exports.noby_id= noby_id0;
+    exports.mockBaseUrl= mockBaseUrl;
+    exports.mockProjectId= mockProjectId;
+    exports.oneb0_id= oneb0_id;
+    exports.oneb1_id= oneb1_id;
+    exports.mykey_id= mykey_id;
+    exports.history_id= history_id;
+    exports.noby_id= noby_id;
 }
