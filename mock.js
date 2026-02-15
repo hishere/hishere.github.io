@@ -6,7 +6,14 @@ let mykey_id="69384056d674ea00189e6ea3";
 let history_id="69384069d674ea00189e6ea4";
 let noby_id="6938408bd674ea00189e6ea5";
 
-
+/*迁移，1账户，2Project，3抓包得到接口id
+有5个接口
+/no/one/but/you
+/oneb0
+/oneb1
+/mykey
+/history
+*/
 function gToken(){
     fetch(mockBaseUrl+"/api/u/login", {
         "headers": {
@@ -52,13 +59,8 @@ if (localStorage.getItem("mockAuth")){
 
 let mockAuth="Bearer "+localStorage.getItem("mockTok");
 
+
+//这里似乎不需要export，我确实拿到了上面的id，js有时有缓存，导致更新无效
 if(typeof(exports) != "undefined"){
     exports.mockAuth= mockAuth;
-    exports.mockBaseUrl= mockBaseUrl;
-    exports.mockProjectId= mockProjectId;
-    exports.oneb0_id= oneb0_id;
-    exports.oneb1_id= oneb1_id;
-    exports.mykey_id= mykey_id;
-    exports.history_id= history_id;
-    exports.noby_id= noby_id;
 }
