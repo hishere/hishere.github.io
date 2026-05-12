@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL ID提取工具 - 查询参数版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .section h3 {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            height: 120px;
+            resize: vertical;
+            font-family: monospace;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        button#clearBtn {
+            background: #6c757d;
+        }
+        
+        button#clearBtn:hover {
+            background: #545b62;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .info ul {
+            margin: 10px 0 0 20px;
+        }
+        
+        .info li {
+            margin: 5px 0;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            color: #007bff;
+        }
+        
+        .code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .example {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+     .autotext {
+  min-height: 600px;     /* 最小高度 */
+  height: auto;         /* 高度自动 */
+  resize: vertical;     /* 允许用户垂直拖动调整 */
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL ID提取与请求工具</h1>
+        
+        <div class="info">
+            <h3>功能说明：</h3>
+            <ul>
+                <li>从URL的查询参数中提取ID（如：<span class="code">https://a.com?id=xxx</span>）</li>
+                <li>将提取的ID作为JSON请求体发送到目标API（如：<span class="code">{"id": "xxx"}</span>）</li>
+                <li>将API返回的JSON原样显示在输出框中</li>
+            </ul>
+        </div>
+        
+        <div id="status" class="status"></div>
+        
+        <div class="section">
+            <h3>1. 源URL（包含ID）</h3>
+            <textarea id="sourceUrl" placeholder=""></textarea>
+            <div class="example">示例：https://a.com?id=xxx 或 https://example.com?product_id=123</div>
+            
+            <h3 style="margin-top: 20px;">目标API端点</h3>
+            <input type="text" id="targetApi" placeholder="" value="https://mpgame.lxyong.com/api/app-game/detail">
+            <div class="example">示例：https://b.com/api 或 https://api.example.com/endpoint</div>
+        </div>
+        
+        <div class="button-group">
+            <button id="extractBtn">提取ID并发送请求</button>
+            <button id="clearBtn">清空所有</button>
+        </div>
+        
+        <div class="loading" id="loading">正在发送请求，请稍候...</div>
+        
+        <div class="section">
+            <h3>2. 提取的ID</h3>
+            <input type="text" id="extractedId" readonly placeholder="提取的ID将显示在这里">
+            
+            <h3 style="margin-top: 20px;">请求体预览</h3>
+            <textarea id="requestBody" readonly placeholder='请求体JSON将显示在这里，例如：{"id": "xxx"}'></textarea>
+            
+            <h3 style="margin-top: 20px;">3. API响应</h3>
+            <textarea rows=3 class="autotext" id="responseBox" placeholder="API响应将显示在这里"></textarea>
+        </div>
+        
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sourceUrlInput = document.getElementById('sourceUrl');
+            const targetApiInput = document.getElementById('targetApi');
+            const extractedIdInput = document.getElementById('extractedId');
+            const requestBodyInput = document.getElementById('requestBody');
+            const responseBox = document.getElementById('responseBox');
+            const extractBtn = document.getElementById('extractBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const statusDiv = document.getElementById('status');
+            const loadingDiv = document.getElementById('loading');
+            
+            // 提取ID并发送请求
+            extractBtn.addEventListener('click', async function() {
+                const sourceUrl = sourceUrlInput.value.trim();
+                const targetApi = targetApiInput.value.trim();
+                
+                if (!sourceUrl) {
+                    showStatus('请输入源URL', 'error');
+                    return;
+                }
+                
+                if (!targetApi) {
+                    showStatus('请输入目标API URL', 'error');
+                    return;
+                }
+                
+                // 提取ID
+                const id = extractIdFromUrl(sourceUrl);
+                
+                if (!id) {
+                    showStatus('无法从URL中提取ID。请确保URL包含id参数（如：?id=xxx）', 'error');
+                    return;
+                }
+                
+                // 显示提取的ID
+                extractedIdInput.value = id;
+                
+                // 构建请求体
+                const requestBody = { id: id };
+                const requestBodyJson = JSON.stringify(requestBody, null, 2);
+                requestBodyInput.value = requestBodyJson;
+                
+                showStatus(`成功提取ID: ${id}`, 'success');
+                
+                // 发送请求
+                await sendRequest(targetApi, requestBody);
+            });
+            
+            // 清空所有
+            clearBtn.addEventListener('click', function() {
+                sourceUrlInput.value = '';
+                extractedIdInput.value = '';
+                requestBodyInput.value = '';
+                responseBox.value = '';
+                hideStatus();
+            });
+            
+            // 从URL中提取ID
+            function extractIdFromUrl(url) {
+                try {
+                    // 确保URL有协议
+                    let urlStr = url;
+                    if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
+                        urlStr = 'https://' + urlStr;
+                    }
+                    
+                    const urlObj = new URL(urlStr);
+                    const params = new URLSearchParams(urlObj.search);
+                    
+                    // 尝试从常见参数名中提取ID
+                    const idParamNames = ['id', 'uid', 'user_id', 'product_id', 'item_id', 'pid'];
+                    
+                    for (const paramName of idParamNames) {
+                        const value = params.get(paramName);
+                        if (value) {
+                            return value;
+                        }
+                    }
+                    
+                    // 如果没有找到标准参数名，尝试获取第一个参数的值
+                    for (const [key, value] of params) {
+                        if (key.toLowerCase().includes('id')) {
+                            return value;
+                        }
+                    }
+                    
+                    // 如果还是没找到，返回第一个参数的值
+                    const firstParam = params.entries().next();
+                    if (firstParam.value) {
+                        return firstParam.value[1];
+                    }
+                    
+                    return null;
+                } catch (error) {
+                    console.error('URL解析错误:', error);
+                    
+                    // 尝试简单解析
+                    const match = url.match(/[?&](?:id|uid|user_id|product_id)=([^&]+)/i);
+                    if (match && match[1]) {
+                        return decodeURIComponent(match[1]);
+                    }
+                    
+                    return null;
+                }
+            }
+            
+            // 发送请求到API
+            async function sendRequest(apiUrl, requestBody) {
+                // 显示加载状态
+                loadingDiv.style.display = 'block';
+                
+                try {
+                    // 发送POST请求
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+                    
+                    // 检查响应状态
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    // 解析JSON响应
+                    const data = await response.json();
+                    
+                    // 将响应原样显示在输出框
+                    responseBox.value = JSON.stringify(data, null, 2);
+                    
+                    showStatus(`请求成功！从 ${apiUrl} 获取了数据`, 'success');
+                } catch (error) {
+                    console.error('请求错误:', error);
+                    
+                    // 使用模拟数据
+                    const mockData = {
+                        success: true,
+                        message: "这是模拟响应（实际API请求失败）",
+                        request: {
+                            id: requestBody.id,
+                            endpoint: apiUrl,
+                            timestamp: new Date().toISOString()
+                        },
+                        data: {
+                            id: requestBody.id,
+                            name: `项目 ${requestBody.id}`,
+                            description: "这是模拟的API响应数据",
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        },
+                        metadata: {
+                            source: "模拟API",
+                            note: "实际请求失败，这是模拟数据"
+                        }
+                    };
+                    
+                    responseBox.value = JSON.stringify(mockData, null, 2);
+                    showStatus(`API请求失败，已显示模拟数据。错误: ${error.message}`, 'error');
+                } finally {
+                    // 隐藏加载状态
+                    loadingDiv.style.display = 'none';
+                }
+            }
+            
+            // 显示状态信息
+            function showStatus(message, type) {
+                statusDiv.textContent = message;
+                statusDiv.className = 'status ' + type;
+            }
+            
+            // 隐藏状态信息
+            function hideStatus() {
+                statusDiv.className = 'status';
+                statusDiv.textContent = '';
+            }
+            
+            // 添加示例URL
+            sourceUrlInput.addEventListener('focus', function() {
+                if (!sourceUrlInput.value) {
+                    sourceUrlInput.value = 'https://a.com?id=12345';
+                }
+            });
+            
+            // 初始状态
+            showStatus('就绪。请输入源URL和目标API，然后点击"提取ID并发送请求"按钮。', 'success');
+        });
+    </script>
+</body>
+</html>
