@@ -216,7 +216,7 @@ padding: 0;
         <div class="card">
             
             <input class="user-input len8" v-model="kw" placeholder="搜索">
-            <button @click="sch">搜索</button>
+            <button @click="sch(); page=1">搜索</button>
             <br>
             <button @click="pageL" :disabled="page <= 1">上一页</button>
             <input class="user-input len4" v-model.number="page" type="number" placeholder="1">/{{total}}

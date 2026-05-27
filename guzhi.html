@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最简单的 Vue.js 示例</title>
+    <!-- 引入 Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .demo-section {
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .counter {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .counter-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .input-section {
+            margin-bottom: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .result {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .list-section ul {
+            list-style-type: none;
+        }
+        
+        .list-section li {
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .list-section li:nth-child(odd) {
+            background-color: #e8f4fc;
+        }
+        
+        .remove-btn {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .add-item {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .add-item input {
+            flex-grow: 1;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+        <h1>最简单的 Vue.js 示例</h1>
+        
+        <!-- 计数器示例 -->
+        <div class="demo-section">
+            <h2>1. 计数器</h2>
+            <div class="counter">
+                <button @click="decrement">-</button>
+                <div class="counter-value">{{ count }}</div>
+                <button @click="increment">+</button>
+            </div>
+        </div>
+        
+        <!-- 双向绑定示例 -->
+        <div class="demo-section input-section">
+            <h2>2. 双向绑定 (v-model)</h2>
+            <input type="text" v-model="message" placeholder="输入一些内容...">
+            <div class="result">
+                <strong>你输入的内容是：</strong> {{ message || "暂无内容" }}
+            </div>
+        </div>
+        
+        <!-- 列表渲染示例 -->
+        <div class="demo-section list-section">
+            <h2>3. 列表渲染 (v-for)</h2>
+            <ul>
+                <li v-for="(item, index) in items" :key="index">
+                    {{ item }}
+                    <button class="remove-btn" @click="removeItem(index)">删除</button>
+                </li>
+            </ul>
+            
+            <div class="add-item">
+                <input type="text" v-model="newItem" placeholder="输入新项目" @keyup.enter="addItem">
+                <button @click="addItem">添加</button>
+            </div>
+        </div>
+        
+        <!-- 条件渲染示例 -->
+        <div class="demo-section">
+            <h2>4. 条件渲染 (v-if)</h2>
+            <button @click="toggleVisibility">
+                {{ isVisible ? '隐藏' : '显示' }}消息
+            </button>
+            <div class="result" v-if="isVisible">
+                这是一个可以通过按钮切换显示/隐藏的消息！
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>这个页面展示了 Vue.js 的核心功能：响应式数据、指令和事件处理。</p>
+        </div>
+    </div>
+
+    <script>
+        // 创建 Vue 应用
+        const { createApp } = Vue;
+        
+        createApp({
+            data() {
+                return {
+                    // 计数器数据
+                    count: 0,
+                    
+                    // 双向绑定数据
+                    message: "Hello Vue!",
+                    
+                    // 列表数据
+                    items: ["Vue.js", "响应式设计", "组件化", "指令系统"],
+                    newItem: "",
+                    
+                    // 条件渲染数据
+                    isVisible: true
+                };
+            },
+            mounted(){
+                this.getData();
+            },
+            methods: {
+                getData(){
+                const that=this;
+                axios.get('https://www.futunn.com/quote-api/quote-v2/get-stock-quote', {
+  params: {
+    'stockId': '201335',
+    'marketType': '2',
+    'marketCode': '11',
+    'lotSize': '1',
+    'spreadCode': '45',
+    'underlyingStockId': '0',
+    'instrumentType': '3',
+    'subInstrumentType': '3002',
+    '_': '1779096293189'
+  },
+  headers: {
+    'accept': 'application/json, text/plain, */*',
+    'futu-x-csrf-token': '2yJ7GuBl4wJQXoD3QCp4H3yG',
+    'quote-token': '81a62c798f',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+    'x-requested-with': 'mark.via',
+    'sec-fetch-site': 'same-origin',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-dest': 'empty',
+    'referer': 'https://www.futunn.com/stock/TSLA-US?chain_id=pfN4l4QD-IxZHO.1l0lmn5&global_content=%7B%22promote_id%22%3A13766,%22sub_promote_id%22%3A2,%22f%22%3A%22nn%2Fquote%2Fus%2Fmost-active-stocks%22%7D',
+    'accept-encoding': 'gzip, deflate',
+    'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+    'cookie': 'cipher_device_id=1778504619989905;Hm_lvt_f3ecfeb354419b501942b6f9caf8d0db=1778504620;HMACCOUNT=9BFE0F28CAC999EA;csrfToken=2yJ7GuBl4wJQXoD3QCp4H3yG;locale=zh-cn;uid=35761420;web_sig=1MgM%2FUoQ0Jgg6bt5AinPxymxdkIDmYYeNXyZZidbFxXEtf3Da5ZqyKwUlMH3fokxK8jnTSNgIgruBAKawh0%2FK5LdbbMDZ%2FIEKcntJ9jZy1RrpSbrMl22Yt9mB238jJSpG1kKL6zILS8kcEReAcmM4Q%3D%3D;ci_sig=yByX9v3BquYQDuQxSjDNGnV7usZhPTEwMDAwNTM4JmI9MjAxMTM2Jms9QUtJRFZvdWxPbGNoS2lxUmxxbFlKcDhCMWFDYW1qYmM5U2JxJmU9MTc4MTY4NzAxNCZ0PTE3NzkwOTUwMTQmcj01MTY4MTk4MTQmdT0mZj0%3D;locale.sig=eVtJzhiDzMABPIvfa_Sa-au5krEj-s_mhZ9m_Dq3tvg;35761420_us_req_section=2;ftreport-jssdk%40session={%22distinctId%22:%22ftv1IPRbxoyLvH5wdZrtSljVSemdSlBOoj2ZrmTd6f8PcDTDiy7/ULxD9pqtOjs+ShpZ%22%2C%22firstId%22:%22ftv1BLNUlVUP+dXvem8Jbf4libc1MdV39cWGUIcVasdJNSiNOW5BHJT4NnFRWKNamaO0%22%2C%22latestReferrer%22:%22https://www.futunn.com/stock/AAPL-US?global_content={%5C%22promote_id%5C%22%253A13766%2C%5C%22sub_promote_id%5C%22%253A2%2C%5C%22f%5C%22%253A%5C%22nn%252Fquote%252Fus%252Fmost-active-stocks%5C%22}&chain_id=fKiAoV0T5xLJX9.1l0llri%22};Hm_lpvt_f3ecfeb354419b501942b6f9caf8d0db=1779096069;showWatch=1'
+  }
+}).then(res=>{
+console.log(res);
+that.message=JSON.stringify(res);
+});
+
+                },
+                // 计数器方法
+                increment() {
+                    this.count++;
+                },
+                decrement() {
+                    this.count--;
+                },
+                
+                // 列表操作方法
+                addItem() {
+                    if (this.newItem.trim()) {
+                        this.items.push(this.newItem);
+                        this.newItem = "";
+                    }
+                },
+                removeItem(index) {
+                    this.items.splice(index, 1);
+                },
+                
+                // 切换可见性
+                toggleVisibility() {
+                    this.isVisible = !this.isVisible;
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
