@@ -1,3 +1,6 @@
+# 视频APP去广告思路
+mt管理器打开，在manifest.xml中字符常量池例如qq.e，bytedance等关键字替换掉相关activity无法加载即可
+
 # 在bing搜索mock
 复制下面这段话搜索，哪家倒闭就换一家，token勤劳更换
 ```sh
