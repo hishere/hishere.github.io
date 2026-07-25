@@ -341,6 +341,8 @@ shamiko似乎没用了
 
 # fastboot免电脑
 
+0.需要后台运行termux api插件，github版本和fdriod是有冲突的
+
 0.手机otg连接手机
 
 1.termux-setup-storage给内存权限
@@ -353,6 +355,7 @@ shamiko似乎没用了
 
 5.如果fastboot刷入提示permission denied，img文件位置/storage/emulated/0/xxx
 
+附加：我的红米出现device fault问题，然后用Bugjaeger这个软件完成了recovery的刷写
 # termux-adb工具
 安装
 ``` shell
