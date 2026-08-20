@@ -9,3 +9,6 @@ r参数表示replace，替换
 ```sh
 js-beautify -r index.html
 ```
+
+如果LAB过期，需要刷新token并复制给github
+https://gitlab.com/hishere/hishere.gitlab.io/-/settings/access_tokens
