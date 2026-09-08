@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三个甜甜圈 · 序号转圈</title>
+    <style>
+        * { box-sizing: border-box; user-select: none; }
+        html, body {
+            margin: 0; padding: 0;
+            background: #fafafa;
+            font-family: system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex; align-items: center;
+        }
+        body { padding-left: 80px; padding-top: 20px; padding-bottom: 20px; }
+        .container {
+            background: white; border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            padding: 20px; display: inline-block;
+        }
+        canvas {
+            display: block; border-radius: 16px; background: #ffffff;
+            box-shadow: inset 0 0 0 1px #eaeaea;
+        }
+        .controls {
+        
+            margin: 16px 200px;
+            
+        }
+        button {
+       
+            border: none; color: black;
+            font-size: 15px; font-weight: 600; padding: 2px 2px;
+            border-radius: 40px; cursor: pointer;
+            box-shadow: 0 3px 0 #00000055;
+            transition: all 0.08s ease; border: 1px solid #444;
+        }
+        button:active { transform: translateY(3px); box-shadow: 0 0 0 #00000055; }
+        .badge {
+            font-size: 14px; background: #f0f0f0; padding: 6px 16px;
+            border-radius: 40px; color: #222; font-weight: 500;
+        }
+        @media (max-width: 860px) {
+            body { padding-left: 24px; padding-right: 24px; justify-content: center; }
+        }
+        #btn1{
+            position: absolute;
+            top: 31rem;
+            left: 20rem;
+        }
+        #btn1r{
+            position: absolute;
+            top: 15rem;
+            left: 28rem;
+        }
+        #btn2{
+            position: absolute;
+            top: 28rem;
+            left: 20rem;
+        }
+        #btn2r{
+            position: absolute;
+            top: 18rem;
+            left: 25rem;
+        }
+        #btn3{
+            position: absolute;
+            top: 31rem;
+            left: 28rem;
+        }
+        #btn3r{
+            position: absolute;
+            top: 15rem;
+            left: 20rem;
+        }
+        #btn4{
+            position: absolute;
+            top: 28rem;
+            left: 28rem;
+        }
+        #btn4r{
+            position: absolute;
+            top: 18rem;
+            left: 22rem;
+        }
+        #btn5{
+            position: absolute;
+            top: 25rem;
+            left: 15rem;
+        }
+        #btn5r{
+            position: absolute;
+            top: 25rem;
+            left: 34rem;
+        }
+        #btn6{
+            position: absolute;
+            top: 26rem;
+            left: 18rem;
+        }
+        #btn6r{
+            position: absolute;
+            top: 25rem;
+            left: 30rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <canvas id="cv" width="720" height="720"></canvas>
+    <div class="controls">
+        <button id="btn1">a1↓</button>
+        <button id="btn3">b1↓</button>
+        <button id="btn5">c1↓</button><br>
+          <button id="btn1r">a1↑</button>
+            <button id="btn3r">b1↑</button>
+            <button id="btn5r">c1↓</button><br>
+        <button id="btn2">a2↓</button>
+      
+        <button id="btn4">b2↓</button>
+
+        <button id="btn6">c2↓</button><br>
+      
+        <button id="btn2r">a2↑</button>
+      
+        <button id="btn4r">b2↑</button>
+        
+        <button id="btn6r">c2↓</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const cv = document.getElementById('cv');
+        const ctx = cv.getContext('2d');
+        const W = cv.width, H = cv.height;
+        const cx = W/2, cy = H/2;
+
+        const R = 190, r = 165, d = 150;
+
+        const A = { x: cx - d*Math.cos(Math.PI/6), y: cy - d*Math.sin(Math.PI/6) };
+        const B = { x: cx + d*Math.cos(Math.PI/6), y: cy - d*Math.sin(Math.PI/6) };
+        const C = { x: cx, y: cy + d };
+        const circles = { A, B, C };
+
+        function inter(o1, r1, o2, r2) {
+            const dx=o2.x-o1.x, dy=o2.y-o1.y, dist=Math.hypot(dx,dy);
+            if(dist===0 || dist>r1+r2 || dist<Math.abs(r1-r2)) return [];
+            const a=(r1*r1-r2*r2+dist*dist)/(2*dist);
+            const h=Math.sqrt(Math.max(0,r1*r1-a*a));
+            const xm=o1.x+a*dx/dist, ym=o1.y+a*dy/dist;
+            return [{x:xm-h*dy/dist,y:ym+h*dx/dist},{x:xm+h*dy/dist,y:ym-h*dx/dist}];
+        }
+
+        function computeSlots() {
+            const s={}; let p;
+            p=inter(A,R,B,R); s[1]=p[0]; s[2]=p[1];
+            p=inter(A,r,B,r); s[3]=p[0]; s[4]=p[1];
+            p=inter(A,R,B,r); s[5]=p[0]; s[6]=p[1];
+            p=inter(A,r,B,R); s[7]=p[0]; s[8]=p[1];
+            p=inter(B,R,C,R); s[9]=p[0]; s[10]=p[1];
+            p=inter(B,r,C,r); s[11]=p[0]; s[12]=p[1];
+            p=inter(B,R,C,r); s[13]=p[0]; s[14]=p[1];
+            p=inter(B,r,C,R); s[15]=p[0]; s[16]=p[1];
+            p=inter(C,R,A,R); s[17]=p[0]; s[18]=p[1];
+            p=inter(C,r,A,r); s[19]=p[0]; s[20]=p[1];
+            p=inter(C,R,A,r); s[21]=p[0]; s[22]=p[1];
+            p=inter(C,r,A,R); s[23]=p[0]; s[24]=p[1];
+            return s;
+        }
+        const SLOT = computeSlots();
+
+        // 序号位置映射：序号 -> 槽位
+        const labelToSlot = {
+            '1':2, '2':6, '3':8, '4':4,
+            '5':9, '6':15, '7':13, '8':11,
+            '9':21, '10':17, '11':19, '12':23,
+            '13':22, '14':20, '15':18, '16':24,
+            '17':3, '18':5, '19':7, '20':1,
+            '21':12, '22':16, '23':14, '24':10
+        };
+
+        // 定义基于位置的循环（槽位编号）
+        // a1: 序号1,2,10,12,18,20,16,15
+        const SLOT_CYCLE_A1 = [2,6,17,23,5,1,24,18];
+        // a2: 序号3,4,9,11,17,19,14,13
+        const SLOT_CYCLE_A2 = [8,4,21,19,3,7,20,22];
+        // b1: 序号1,3,5,7,19,20,23,24
+        const SLOT_CYCLE_B1 = [2,8,9,13,7,1,14,10];
+        // b2: 序号2,4,6,8,17,18,21,22
+        const SLOT_CYCLE_B2 = [6,4,15,11,3,5,12,16];
+        // c1: 序号24,22,10,9,6,5,13,15
+        const SLOT_CYCLE_C1 = [10,16,17,21,15,9,22,18];
+        // c2: 序号23,21,12,11,8,7,14,16
+        const SLOT_CYCLE_C2 = [14,12,23,19,11,13,20,24];
+
+        // 反向循环 = 倒序
+        function reverseCycle(cycle) {
+            return [...cycle].reverse();
+        }
+
+        const SLOT_CYCLE_A1_R = reverseCycle(SLOT_CYCLE_A1);
+        const SLOT_CYCLE_A2_R = reverseCycle(SLOT_CYCLE_A2);
+        const SLOT_CYCLE_B1_R = reverseCycle(SLOT_CYCLE_B1);
+        const SLOT_CYCLE_B2_R = reverseCycle(SLOT_CYCLE_B2);
+        const SLOT_CYCLE_C1_R = reverseCycle(SLOT_CYCLE_C1);
+        const SLOT_CYCLE_C2_R = reverseCycle(SLOT_CYCLE_C2);
+
+        // 当前: 槽位 -> 显示序号
+        let current = {};
+        for(let i=1; i<=24; i++) current[i] = parseInt(Object.keys(labelToSlot).find(k => labelToSlot[k] === i));
+
+        // 颜色 (按显示序号区间)
+        function colorOfLabel(num) {
+            if(num>=1&&num<=4) return '#d00000';
+            if(num>=5&&num<=8) return '#0033cc';
+            if(num>=9&&num<=12) return '#e8590c';
+            if(num>=13&&num<=16) return '#008000';
+            if(num>=17&&num<=20) return '#b58900';
+            if(num>=21&&num<=24) return '#444444';
+            return '#000';
+        }
+
+        // ---------- 平移动画 ----------
+        let anim = null;
+        function rotateSlotCycle(slotCycle) {
+            if(anim) return; // 防抖
+            // 顺时针 = 槽位上的标签沿循环前进
+            const nc = {};
+            for(const k in current) nc[k] = current[k];
+            for(let i=0;i<slotCycle.length;i++){
+                const curSlot=slotCycle[i], nxtSlot=slotCycle[(i+1)%slotCycle.length];
+                nc[nxtSlot] = current[curSlot]; // 标签 curSlot -> 位置 nxtSlot
+            }
+            anim = { 
+                t: 0, 
+                from: Object.assign({}, current), 
+                to: nc, 
+                slots: slotCycle,
+                lastTime: performance.now()
+            };
+        }
+
+        function draw(){
+            ctx.clearRect(0,0,W,H);
+
+            // 圆环
+            ctx.lineWidth=2.5; ctx.strokeStyle='#1a1a1a'; ctx.lineJoin='round';
+            for(const k of ['A','B','C']){
+                ctx.beginPath(); ctx.arc(circles[k].x,circles[k].y,R,0,Math.PI*2); ctx.stroke();
+            }
+            for(const k of ['A','B','C']){
+                ctx.beginPath(); ctx.arc(circles[k].x,circles[k].y,r,0,Math.PI*2); ctx.stroke();
+            }
+
+            // 动画中
+            if(anim){
+                const now = performance.now();
+                const dt = (now - anim.lastTime) / 1000; // 秒
+                anim.lastTime = now;
+                
+                // 匀速动画，1.2秒完成
+                anim.t = Math.min(1, anim.t + dt / 0.5);
+                const e = anim.t; // 线性插值
+                
+                // 先绘制不动的槽位
+                for(let slot=1; slot<=24; slot++){
+                    if(!anim.slots.includes(slot)){
+                        const label = current[slot];
+                        drawDot(SLOT[slot].x, SLOT[slot].y, colorOfLabel(label), label.toString(), 1);
+                    }
+                }
+                
+                // 再绘制正在平移的槽位
+                for(const slot of anim.slots){
+                    const idx = anim.slots.indexOf(slot);
+                    const nextSlot = anim.slots[(idx+1)%anim.slots.length];
+                    const label = anim.from[slot];
+                    
+                    // 线性插值（平移）
+                    const x = SLOT[slot].x + (SLOT[nextSlot].x - SLOT[slot].x) * e;
+                    const y = SLOT[slot].y + (SLOT[nextSlot].y - SLOT[slot].y) * e;
+                    drawDot(x, y, colorOfLabel(label), label.toString(), 1.15);
+                }
+                
+                if(anim.t>=1){ current = anim.to; anim = null; }
+            } else {
+                // 静态绘制所有点
+                for(let slot=1; slot<=24; slot++){
+                    const label = current[slot];
+                    drawDot(SLOT[slot].x, SLOT[slot].y, colorOfLabel(label), label.toString(), 1);
+                }
+            }
+
+            drawLegend();
+            requestAnimationFrame(draw);
+        }
+
+        function drawDot(x,y,color,label,scale){
+            const rr=10.5*scale;
+            ctx.beginPath(); ctx.arc(x,y,rr+1.8,0,Math.PI*2);
+            ctx.fillStyle='#fff'; ctx.fill();
+            ctx.shadowColor='rgba(0,0,0,0.25)'; ctx.shadowBlur=6;
+            ctx.beginPath(); ctx.arc(x,y,rr,0,Math.PI*2);
+            ctx.fillStyle=color; ctx.fill(); ctx.shadowBlur=0;
+            ctx.font='bold 12px "Segoe UI",sans-serif';
+            ctx.textAlign='center'; ctx.textBaseline='middle';
+            ctx.lineWidth=3; ctx.strokeStyle='#fff';
+            ctx.strokeText(label,x,y);
+            ctx.fillStyle='#111'; ctx.fillText(label,x,y);
+        }
+
+        function drawLegend(){
+            const items=[
+                ['#d00000','1–4'],['#0033cc','5–8'],['#e8590c','9–12'],
+                ['#008000','13–16'],['#b58900','17–20'],['#444444','21–24']
+            ];
+            ctx.font='12px "Segoe UI",sans-serif';
+            ctx.textAlign='left'; ctx.textBaseline='middle';
+            let y=H-32; const startX=W-100;
+            for(const [c,t] of items){
+                ctx.beginPath(); ctx.arc(startX,y,5,0,Math.PI*2);
+                ctx.fillStyle=c; ctx.fill();
+                ctx.fillStyle='#222'; ctx.fillText(t,startX+14,y);
+                y-=20;
+            }
+        }
+
+        // 按钮事件 - 正向
+        document.getElementById('btn1').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_A1));
+        document.getElementById('btn2').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_A2));
+        document.getElementById('btn3').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_B1));
+        document.getElementById('btn4').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_B2));
+        document.getElementById('btn5').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_C1));
+        document.getElementById('btn6').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_C2));
+
+        // 按钮事件 - 反向
+        document.getElementById('btn1r').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_A1_R));
+        document.getElementById('btn2r').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_A2_R));
+        document.getElementById('btn3r').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_B1_R));
+        document.getElementById('btn4r').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_B2_R));
+        document.getElementById('btn5r').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_C1_R));
+        document.getElementById('btn6r').addEventListener('click', () => rotateSlotCycle(SLOT_CYCLE_C2_R));
+
+        draw();
+    })();
+</script>
+</body>
+</html>
