@@ -17,13 +17,13 @@
     <script src="https://s4.zstatic.net/npm/markdown-it-toc-done-right@4.2.0/dist/markdownItTocDoneRight.umd.js"></script>
     <style>
         /* 示例：基于 rem 单位，按比例缩小所有标题，但仍保持差异 */
-        h1 { font-size: 1.8rem; }   /* 原为 2rem */
-        h2 { font-size: 1.6rem; }   /* 原为 1.8rem */
-        h3 { font-size: 1.4rem; }   /* 原为 1.6rem */
-        h4 { font-size: 1.2rem; }
-        h5 { font-size: 1.1rem; }
-        h6 { font-size: 1rem; }
-        
+h1 { font-size: 1.8rem; }   /* 原为 2rem */
+h2 { font-size: 1.6rem; }   /* 原为 1.8rem */
+h3 { font-size: 1.4rem; }   /* 原为 1.6rem */
+h4 { font-size: 1.2rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
         #toc {
             border: 1px solid #ccc;
             padding: 10px;
@@ -181,7 +181,7 @@
         }
         
         
-        const externalMdUrl = './md/'+mdLoad+'.md';
+        const externalMdUrl = './md/'+'node'+'.md';
         
         fetch(externalMdUrl)
          .then(response => response.text())
@@ -210,75 +210,75 @@
             }
         };
     </script>
-
+    
     <script>
-        // ========== 标题自动编号功能（附加脚本） ==========
-        (function() {
-            // 等页面内容渲染完成后执行
-            function addHeadingNumbers() {
-                const container = document.getElementById('markdown-rendered');
-                if (!container) return;
-                
-                // 获取所有标题元素
-                const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
-                if (headings.length === 0) return;
-                
-                // 计数器
-                const counters = [0, 0, 0, 0, 0, 0]; // 对应 h1-h6
-                
-                headings.forEach(heading => {
-                    const level = parseInt(heading.tagName.substring(1)); // h1 -> 1
-                    
-                    // 重置更低级别的计数器
-                    for (let i = level; i < 6; i++) {
-                        counters[i] = 0;
-                    }
-                    
-                    // 增加当前级别计数
-                    counters[level - 1]++;
-                    
-                    // 构建编号，如 "1.1"
-                    let number = '';
-                    for (let i = 0; i < level; i++) {
-                        if (counters[i] > 0) {
-                            number += counters[i] + '.';
-                        }
-                    }
-                    number = number.slice(0, -1); // 去掉最后的点
-                    
-                    // 在标题文本前插入编号
-                    const numberSpan = document.createElement('span');
-                    numberSpan.className = 'heading-number';
-                    numberSpan.style.marginRight = '8px';
-                    numberSpan.style.color = '#666';
-                    numberSpan.style.fontWeight = 'normal';
-                    numberSpan.textContent = number + ' ';
-                    
-                    heading.insertBefore(numberSpan, heading.firstChild);
-                });
+// ========== 标题自动编号功能（附加脚本） ==========
+(function() {
+    // 等页面内容渲染完成后执行
+    function addHeadingNumbers() {
+        const container = document.getElementById('markdown-rendered');
+        if (!container) return;
+        
+        // 获取所有标题元素
+        const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        if (headings.length === 0) return;
+        
+        // 计数器
+        const counters = [0, 0, 0, 0, 0, 0]; // 对应 h1-h6
+        
+        headings.forEach(heading => {
+            const level = parseInt(heading.tagName.substring(1)); // h1 -> 1
+            
+            // 重置更低级别的计数器
+            for (let i = level; i < 6; i++) {
+                counters[i] = 0;
             }
             
-            // 监听页面加载完成
-            if (document.readyState === 'complete') {
-                addHeadingNumbers();
-            } else {
-                window.addEventListener('load', addHeadingNumbers);
-            }
+            // 增加当前级别计数
+            counters[level - 1]++;
             
-            // 如果使用 fetch 动态加载内容，需要等待内容渲染后执行
-            const observer = new MutationObserver(function(mutations) {
-                // 检查是否已有编号，避免重复添加
-                if (!document.querySelector('.heading-number')) {
-                    addHeadingNumbers();
+            // 构建编号，如 "1.1"
+            let number = '';
+            for (let i = 0; i < level; i++) {
+                if (counters[i] > 0) {
+                    number += counters[i] + '.';
                 }
-            });
+            }
+            number = number.slice(0, -1); // 去掉最后的点
             
-            observer.observe(document.getElementById('markdown-rendered'), {
-                childList: true,
-                subtree: true
-            });
-        })();
-    </script>
+            // 在标题文本前插入编号
+            const numberSpan = document.createElement('span');
+            numberSpan.className = 'heading-number';
+            numberSpan.style.marginRight = '8px';
+            numberSpan.style.color = '#666';
+            numberSpan.style.fontWeight = 'normal';
+            numberSpan.textContent = number + ' ';
+            
+            heading.insertBefore(numberSpan, heading.firstChild);
+        });
+    }
+    
+    // 监听页面加载完成
+    if (document.readyState === 'complete') {
+        addHeadingNumbers();
+    } else {
+        window.addEventListener('load', addHeadingNumbers);
+    }
+    
+    // 如果使用 fetch 动态加载内容，需要等待内容渲染后执行
+    const observer = new MutationObserver(function(mutations) {
+        // 检查是否已有编号，避免重复添加
+        if (!document.querySelector('.heading-number')) {
+            addHeadingNumbers();
+        }
+    });
+    
+    observer.observe(document.getElementById('markdown-rendered'), {
+        childList: true,
+        subtree: true
+    });
+})();
+</script>
 
 </body>
 
