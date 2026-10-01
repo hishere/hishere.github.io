@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -153,57 +154,58 @@
         }
         
         .welcome-messages {
-  font-family: Arial, sans-serif;
-}
-
-.message-item {
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  padding: 8px;
-  border: 1px solid #eee;
-  border-radius: 4px;
-}
-
-.message-image {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-right: 10px;
-}
-
-.message-title {
-  font-size: 16px;
-  color: #333;
-}
+          font-family: Arial, sans-serif;
+        }
+        
+        .message-item {
+          display: flex;
+          align-items: center;
+          margin: 10px 0;
+          padding: 8px;
+          border: 1px solid #eee;
+          border-radius: 4px;
+        }
+        
+        .message-image {
+          width: 40px;
+          height: 40px;
+          object-fit: cover;
+          border-radius: 4px;
+          margin-right: 10px;
+        }
+        
+        .message-title {
+          font-size: 16px;
+          color: #333;
+        }
               
-
-/* 禁用状态样式 */
-button:disabled {
-  background-color: #f0f0f0;
-  color: #a0a0a0;
-  cursor: not-allowed;
-  border-color: #e0e0e0;
-}
-
-.len4{
-width: 4rem;
-}
-
-.len8{
-width: 8rem;
-}
-.miniBtn{
-padding: 0;
-}
+        
+        /* 禁用状态样式 */
+        button:disabled {
+          background-color: #f0f0f0;
+          color: #a0a0a0;
+          cursor: not-allowed;
+          border-color: #e0e0e0;
+        }
+        
+        .len4{
+        width: 4rem;
+        }
+        
+        .len8{
+        width: 8rem;
+        }
+        .miniBtn{
+        padding: 0;
+        }
     </style>
 </head>
+
 <body>
     <!-- Vue应用挂载点 -->
     xxxyz2
     <div id="app">
-        <h1><span>{{emu}}</span>游戏下载</h1>
+        <h1><span>{{emu}}</span>游戏下载{{appv}}</h1>
         <button class="miniBtn" @click="emuType='aad522bf-5855-4553-9388-8bd02b1f6f14'; loadGame(1); emu='3DS'">3DS</button>
         <button class="miniBtn" @click="emuType='ff9e9878-649d-4831-9fbb-dda07fe8e34c'; loadGame(1); emu='NES'">NES</button>
         <button class="miniBtn" @click="emuType='c36cc046-2255-4945-b304-d321980e5218'; loadGame(1); emu='GBA'">GBA</button>
@@ -214,262 +216,285 @@ padding: 0;
         <button class="miniBtn" @click="emuType='2e41dee9-2b73-4169-97bd-3b127a466027'; loadGame(1); emu='PS1'">PS1</button>
         <button class="miniBtn" @click="emuType='5d491ed9-29d3-452c-a702-d220fa2d6f5c'; loadGame(1); emu='PS2'">PS2</button>
         <div class="card">
-            
+
             <input class="user-input len8" v-model="kw" placeholder="搜索">
             <button @click="sch(); page=1">搜索</button>
             <br>
             <button @click="pageL" :disabled="page <= 1">上一页</button>
             <input class="user-input len4" v-model.number="page" type="number" placeholder="1">/{{total}}
             <button @click="pageR" :disabled="page >= total">下一页</button>
-        
-            
+
+
             <div v-for="item in welcomeMessageList" :key="item.id" class="message-item">
-      <img :src="item.image" :alt="item.title" class="message-image">
-      <strong class="message-title">{{ item.title }}</strong>
-      <button class="miniBtn" @click="dL(item.id)">下载</button>
-    </div>
-            
+                <img :src="item.image" :alt="item.title" class="message-image">
+                <strong class="message-title">{{ item.title }}</strong>
+                <button class="miniBtn" @click="dL(item.id)">下载</button>
+            </div>
+
             <p>当前时间: <strong>{{ currentTime }}</strong></p>
-            
+
             <div class="info-box">
                 <p>这是一个响应式数据展示。尝试在控制台中修改 app.message 的值，看看页面如何自动更新。</p>
             </div>
         </div>
-        
 
 
 
 
-    <!-- 引入Vue 3 CDN -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <script>
-        const { createApp } = Vue;
-        
-        // 创建Vue应用
-        const app = createApp({
-            // 数据
-            data() {
-                return {
-                    baseUrl: 'https://mpgame.lxyong.com',
-                    welcomeMessageList: '欢迎使用Vue 3!',
-                    count: 0,
-                    total: 999,
-                    page: 1,
-                    kw: '',
-                    emu: 'emu',
-                    emuType: 'aad522bf-5855-4553-9388-8bd02b1f6f14',
-                    showMessage: true,
-                    items: [
-                        { id: 1, name: 'Vue.js', description: '渐进式JavaScript框架' },
-                        { id: 2, name: 'Vite', description: '下一代前端工具' },
-                        { id: 3, name: 'Vue Router', description: 'Vue.js官方路由' },
-                        { id: 4, name: 'Pinia', description: 'Vue状态管理库' }
-                    ],
-                    newItem: '',
-                    userInput: '',
-                    appv: '',
-                    accp: '',
-                    currentTime: new Date().toLocaleTimeString()
-                }
-            },
+        <!-- 引入Vue 3 CDN -->
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script>
+            const { createApp } = Vue;
             
-            // 计算属性
-            computed: {
-                doubledCount() {
-                    return this.count * 2;
-                },
-                tripledCount() {
-                    return this.count * 3;
-                }
-            },
-            
-            // 方法
-            methods: {
-                sch(){
-                    const that=this;
-                    that.loadGame(1,that.kw);
-                },
-                dL(id){
-                const that=this;
-                axios.post(that.baseUrl+'/api/app-game/detail', 
-  {
-    id: id
-    
-  },
-  {
-    headers: {
-      
-      'mode': 'false',
-      'device-id': '37:FA:A3:B8:E8:F5:96:A7:90:B3:BF:E2:7C:6F:92:5B:56:1D:07:EB:F9:34:29:7A:94:56:68:18:7D:98:14:26',
-      'user-agent': 'Dart/3.11 (dart:io)',
-      'app-platform': 'android',
-      'Accept': accp,
-      'content-type': 'application/json',
-      'is-simple': 'false',
-      'app-channel': 'guanwang',
-      'app-package': 'com.gzhuaiyun.retro',
-      'host': 'mpgame.lxyong.com',
-      'app-version': appv,
-      
-      'localmode': 'false',
-      'device-type': 'app'
-    }
-  }
-)
-.then(response => {
-  console.log('响应数据:', response.data);
-  const da=response.data;
-  
-  //const romUrl = da.data.rom;
-
-  const romUrl = da.data.rom;
-
-if (romUrl) {
-    // 创建一个隐藏的 <a> 标签
-    const link = document.createElement('a');
-    link.href = romUrl;
-    link.download = ''; // 可以设置下载文件的名称，如 'file.rom'
-    
-    // 触发下载
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-} else {
-    console.error('没有找到 ROM URL');
-}
-
-  
-})
-.catch(error => {
-  console.error('请求失败:', error);
-});
-
-                },
-                pageL(){
-                    const that=this;
-                    if(that.page<=1)return;
-                    that.page=that.page-1;
-                    that.loadGame(that.page,that.kw || undefined);
-                },
-                pageR(){
-                    const that=this;
-                    that.page=that.page+1;
-                    that.loadGame(that.page,that.kw || undefined);
-                },
-                loadGame(page,title){
-                const that=this;
-                var obj={
-    page: page,
-    pageSize: 10,
-    categoryId: that.emuType
-  };
-  
-                
-                
-                if(title!=undefined)obj.title=title;
-                
-                
-                
-                console.log("加载数据");
-                
-                
-                axios.post(that.baseUrl+'/api/app-game/list', 
-  obj,
-  {
-    headers: {
-      
-      'mode': 'false',
-      'device-id': '37:FA:A3:B8:E8:F5:96:A7:90:B3:BF:E2:7C:6F:92:5B:56:1D:07:EB:F9:34:29:7A:94:56:68:18:7D:98:14:26',
-      'user-agent': 'Dart/3.11 (dart:io)',
-      'app-platform': 'android',
-      
-      'content-type': 'application/json',
-      'is-simple': 'false',
-      'app-channel': 'guanwang',
-      'app-package': 'com.gzhuaiyun.retro',
-      'host': 'mpgame.lxyong.com',
-      'app-version': '2.1.8',
-            'Accept': accp,
-
-      'localmode': 'false',
-      'device-type': 'app'
-    }
-  }
-)
-.then(response => {
-  console.log('响应数据:', response.data);
-  //const da=JSON.stringify(response.data);
-  that.welcomeMessageList=response.data.data.list;
-  that.total=Math.ceil(response.data.data.total/10);
-  //that.welcomeMessage=da;
-})
-.catch(error => {
-  console.error('请求失败:', error);
-});
-
-                
-                },
-                increment() {
-                    this.count++;
-                },
-                decrement() {
-                    if (this.count > 0) {
-                        this.count--;
+            // 创建Vue应用
+            const app = createApp({
+                // 数据
+                data() {
+                    return {
+                        baseUrl: 'https://mpgame.lxyong.com',
+                        welcomeMessageList: '欢迎使用Vue 3!',
+                        count: 0,
+                        total: 999,
+                        page: 1,
+                        kw: '',
+                        emu: 'emu',
+                        emuType: 'aad522bf-5855-4553-9388-8bd02b1f6f14',
+                        showMessage: true,
+                        items: [
+                            { id: 1, name: 'Vue.js', description: '渐进式JavaScript框架' },
+                            { id: 2, name: 'Vite', description: '下一代前端工具' },
+                            { id: 3, name: 'Vue Router', description: 'Vue.js官方路由' },
+                            { id: 4, name: 'Pinia', description: 'Vue状态管理库' }
+                        ],
+                        newItem: '',
+                        userInput: '',
+                        appv: '2.1.9',
+                        accp: 'application/json, application/octet-stream, */*; q=0.03; v=2.1.9; dv=104;tpd=0;tpv=0',
+                        currentTime: new Date().toLocaleTimeString()
                     }
                 },
-                resetCount() {
-                    this.count = 0;
-                },
-                toggleMessage() {
-                    this.showMessage = !this.showMessage;
-                },
-                addItem() {
-                    if (this.newItem.trim() !== '') {
-                        this.items.push({
-                            id: this.items.length + 1,
-                            name: this.newItem,
-                            description: '新添加的项目'
-                        });
-                        this.newItem = '';
+                
+                // 计算属性
+                computed: {
+                    doubledCount() {
+                        return this.count * 2;
+                    },
+                    tripledCount() {
+                        return this.count * 3;
                     }
                 },
-                updateTime() {
-                    this.currentTime = new Date().toLocaleTimeString();
-                }
-            },
+              
             
-            // 生命周期钩子
-            created(){
+                // 方法
+               
+                methods: {
+                    sch(){
+                        const that=this;
+                        that.loadGame(1,that.kw);
+                    },
+                    dL(id){
+                    const that=this;
+                    axios.post(that.baseUrl+'/api/app-game/detail', 
+              {
+                id: id
                 
-            },
-            mounted() {
-                console.log('Vue应用已挂载');
-                
-                // 每秒更新一次时间
-                this.timer = setInterval(() => {
-                    this.updateTime();
-                }, 1000);
-                
-                this.loadGame(1);
-            },
-            
-            beforeUnmount() {
-                // 清除定时器
-                if (this.timer) {
-                    clearInterval(this.timer);
+              },
+              {
+                headers: {
+                  
+                  'mode': 'false',
+                  'device-id': '37:FA:A3:B8:E8:F5:96:A7:90:B3:BF:E2:7C:6F:92:5B:56:1D:07:EB:F9:34:29:7A:94:56:68:18:7D:98:14:26',
+                  'user-agent': 'Dart/3.11 (dart:io)',
+                  'app-platform': 'android',
+                  'Accept': this.accp,
+                  'content-type': 'application/json',
+                  'is-simple': 'false',
+                  'app-channel': 'guanwang',
+                  'app-package': 'com.gzhuaiyun.retro',
+                  'host': 'mpgame.lxyong.com',
+                  'app-version': this.appv,
+                  
+                  'localmode': 'false',
+                  'device-type': 'app'
                 }
+              }
+            )
+            .then(response => {
+              console.log('响应数据:', response.data);
+              const da=response.data;
+              
+              //const romUrl = da.data.rom;
+            
+              const romUrl = da.data.rom;
+            
+            if (romUrl) {
+                // 创建一个隐藏的 <a> 标签
+                const link = document.createElement('a');
+                link.href = romUrl;
+                link.download = ''; // 可以设置下载文件的名称，如 'file.rom'
+                
+                // 触发下载
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                console.error('没有找到 ROM URL');
             }
-        });
-        
-        // 挂载Vue应用到DOM
-        app.mount('#app');
-        
-        // 在控制台中可以直接访问Vue实例
-        console.log('在控制台中可以使用 app 变量访问Vue实例');
-        console.log('例如: app.count = 10');
-    </script>
-    <script src="./version.js"></script>
+            
+              
+            })
+            .catch(error => {
+              console.error('请求失败:', error);
+            });
+            
+                    },
+                    pageL(){
+                        const that=this;
+                        if(that.page<=1)return;
+                        that.page=that.page-1;
+                        that.loadGame(that.page,that.kw || undefined);
+                    },
+                    pageR(){
+                        const that=this;
+                        that.page=that.page+1;
+                        that.loadGame(that.page,that.kw || undefined);
+                    },
+                    loadGame(page,title){
+                    const that=this;
+                    var obj={
+                page: page,
+                pageSize: 10,
+                categoryId: that.emuType
+              };
+              
+                    
+                    
+                    if(title!=undefined)obj.title=title;
+                    
+                    
+                    
+                    console.log("加载数据");
+                    
+                    
+                    axios.post(that.baseUrl+'/api/app-game/list', 
+              obj,
+              {
+                headers: {
+                  
+                  'mode': 'false',
+                  'device-id': '37:FA:A3:B8:E8:F5:96:A7:90:B3:BF:E2:7C:6F:92:5B:56:1D:07:EB:F9:34:29:7A:94:56:68:18:7D:98:14:26',
+                  'user-agent': 'Dart/3.11 (dart:io)',
+                  'app-platform': 'android',
+                  
+                  'content-type': 'application/json',
+                  'is-simple': 'false',
+                  'app-channel': 'guanwang',
+                  'app-package': 'com.gzhuaiyun.retro',
+                  'host': 'mpgame.lxyong.com',
+                  'app-version': this.appv,
+                  'Accept': this.accp,
+            
+                  'localmode': 'false',
+                  'device-type': 'app'
+                }
+              }
+            )
+            .then(response => {
+              console.log('响应数据:', response.data);
+              //const da=JSON.stringify(response.data);
+              that.welcomeMessageList=response.data.data.list;
+              that.total=Math.ceil(response.data.data.total/10);
+              //that.welcomeMessage=da;
+            })
+            .catch(error => {
+              console.error('请求失败:', error);
+            });
+            
+                    
+                    },
+                    increment() {
+                        this.count++;
+                    },
+                    decrement() {
+                        if (this.count > 0) {
+                            this.count--;
+                        }
+                    },
+                    resetCount() {
+                        this.count = 0;
+                    },
+                    toggleMessage() {
+                        this.showMessage = !this.showMessage;
+                    },
+                    addItem() {
+                        if (this.newItem.trim() !== '') {
+                            this.items.push({
+                                id: this.items.length + 1,
+                                name: this.newItem,
+                                description: '新添加的项目'
+                            });
+                            this.newItem = '';
+                        }
+                    },
+                    updateTime() {
+                        this.currentTime = new Date().toLocaleTimeString();
+                    }
+                },
+                
+                // 生命周期钩子
+                created(){
+                    
+                },
+                mounted() {
+                    console.log('Vue应用已挂载');
+                    
+                    // 每秒更新一次时间
+                    this.timer = setInterval(() => {
+                        this.updateTime();
+                    }, 1000);
+                    
+                    this.loadGame(1);
+                    const that=this;
+                    setTimeout(function(){
+                      fetch('https://mpgame.lxyong.com/api/app/download-info')
+                        .then(response => response.json())
+                        .then(data => {
+                        if (data.success && data.code === 200) {
+                          // 将版本号赋值给全局 app 对象的 version 字段
+                          var version = data.data.version;
+                          that.appv=version;
+                          that.accp='application/json, application/octet-stream, */*; q=0.03; v='+version+'; dv=104;tpd=0;tpv=0';
+                          //alert('版本号获取成功:'+version);
+                        } else {
+                          console.error('接口返回错误:', data.msg);
+                        }
+                              })
+                              .catch(error => {
+                        console.error('请求失败:', error);
+                         });
+                            
+                   },2000);
+                },
+                
+                beforeUnmount() {
+                    // 清除定时器
+                    if (this.timer) {
+                        clearInterval(this.timer);
+                    }
+                }
+            });
+            
+            // 挂载Vue应用到DOM
+            app.mount('#app');
+            
+            // 在控制台中可以直接访问Vue实例
+            console.log('在控制台中可以使用 app 变量访问Vue实例');
+            console.log('例如: app.count = 10');
+        </script>
+        <!-- <script src="./version.js"></script> -->
 </body>
+
 </html>
