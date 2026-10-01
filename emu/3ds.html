@@ -201,7 +201,7 @@ padding: 0;
 </head>
 <body>
     <!-- Vue应用挂载点 -->
-    xxxyz219
+    xxxyz2
     <div id="app">
         <h1><span>{{emu}}</span>游戏下载</h1>
         <button class="miniBtn" @click="emuType='aad522bf-5855-4553-9388-8bd02b1f6f14'; loadGame(1); emu='3DS'">3DS</button>
@@ -269,6 +269,8 @@ padding: 0;
                     ],
                     newItem: '',
                     userInput: '',
+                    appv: '',
+                    accp: '',
                     currentTime: new Date().toLocaleTimeString()
                 }
             },
@@ -303,13 +305,13 @@ padding: 0;
       'device-id': '37:FA:A3:B8:E8:F5:96:A7:90:B3:BF:E2:7C:6F:92:5B:56:1D:07:EB:F9:34:29:7A:94:56:68:18:7D:98:14:26',
       'user-agent': 'Dart/3.11 (dart:io)',
       'app-platform': 'android',
-      'Accept': 'application/json, application/octet-stream, */*; q=0.03; v=2.1.9; dv=104;tpd=0;tpv=0',
+      'Accept': accp,
       'content-type': 'application/json',
       'is-simple': 'false',
       'app-channel': 'guanwang',
       'app-package': 'com.gzhuaiyun.retro',
       'host': 'mpgame.lxyong.com',
-      'app-version': '2.1.8',
+      'app-version': appv,
       
       'localmode': 'false',
       'device-type': 'app'
@@ -389,7 +391,7 @@ if (romUrl) {
       'app-package': 'com.gzhuaiyun.retro',
       'host': 'mpgame.lxyong.com',
       'app-version': '2.1.8',
-            'Accept': 'application/json, application/octet-stream, */*; q=0.03; v=2.1.9; dv=104;tpd=0;tpv=0',
+            'Accept': accp,
 
       'localmode': 'false',
       'device-type': 'app'
@@ -468,5 +470,6 @@ if (romUrl) {
         console.log('在控制台中可以使用 app 变量访问Vue实例');
         console.log('例如: app.count = 10');
     </script>
+    <script src="./version.js"></script>
 </body>
 </html>
