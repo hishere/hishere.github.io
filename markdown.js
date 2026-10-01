@@ -39,32 +39,28 @@
             // 查找原有的锚点链接（markdown-it-anchor 生成的带 § 的元素）
             const anchorLink = heading.querySelector('a[href^="#"]');
             
+            // 创建 _$编号_ 节点
+            const numberSpan = document.createElement('span');
+            numberSpan.className = 'heading-number';
+            numberSpan.style.marginRight = '6px';
+            numberSpan.style.fontWeight = 'normal';
+            numberSpan.textContent = '_$' + number + '_';
+            
+            // 强制设置为蓝色（优先级最高）
+            numberSpan.style.color = '#1a73e8'; // 标准 Google 蓝，你也可以换其他蓝色
+            numberSpan.style.textDecoration = 'none'; // 去掉下划线
+            
             if (anchorLink) {
                 // 清空原 § 符号
                 anchorLink.innerHTML = '';
-                
-                // 创建 _$编号_ 节点
-                const numberSpan = document.createElement('span');
-                numberSpan.className = 'heading-number';
-                numberSpan.style.marginRight = '6px';
-                // 继承锚点原有的蓝色和下划线，不强制覆盖颜色和装饰线
-                numberSpan.style.fontWeight = 'normal';
-                numberSpan.textContent = '_$' + number + '_';
-                
                 // 将编号嵌入锚点内部
                 anchorLink.appendChild(numberSpan);
                 
-                // 保留原有蓝色：不覆盖 color；保留下划线：不覆盖 textDecoration
-                // 仅确保点击区域正常
-                anchorLink.style.color = ''; 
-                anchorLink.style.textDecoration = '';
+                // 确保锚点本身也是蓝色（可选）
+                anchorLink.style.color = '#1a73e8';
+                anchorLink.style.textDecoration = 'none';
             } else {
-                // 无锚点时的兜底处理：直接插入标题最前（默认灰色）
-                const numberSpan = document.createElement('span');
-                numberSpan.className = 'heading-number';
-                numberSpan.style.marginRight = '6px';
-                numberSpan.style.color = '#666';
-                numberSpan.textContent = '_$' + number + '_';
+                // 无锚点时的兜底处理
                 heading.insertBefore(numberSpan, heading.firstChild);
             }
         });
