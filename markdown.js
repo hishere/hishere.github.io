@@ -47,7 +47,7 @@
             numberSpan.textContent = '_$' + number + '_';
             
             // 强制设置为蓝色（优先级最高）
-            numberSpan.style.color = '#1a73e8'; // 标准 Google 蓝，你也可以换其他蓝色
+            numberSpan.style.color = 'blue'; // 标准 Google 蓝，你也可以换其他蓝色
             numberSpan.style.textDecoration = 'none'; // 去掉下划线
             
             if (anchorLink) {
@@ -57,7 +57,7 @@
                 anchorLink.appendChild(numberSpan);
                 
                 // 确保锚点本身也是蓝色（可选）
-                anchorLink.style.color = '#1a73e8';
+                anchorLink.style.color = 'blue';
                 anchorLink.style.textDecoration = 'none';
             } else {
                 // 无锚点时的兜底处理
