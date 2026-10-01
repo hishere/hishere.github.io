@@ -1,4 +1,4 @@
-<script>
+
 // ========== 标题自动编号功能（附加脚本 - _$编号_ 蓝色版） ==========
 (function() {
     let isExecuted = false; // 防重复执行锁
@@ -91,4 +91,5 @@
         if (target) observer.observe(target, { childList: true, subtree: true });
     });
 })();
-</script>
+
+
