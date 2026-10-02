@@ -1,4 +1,5 @@
-let mockBaseUrl="https://mock.nodjoy.com";
+//let mockBaseUrl="https://mock.nodjoy.com";
+let mockBaseUrl="https://mock.presstime.cn";
 let mockProjectId="69373cd1d674ea00189e6e9b";//项目的id，下面是子接口id
 let oneb0_id="6938402fd674ea00189e6ea1";
 let oneb1_id="6938403bd674ea00189e6ea2";

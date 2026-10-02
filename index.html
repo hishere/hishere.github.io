@@ -388,7 +388,7 @@
         }
         if (apiuse == 2) {
             ajax({
-                url: "https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/no/one/but/you",
+                url: mockBaseUrl+"/mock/6648b0e2fa29401478437423/nooneb/no/one/but/you",
                 type: "get",
                 success: res => {
                     const data = JSON.parse(res)
@@ -410,7 +410,7 @@
                         "id": "6648b1be94e3e514624f65ea"
                     };
                     const xhr = ajax({
-                        url: "https://mock.presstime.cn/api/mock/update",
+                        url: mockBaseUrl+"/api/mock/update",
                         type: "post",
                         success: function(res) {
                             console.log(res);
@@ -491,7 +491,7 @@
 
         setTimeout(function() {
             ajax({
-                url: "https://mock.presstime.cn/mock/6648b0e2fa29401478437423/nooneb/history",
+                url: mockBaseUrl+"/mock/6648b0e2fa29401478437423/nooneb/history",
                 type: "get",
                 success: res => {
                     const jsonRes = JSON.parse(res);
@@ -534,7 +534,7 @@
                                 "id": "6648b9d7fa29401478437cbf"
                             }
                             const xhr = ajax({
-                                url: "https://mock.presstime.cn/api/mock/update",
+                                url: mockBaseUrl+"/api/mock/update",
                                 type: "post",
                                 success: function(res) {
                                     console.log(res);
