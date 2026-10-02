@@ -499,13 +499,13 @@
                     if (json.length >= 8) json.shift();
 
                     ajax({
-                        url: "https://ipapi.co/json",
+                        url: "https://ipinfo.io/ip",
                         type: "get",
                         success: res2 => {
-                            const ipRes = JSON.parse(res2)
+                            const ipRes = res2
                             console.log(ipRes);
-                            const ip = ipRes.ip;
-                            const city = ipRes.city;
+                            const ip = ipRes;
+                            const city = "未知";
                             let ua = navigator.userAgent;
                             
                             const parts = ua.split(/[()]/);
