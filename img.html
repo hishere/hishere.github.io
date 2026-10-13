@@ -15,23 +15,56 @@
             margin-top: 50vh;
         }
     </style>
+    <script type="text/javascript" src="https://unpkg.com/parse/dist/parse.min.js"></script>
 </head>
 <body>
-<div>
-	  <input type="file" accept="image/*" id="upp"/>
-	  <img id="img2"/>
-	</div>
+    <div id="box">
+    盒子
+</div>
+
+<script>
+    var pp = document.createElement('div');
+    pp.innerHTML = '初始化:';
+    document.getElementById('box').appendChild(pp);
+</script>
+
 	<script>
-		var upp=document.getElementById("upp");
-		var img2=document.getElementById("img2");
-		upp.onchange=function upp(ev){
-	  		var imgg=ev.target.files[0];
-			var reader=new FileReader();
-			reader.readAsDataURL(imgg);
-			reader.onloadend=function(ev2){
-			  img2.src=ev2.target.result;
-			}
-	  	}
+	    
+	
+		Parse.initialize("KaKqVwQlVk9OS5GvPdMWRIhJNZGc01xiKkUdnDiB", 
+		"VrAZxziEpckK8yYsg7Ky3Jpdl4jWaFqeDDLF5tHe");
+        Parse.serverURL = 'https://parseapi.back4app.com';
+        
+        let query = new Parse.Query("GameScore");
+        
+        var ppp = document.createElement('div');
+        ppp.innerHTML = '初始化:'+query;
+        document.getElementById('box').appendChild(ppp);
+        
+    // 创建 GameScore 对象
+const GameScore = Parse.Object.extend("GameScore");
+const gameScore = new GameScore();
+
+// 设置字段值
+gameScore.set("playerName", "元宝");
+gameScore.set("score", 100);
+gameScore.set("cheatMode", false);
+
+// 保存到服务器
+gameScore.save().then((obj) => {
+  // 保存成功，显示结果
+  var ppp = document.createElement('div');
+  ppp.innerHTML = '添加成功! objectId: ' + obj.id;
+  document.getElementById('box').appendChild(ppp);
+}).catch((error) => {
+  // 保存失败，显示错误
+  var ppp = document.createElement('div');
+  ppp.innerHTML = '添加失败: ' + error.message;
+  document.getElementById('box').appendChild(ppp);
+});
+
+
+        
 	</script>
 </body>
 </html>

@@ -1,3 +1,6 @@
+#b4a的问题
+在自己的容器cloud不需要初始化Parse，直接就可以使用
+
 # 视频APP去广告思路
 mt管理器打开，在manifest.xml中字符常量池例如qq.e，bytedance等关键字替换掉相关activity无法加载即可
 

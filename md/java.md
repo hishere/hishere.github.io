@@ -44,6 +44,8 @@ jar cfe myapp2.jar HelloWorld -C out .
 java -jar myapp2.jar
 ```
 
+如下，将编译出两个class文件HelloWorld.class，a.class
+
 ```java
 public class HelloWorld {
     public static void main(String[] args) {
@@ -53,10 +55,69 @@ public class HelloWorld {
 class a{}
 ```
 
+# 基础数据
+
+数据的定义
+
+```java
+int a=1;
+float b=2.0f;
+double c=3.1d;
+long d=999L;
+byte e=127;
+short f=254;
+char g='a';//char c=97;
+//这里是ascii表，48是0，65是A，97是a
+```
+
+逻辑与和短路与的区别
+
+```java
+int b=1;
+if(false&b++==1);
+System.out.println(b);//2，两边都执行 
+int c=1;     
+if(false&&c++==1);
+System.out.println(c);//1，左边是false，不再执行右边
+```
+
+数组，是写死的，不能添加元素，只能开辟新的数组
+
+```java
+int[ ] arr=new int[ ]{1,2,3}; 
+System.out.println(arr[0]);//1，数组起步是0
+```
+
+Arrays工具类是很方便的，使用前要引入
+
+```java
+import java.util.Arrays;
+
+public class HelloWorld {
+    public static void main(String[] args) {
+
+        int[] arr = new int[]{1, 2, 3};
+
+        // 直接复制并扩容
+        int[] newArr = Arrays.copyOf(arr, arr.length + 1);
+
+        // 添加新元素
+        //newArr[arr.length] = 4;
+
+        System.out.println(newArr[3]); // 输出默认值0
+    }
+}
+```
+
 # 后记
 我很怀念，学习java的这段时光，虽然，没有从事这方面的工作，
+
 这种思维是值得学习的，
+
 封装，一些属性是可以访问的，一些是私有的，都封装成一个整体。
+
 继承，避免重复的编写，从模板上继承已有的属性。
+
 多态，传入不同的对象，调用的方法，呈现不同的形态
+
 抽象，向上抽取，你对接一大堆人，而我只跟你对接即可，简化我的逻辑
